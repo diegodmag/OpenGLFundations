@@ -1,0 +1,6 @@
+GLX_SGIX_fbconfig_float
+https://www.khronos.org/registry/OpenGL/extensions/SGIX/GLX_SGIX_fbconfig_float.txt
+GLX_SGIX_fbconfig_float
+
+	GLXFBConfigSGIX* glXChooseFBConfigWithFltSGIX (Display *dpy, int screen, const int *int_attrib_list, const double *flt_attrib_list, int *nelements)
+	int glXGetFBConfigFltAttribSGIX (Display* dpy, GLXFBConfigSGIX config, int attribute, double *value)
