@@ -1,7 +1,0 @@
-GLX_SGIX_video_resize_float
-https://www.khronos.org/registry/OpenGL/extensions/SGIX/GLX_SGIX_video_resize_float.txt
-GLX_SGIX_video_resize_float
-
-	int glXChannelRectfSGIX (Display* display, int screen, int channel, float x, float y, float w, float h)
-	int glXQueryChannelDeltasfSGIX (Display* display, int screen, int channel, float *x, float *y, float *w, float *h)
-	int glXQueryChannelRectfSGIX (Display* display, int screen, int channel, float *dx, float *dy, float *dw, float *dh)

@@ -1,6 +1,0 @@
-GL_EXT_gpu_program_parameters
-https://www.khronos.org/registry/OpenGL/extensions/EXT/EXT_gpu_program_parameters.txt
-GL_EXT_gpu_program_parameters
-
-	void glProgramEnvParameters4fvEXT (GLenum target, GLuint index, GLsizei count, const GLfloat* params)
-	void glProgramLocalParameters4fvEXT (GLenum target, GLuint index, GLsizei count, const GLfloat* params)

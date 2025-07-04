@@ -1,6 +1,0 @@
-GLX_SGIX_video_source
-https://www.khronos.org/registry/OpenGL/extensions/SGIX/GLX_SGIX_video_source.txt
-GLX_SGIX_video_source
-
-	GLXVideoSourceSGIX glXCreateGLXVideoSourceSGIX (Display* display, int screen, VLServer server, VLPath path, int nodeClass, VLNode drainNode)
-	void glXDestroyGLXVideoSourceSGIX (Display* dpy, GLXVideoSourceSGIX glxvideosource)

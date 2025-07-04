@@ -1,6 +1,0 @@
-GLX_SGIX_dm_buffer
-https://www.khronos.org/registry/OpenGL/extensions/SGIX/GLX_SGIX_dm_buffer.txt
-GLX_SGIX_dm_buffer
-
-	GLX_DIGITAL_MEDIA_PBUFFER_SGIX 0x8024
-	Bool glXAssociateDMPbufferSGIX (Display* dpy, GLXPbufferSGIX pbuffer, DMparams *params, DMbuffer dmbuffer)
