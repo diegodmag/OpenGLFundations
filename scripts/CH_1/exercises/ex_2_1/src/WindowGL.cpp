@@ -87,7 +87,6 @@ void WindowGL::display(double currentTime){
     
     //glPointSize(30.0f);
     glPointSize(50.0f*x);
-    cout<<x<<'\n';
 }
 
 void WindowGL::update(){
