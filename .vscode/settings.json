@@ -1,6 +1,8 @@
 {
     "cmake.sourceDirectory": "/home/diegodmag/OpenGLFundations/scripts/CH1",
     "files.associations": {
-        "iostream": "cpp"
+        "iostream": "cpp",
+        "string": "cpp",
+        "format": "cpp"
     }
 }
