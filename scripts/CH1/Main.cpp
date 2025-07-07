@@ -16,6 +16,8 @@ void printShaderLog(GLuint shader);
 void printProgramLog(int prog);
 bool checkOpenGLError();
 
+float x=0.0f;
+float inc = 0.01f;
 
 string readShaderSource(const char* filePath){
     string content; 
@@ -109,12 +111,22 @@ void init(GLFWwindow* window){
  * Everything related with drawing to the GLFWwindow 
  */
 void display(GLFWwindow* window, double currentTime){
-    // glClearColor(1.0,0.0,0.0,1.0); //Specifies the color value to be applied when clearing the backgorund 
-    // //A color that is applied when the buffer is cleared 
-    // glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_DEPTH_BUFFER_BIT);
+	glClearColor(0.0, 0.0, 0.0, 1.0);
+	glClear(GL_COLOR_BUFFER_BIT);// clear the background to black, each time
     glUseProgram(renderingProgram); //This doesnt run the shaders , just loads them onto the hardware 
     //The program is in someway carrying the compiled shaders and then it add them to the OpenGL pipeline
-    glDrawArrays(GL_POINTS, 0, 1);//When this instruction is called, the GLSL code starts executing and also initializes the pipelione
+    // glDrawArrays(GL_POINTS, 0, 1);//When this instruction is called, the GLSL code starts executing and also initializes the pipelione
+    // For triangles
+    x+=inc; 
+    if(x>1.0f) inc=-0.01f;
+    if(x<-1.0f) inc =0.01f;
+    GLuint offsetLoc = glGetUniformLocation(renderingProgram, "offset"); // get ptr to "offset"
+	glProgramUniform1f(renderingProgram, offsetLoc, x);
+    // send value in "x" to "offset"
+    glDrawArrays(GL_TRIANGLES,0,3);
+    //
+    
     glPointSize(30.0f);
 }
 
