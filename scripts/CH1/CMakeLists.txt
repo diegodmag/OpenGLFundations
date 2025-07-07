@@ -10,10 +10,10 @@ include_directories(/usr/local/include)
 link_directories(/usr/local/lib)
 
 # Crea el ejecutable
-add_executable(first first.cpp)
+add_executable(main Main.cpp)
 
 # Enlaza las bibliotecas necesarias
-target_link_libraries(first
+target_link_libraries(main
     glfw
     GLEW
     GL
