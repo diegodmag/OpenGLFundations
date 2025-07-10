@@ -27,17 +27,12 @@ private:
     GLuint renderingProgram;
     GLuint vao[numVAOs];//Vertex array object
     GLuint vbo[numVBOs]; 
-    //For chapter 4
     GLFWwindow* window;
-    // float x=0.0f;
-    // float inc = 0.01f;
-    GLuint mvLoc, pLoc;
+    GLuint mvLoc, pLoc; // Location of the MV matrix in the vertex shader and Perspectvie matrix in vertexShader
     int width, height;
     float aspect;
     glm::mat4 pMat, vMat, mMat, mvMat;
-
-    float x;
-    float inc;
+    glm::mat4 tMat, rMat; // Translation and rotation matrices for model animation
 
 public: 
 
