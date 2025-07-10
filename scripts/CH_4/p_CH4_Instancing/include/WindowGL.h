@@ -28,9 +28,10 @@ private:
     GLuint vao[numVAOs];//Vertex array object
     GLuint vbo[numVBOs]; 
     GLFWwindow* window;
-    GLuint mvLoc, pLoc; // Location of the MV matrix in the vertex shader and Perspectvie matrix in vertexShader
+    GLuint vLoc, pLoc; // Location of the MV matrix in the vertex shader and Perspectvie matrix in vertexShader
+    GLuint tfLoc; 
     int width, height;
-    float aspect;
+    float aspect, timeFactor; //timeFactor is added for Chapter 4_6
     glm::mat4 pMat, vMat, mMat, mvMat;
     glm::mat4 tMat, rMat; // Translation and rotation matrices for model animation
 
@@ -55,7 +56,7 @@ public:
     void start();
 
     // Chapter 4_6 Rendering Multiple copies 
-    void drawCube(float timeFactor);
+    void drawCube(float tf);
 
 };
 

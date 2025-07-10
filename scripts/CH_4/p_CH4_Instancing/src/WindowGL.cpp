@@ -1,6 +1,6 @@
 #include "WindowGL.h"
 #include "Utils.h"
-
+//#include "Transformations.h"
 
 WindowGL::WindowGL(){
 
@@ -54,7 +54,7 @@ const bool WindowGL::validateGL(){
 
 void WindowGL::init(){
     renderingProgram = Utils::createShaderProgram("shaders/vertShader.glsl", "shaders/fragShader.glsl");
-    cameraX = 1.5f; cameraY = 0.0f; cameraZ = 16.0f;
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
     cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down Y to reveal perspective
     setupVertices();    
 }
@@ -79,7 +79,7 @@ void WindowGL::display(double currentTime){
     glUseProgram(renderingProgram);
 
     // get the uniform variables for the MV and projection matrices
-    mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix"); // get locations of uniforms in the shader program
+    vLoc = glGetUniformLocation(renderingProgram, "v_matrix"); // get locations of uniforms in the shader program
     pLoc = glGetUniformLocation(renderingProgram, "p_matrix"); // get locations of uniforms in the shader program
     
     //Retrieves (in pixels) the size of the specified window
@@ -97,9 +97,9 @@ void WindowGL::display(double currentTime){
     
     for(int i=0; i<24 ; i++){
         float tf = currentTime+i; 
+        drawCube(tf);
         
         //This is important because each time a cube is drawn, a different model matrix is built 
-        drawCube(tf);
     }
     
 }
@@ -158,32 +158,36 @@ void WindowGL::start(){
 /**
  * This function encapsulate the logic for drawing a single cube for the section Chapter 4_6
  */
-void WindowGL::drawCube(float timeFactor){
+void WindowGL::drawCube(float tf){
     // Model Matrix
     // use current time to compute different translations in x, y, and z
     // ORIGINAL >> 
     //tMat = glm::translate(glm::mat4(1.0), glm::vec3(sin(0.35f*timeFactor)*2.0f, cos(0.52f*timeFactor)*2.0f, sin(0.71f*timeFactor)*2.0f));
     
     
-    tMat = glm::translate(glm::mat4(1.0), glm::vec3(sin(0.5*timeFactor)*6.0f, cos(0.5*timeFactor)*6.0f, sin(0.5f*timeFactor)*6.0f));
+    // tMat = glm::translate(glm::mat4(1.0), glm::vec3(sin(0.5*timeFactor)*6.0f, cos(0.5*timeFactor)*6.0f, sin(0.5f*timeFactor)*6.0f));
 
 
-    rMat = glm::rotate(glm::mat4(1.0f), 1.75f*(float)timeFactor, glm::vec3(0.0f, 1.0f, 0.0f));
-    rMat = glm::rotate(rMat, 1.75f*(float)timeFactor, glm::vec3(1.0f, 0.0f, 0.0f));
-    rMat = glm::rotate(rMat,1.75f*(float)timeFactor, glm::vec3(0.0f, 0.0f, 1.0f));
+    // rMat = glm::rotate(glm::mat4(1.0f), 1.75f*(float)timeFactor, glm::vec3(0.0f, 1.0f, 0.0f));
+    // rMat = glm::rotate(rMat, 1.75f*(float)timeFactor, glm::vec3(1.0f, 0.0f, 0.0f));
+    // rMat = glm::rotate(rMat,1.75f*(float)timeFactor, glm::vec3(0.0f, 0.0f, 1.0f));
 
-    // the 1.75 adjusts the rotation speed
-    //mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));//Gen model matrix
-    mMat = tMat * rMat; //The order is truly important, that is, tMat * rMat is different from rMat * tMat ;
+    // // the 1.75 adjusts the rotation speed
+    // //mMat = glm::translate(glm::mat4(1.0f), glm::vec3(cubeLocX, cubeLocY, cubeLocZ));//Gen model matrix
+    // mMat = tMat * rMat; //The order is truly important, that is, tMat * rMat is different from rMat * tMat ;
     
     
-    mvMat = vMat * mMat; // model - view matrix is equal to the concatenation
+    // mvMat = vMat * mMat; // model - view matrix is equal to the concatenation
 
     // copy perspective and MV matrices to corresponding uniform variables
-    glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvMat)); //send matrix data to the uniform variables
+    glUniformMatrix4fv(vLoc, 1, GL_FALSE, glm::value_ptr(vMat)); //send matrix data to the uniform variables
     glUniformMatrix4fv(pLoc, 1, GL_FALSE, glm::value_ptr(pMat)); //send matrix data to the uniform variables
     //glm::value_ptr returns a reference to the matrix data and its needed to tranfer those matrix values to the uniform variable
     
+    timeFactor = ((float)tf);
+    tfLoc = glGetUniformLocation(renderingProgram, "tf");
+    glUniform1f(tfLoc, (float)timeFactor);
+
     // associate VBO with the corresponding vertex attribute in the vertex shader
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); //makes the 0th buffer active 
     /**
@@ -196,6 +200,11 @@ void WindowGL::drawCube(float timeFactor){
     // adjust OpenGL settings and draw model
     glEnable(GL_DEPTH_TEST); //Enable depth testing 
     glDepthFunc(GL_LEQUAL); //Specify the particular depth test we wish OpenGL to use  
-    glDrawArrays(GL_TRIANGLES, 0, 36);//there are 36 vertex 
+    
+    //glDrawArrays(GL_TRIANGLES, 0, 36);//there are 36 vertex 
 
+    //This is for instance
+    //glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 24);
+
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 100000);
 }
