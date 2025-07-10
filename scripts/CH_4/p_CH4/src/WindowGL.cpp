@@ -92,7 +92,7 @@ void WindowGL::display(double currentTime){
     
     // build view matrix, model matrix, and model-view matrix
     
-    // View Transformation Matrix
+    // Viewing Transformation Matrix
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
     
     // Model Matrix
