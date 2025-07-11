@@ -25,7 +25,7 @@ const bool WindowGL::validateGL(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     //2 Initialize GLFWwindow
-    window = glfwCreateWindow(1200,1000,"Chapter1-program-1", NULL, NULL);
+    window = glfwCreateWindow(1000,800,"Chapter1-program-1", NULL, NULL);
 
     if (!window) {
         std::cerr << "Failed to create window" << std::endl;
@@ -54,7 +54,7 @@ const bool WindowGL::validateGL(){
 
 void WindowGL::init(){
     renderingProgram = Utils::createShaderProgram("shaders/vertShader.glsl", "shaders/fragShader.glsl");
-    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 160.0f;
     cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down Y to reveal perspective
     setupVertices();    
 }
@@ -206,5 +206,5 @@ void WindowGL::drawCube(float tf){
     //This is for instance
     //glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 24);
 
-    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 100000);
+    glDrawArraysInstanced(GL_TRIANGLES, 0, 36, 350);
 }

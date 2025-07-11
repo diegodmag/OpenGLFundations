@@ -24,9 +24,9 @@ void main(void)
     // float c = sin(4.0 * i) * 8.0;
 
     //For a lot 
-    float a = sin(203.0 * i/8000.0) * 403.0;
-    float b = cos(301.0 * i/4001.0) * 401.0;
-    float c = sin(400.0 * i/6003.0) * 405.0;
+    float a = sin(203.0 * (i/(8000.0/2))) * (403.0/8);
+    float b = cos(301.0 * (i/(4001.0/2))) * (401.0/8);
+    float c = sin(400.0 * (i/(6003.0/2))) * (405.0/8);
 
     // build the rotation and translation matrices to be applied to this cube’s model matrix
     mat4 localRotX = buildRotateX(1000*i);
