@@ -54,8 +54,9 @@ const bool WindowGL::validateGL(){
 
 void WindowGL::init(){
     renderingProgram = Utils::createShaderProgram("shaders/vertShader.glsl", "shaders/fragShader.glsl");
-    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 160.0f;
-    cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down Y to reveal perspective
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
+    cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down the cube  Y to reveal perspective
+    pyrLocX = 0.0f; pyrLocY = 2.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective
     setupVertices();    
 }
 
@@ -79,29 +80,113 @@ void WindowGL::display(double currentTime){
     glUseProgram(renderingProgram);
 
     // get the uniform variables for the MV and projection matrices
-    vLoc = glGetUniformLocation(renderingProgram, "v_matrix"); // get locations of uniforms in the shader program
+    mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix"); // get locations of uniforms in the shader program
     pLoc = glGetUniformLocation(renderingProgram, "p_matrix"); // get locations of uniforms in the shader program
     
     //Retrieves (in pixels) the size of the specified window
     glfwGetFramebufferSize(window, &width, &height);
     aspect = (float)width / (float)height;
     
-    // PERSPECTIVE MATRIX
+    // Projection MATRIX
     //glm::perspective(float field of view, float screen aspect ratio, float near clipping plane, float far clipping plane)
     pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
+    
+    glUniformMatrix4fv(pLoc, 1, GL_FALSE, glm::value_ptr(pMat)); //send projection matrix data
     
     // build view matrix, model matrix, and model-view matrix
     
     // Viewing Transformation Matrix
+    /**
+     * It's important to note that the Viewing Transforming Matrix is declared one time and used 
+     * for the two models.
+     */
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
     
-    for(int i=0; i<24 ; i++){
-        float tf = currentTime+i; 
-        drawCube(tf);
-        
-        //This is important because each time a cube is drawn, a different model matrix is built 
-    }
+    // Using Matrix Stack for pareting models 
+    mvStack.push(vMat); // push view matrix onto the stack 
+
+    // ----- pyramid == sun -----
     
+    /**
+     * Push a new matrix onto the stack (this will be the parent MV
+     * matrix—for the first parent, it duplicates the view matrix.
+     * We add a "copy" of the model - view matrix because we are goin to multiply so that it can save the sun position
+     */
+    mvStack.push(mvStack.top()); // First copy of the model - view matrix which saces the sun position
+    /**
+     * Apply transforms to incorporate the parent’s M matrix into the duplicated view matrix.
+     */
+    mvStack.top() *= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, 0.0f)); // sun position
+    
+    mvStack.push(mvStack.top()); // Second copy of the model - view matrix which saves the sun rotation
+    mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(1.0f, 0.0f, 0.0f)); // sun rotation
+    
+    glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(mvStack.top()));
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_LEQUAL);
+    glDrawArrays(GL_TRIANGLES, 0, 18); // draw the pyramid - sun
+    // draw the sun
+    mvStack.pop(); // remove the sun’s axial rotation from the stack, so the translation is int the top of the stack
+
+    // ----- cube == planet -----
+
+    mvStack.push(mvStack.top()); // we add a view matrix with the sun's transformations
+
+    mvStack.top() *= glm::translate(glm::mat4(1.0f), 
+                                    glm::vec3(sin((float)currentTime)*4.0, 0.0f, cos((float)currentTime)*4.0)); // Planet translation
+    
+    mvStack.push(mvStack.top()); // copy fot the planet rotation
+    mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0, 1.0, 0.0)); //planet rotation   
+    
+    mvStack.top()*=glm::scale(glm::mat4(1.0f),glm::vec3(0.75f, 0.75f, 0.75f)); // planet scalation
+
+    glUniformMatrix4fv(mvLoc,1,GL_FALSE,glm::value_ptr(mvStack.top()));
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_LEQUAL);
+    glDrawArrays(GL_TRIANGLES, 0, 36); // draw the planet
+
+    mvStack.pop();// remove the planet’s axial rotation from the stack
+
+    // ----- smaller-cube == moon -----
+
+    mvStack.push(mvStack.top());
+    mvStack.top() *=glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)currentTime)*2.0,
+                                   cos((float)currentTime)*2.0)); // moon translation using parent matrix (planet's one)
+
+    mvStack.top() *= glm::rotate(glm::mat4(1.0f), (float)currentTime, glm::vec3(0.0, 0.0, 1.0)); // moon rotatio
+
+    mvStack.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.25f, 0.25f, 0.25f)); // make the moon smaller
+
+    glUniformMatrix4fv(mvLoc,1,GL_FALSE,glm::value_ptr(mvStack.top()));
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[0]);
+    
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    // glEnable(GL_DEPTH_TEST);
+    // glEnable(GL_LEQUAL);
+    glDrawArrays(GL_TRIANGLES, 0, 36); // draw the planet
+
+    // // remove moon scale/rotation/position, planet position, sun position, and view matrices from stack
+    // mvStack.pop(); mvStack.pop(); mvStack.pop(); 
+    
+    mvStack.pop(); //remove moon position from stack
+
+    mvStack.pop(); //remove planet position from stack
+
+    mvStack.pop(); //remove sun position from stack
+    
+    mvStack.pop(); //remove view matrices from stack
+
+    glEnable(GL_DEPTH_TEST);
+    glEnable(GL_LEQUAL);
 }
 
 void WindowGL::update(){
@@ -117,11 +202,12 @@ void WindowGL::update(){
 
 
 void WindowGL::setupVertices(void){
+    
     //Each cube's face has is comprised by two triangles and each triangle is comprised by 3 vertices 
     //So for each face there are 6 vertices comprising it and because the cube has six faces, there 
     //are a total of 36 vertices 
     //Since each vertex has three values (x,y,z) there are a total of 36x3=108 values in the array  
-    float vertexPositions[108] = {
+    float cubePositions[108] = {
         -1.0f,  1.0f, -1.0f, -1.0f, -1.0f, -1.0f,  1.0f, -1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,  1.0f,  1.0f, -1.0f, -1.0f,  1.0f, -1.0f,
          1.0f, -1.0f, -1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f, -1.0f,
@@ -135,12 +221,30 @@ void WindowGL::setupVertices(void){
         -1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f,  1.0f,
          1.0f,  1.0f,  1.0f, -1.0f,  1.0f,  1.0f, -1.0f,  1.0f, -1.0f,
     };
+
+    //Setting up pyramid vertices
+    //Pyramid with 18 verices, comprising 6 triangles (four sides and tow on the bottom)
+    float pyramidPositions[54] =    
+    { 
+        -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,// front face
+        1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,// right face
+        1.0f, -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,// back face
+        -1.0f, -1.0f, -1.0f, -1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,// left face
+        -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, 1.0f, -1.0f, -1.0f, 1.0f,// base – left front
+        1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f// base – right back
+    };
+
     glGenVertexArrays(1, vao); //produce integer ID for the Vertex Array Object
     glBindVertexArray(vao[0]); // makes the vao[0] array "active"
+
+    //Now, because there are two figures, we need 2 vbos
     glGenBuffers(numVBOs, vbo); //produce integer ID for the n=vertex buffer object
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[0]); // makes the vbo[0] buffer active 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertexPositions), vertexPositions, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubePositions), cubePositions, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+
+    glBindBuffer(GL_ARRAY_BUFFER, vbo[1]); // makes the vbo[0] buffer active 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
 
 }
 
