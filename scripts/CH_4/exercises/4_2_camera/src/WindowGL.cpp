@@ -2,6 +2,9 @@
 #include "Utils.h"
 //#include "Transformations.h"
 
+//Checking for inputs
+
+
 WindowGL::WindowGL(){
 
 }
@@ -55,7 +58,20 @@ const bool WindowGL::validateGL(){
 void WindowGL::init(){
     
     renderingProgram = Utils::createShaderProgram("shaders/vertShader.glsl", "shaders/fragShader.glsl");
+    //Init camera
     cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
+    // Orientarion Vectors 
+    cameraU = glm::vec3{1.0f, 0.0f, 0.0f}; // Right facing vector -> Points positive X
+    cameraV = glm::vec3{0.0f, 1.0f, 0.0f}; // Up Down vecotr -> Pointing positive Y 
+    cameraN = glm::vec3{0.0f, 0.0f, -1.0f}; //Because OpenGL has its default foreward in -z 
+
+    // Orientation Vectors Requirements 
+    /**
+     * They must be of unit lenght 
+     * They must be mutually orthogonal
+     * They must be arranged as a lef-handed system
+     */
+
     cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down the cube  Y to reveal perspective
     pyrLocX = 0.0f; pyrLocY = 2.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective
     setupVertices();    
@@ -103,8 +119,11 @@ void WindowGL::display(double currentTime){
      * It's important to note that the Viewing Transforming Matrix is declared one time and used 
      * for the two models.
      */
-    vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
+    // vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
     
+    //vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
+    
+
     // Using Matrix Stack for pareting models 
     mvStack.push(vMat); // push view matrix onto the stack 
 
@@ -272,11 +291,12 @@ void WindowGL::start(){
             }
         });
 
+
+
         update();
     }
 
 }
-
 
 
 // Chapter 4_6 Rendering Multiple copies 
@@ -328,3 +348,14 @@ void WindowGL::window_reshape_callback(GLFWwindow* window, int newWidth, int new
     glViewport(0, 0, newWidth, newHeight);
     pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
 }
+
+void WindowGL::key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_E && action == GLFW_REPEAT){
+        cout<<"PRESSING E"<<'\n';
+    }
+}
+
+// void WindowGL::keyboard_input_check(){
+//     glfwSetKeyCallback(window, key_callback);
+// }

@@ -25,7 +25,10 @@ class WindowGL
 {
 private:
 
-    float cameraX, cameraY, cameraZ;
+    float cameraX, cameraY, cameraZ; //This has to be separated
+    glm::vec3 cameraU, cameraV, cameraN;
+
+
     float cubeLocX, cubeLocY, cubeLocZ;
     float pyrLocX, pyrLocY, pyrLocZ;
     GLuint renderingProgram;
@@ -68,7 +71,9 @@ public:
     // chapter 4_11 Coding for performance
     void window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight);
 
-    
+    void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+    void keyboard_input_check();
 
 };
 
