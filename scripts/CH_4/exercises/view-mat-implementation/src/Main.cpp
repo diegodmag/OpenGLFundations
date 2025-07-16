@@ -1,0 +1,7 @@
+#include "WindowGL.h"
+
+int main(void){
+
+    WindowGL* wd = new WindowGL();
+    wd->start();
+}

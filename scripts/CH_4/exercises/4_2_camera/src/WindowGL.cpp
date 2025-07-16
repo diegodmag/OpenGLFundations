@@ -83,6 +83,7 @@ void WindowGL::init(){
     // Projection MATRIX
     //glm::perspective(float field of view, float screen aspect ratio, float near clipping plane, float far clipping plane)
     pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
+
 }
 
 void WindowGL::terminate(){
@@ -119,7 +120,7 @@ void WindowGL::display(double currentTime){
      * It's important to note that the Viewing Transforming Matrix is declared one time and used 
      * for the two models.
      */
-    // vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
+    vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
     
     //vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX, -cameraY, -cameraZ));
     
