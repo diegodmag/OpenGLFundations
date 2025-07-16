@@ -2,6 +2,13 @@
 #include "Utils.h"
 //#include "Transformations.h"
 
+// void processInput(GLFWwindow *window)
+// {
+//     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+//         glfwSetWindowShouldClose(window, true);
+// }
+
+
 WindowGL::WindowGL(){
 
 }
@@ -58,6 +65,12 @@ void WindowGL::init(){
     cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
     cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down the cube  Y to reveal perspective
     pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective
+    
+    // INPUT
+    cameraPos = glm::vec3(0.0f, 0.0f,  5.0f);
+    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+
     setupVertices();    
 
     //Retrieves (in pixels) the size of the specified window
@@ -97,63 +110,6 @@ void WindowGL::display(double currentTime){
 
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX,-cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
 
-    /**
-     * CAMERA POSITION
-     * Its important to rememeber that, by default, OpenGL Z-axis points to -Z axes 
-     */
-    glm::vec3 camerPosition = glm::vec3(cameraX,cameraY,cameraZ);
-
-    /**
-     * CAMERA DIRECTION
-     * Its important this substraction camerPosition-cameraTarget because of the direction of the vector 
-     * The result is a vector pointing to the origin 
-     */
-    glm::vec3 cameraTarget = glm::vec3(0.0f, 0.0f, 0.0f); // Global origin 
-
-    glm::vec3 cameraDirection = glm::normalize(camerPosition-cameraTarget); // Foreward
-
-    /**
-     * CAMERA RIGHT AXIS
-     */
-    glm::vec3 up = glm::vec3(0.0f,1.0f,0.0f);
-    glm::vec3 cameraRight = glm::normalize(glm::cross(up, cameraDirection));
-
-    /**
-     * CAMERA UP AXIS
-     */
-    glm::vec3 cameraUp = glm::normalize(glm::cross(cameraDirection, cameraRight));
-
-    /**
-     * LOOK AT ROTATION MATRIX 
-     */
-    glm::mat4 look_at_rot = glm::mat4(
-                                      glm::vec4(cameraRight,        0.0f),
-                                      glm::vec4(cameraUp,           0.0f),
-                                      glm::vec4(cameraDirection,    0.0f),
-                                      glm::vec4(0.0f, 0.0f, 0.0f,    1.0f)
-    );
-
-    // The we transposed it 
-    look_at_rot = glm::transpose(look_at_rot);
-    
-    /**
-     * LOOK AT TRANSLATION MATRIX
-     */
-    glm::mat4 look_at_tras = glm::mat4(
-                                      glm::vec4(1.0f,0.0f,0.0f,0.0f),
-                                      glm::vec4(0.0f,1.0f,0.0f,0.0f),
-                                      glm::vec4(0.0f,0.0f,1.0f,0.0f),
-                                      glm::vec4(-camerPosition, 1.0f)
-    );
-
-    /**
-     * LOOK AT MATRIX (VIEW SPACE MATRIX)
-     */
-    //glm::mat4 look_at = look_at_rot*look_at_tras;
-
-    glm::mat4 look_at = look_at_tras*look_at_rot;
-    
-
     //Although, OpenGl has already a function that generate the view mat 
     // glm::mat4 view; 
     // /**
@@ -166,20 +122,15 @@ void WindowGL::display(double currentTime){
     //                     glm::vec3(0.0f, 1.0f, 0.0f)
     // );
 
+    cameraRight = glm::normalize(glm::cross(cameraFront,cameraUp));
 
-    //Adding some rotation to the camera 
-
-    const float radius = 5.0f;
-    float camX = sin(glfwGetTime()) * radius;
-    float camZ = cos(glfwGetTime()) * radius;
-    glm::mat4 view;
-    view = glm::lookAt(glm::vec3(camX, 0.0, camZ), glm::vec3(0.0, 0.0, 0.0), glm::vec3(0.0, 1.0, 0.0));
+    viewMat = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
 
     glEnable(GL_CULL_FACE);
 
     //mvMat = glm::rotate(look_at, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.f));
 
-    glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(view));
+    glUniformMatrix4fv(mvLoc, 1, GL_FALSE, glm::value_ptr(viewMat));
 
     glBindBuffer(GL_ARRAY_BUFFER, vbo[1]);
 
@@ -197,6 +148,7 @@ void WindowGL::display(double currentTime){
 void WindowGL::update(){
     
    while (!glfwWindowShouldClose(window)) {
+        this->processInput();
 		display(glfwGetTime());
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -268,6 +220,21 @@ void WindowGL::start(){
 
 }
 
+void WindowGL::processInput(){
+    const float cameraSpeed = 0.05f; // adjust accordingly
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        cameraPos += cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        cameraPos -= cameraSpeed * cameraFront;
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        cameraPos -= cameraRight * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        cameraPos += cameraRight * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        cameraPos += cameraUp * cameraSpeed;
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        cameraPos -= cameraUp * cameraSpeed;
+}
 
 void WindowGL::window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight)
 {
