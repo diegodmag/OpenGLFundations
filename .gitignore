@@ -1,4 +1,5 @@
 <<'\n'
+**/.vscode/
 build/
 CMakeFiles/
 CMakeCache.txt
