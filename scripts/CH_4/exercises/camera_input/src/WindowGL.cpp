@@ -7,7 +7,15 @@
 //     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
 //         glfwSetWindowShouldClose(window, true);
 // }
+// WindowGL.cpp
 
+glm::vec3 WindowGL::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+float WindowGL::yaw = -90.0f;
+float WindowGL::pitch = 0.0f;
+float WindowGL::lastMouseX = 0.0;
+float WindowGL::lastMouseY = 0.0;
+float WindowGL::fov = 45.0f;
+bool WindowGL::firstMouse = true;
 
 WindowGL::WindowGL(){
 
@@ -68,18 +76,17 @@ void WindowGL::init(){
     
     // INPUT
     cameraPos = glm::vec3(0.0f, 0.0f,  5.0f);
-    cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
+    //cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
-    rotationSpeed =0.0f;
-
     setupVertices();    
+    //Capture and hide cursor
+    //glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    
 
     //Retrieves (in pixels) the size of the specified window
     glfwGetFramebufferSize(window, &width, &height);
     aspect = (float)width / (float)height;
-        
-    pMat = glm::perspective(glm::radians(45.0f), aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 
 }
 
@@ -106,6 +113,8 @@ void WindowGL::display(double currentTime){
     mvLoc = glGetUniformLocation(renderingProgram, "mv_matrix"); // get locations of uniforms in the shader program
     pLoc = glGetUniformLocation(renderingProgram, "p_matrix"); // get locations of uniforms in the shader program
     
+    //This now inside the display because we are re - calculating the fov using the zoom 
+    pMat = glm::perspective(glm::radians(fov), aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 
     //This has to be in the display 
     glUniformMatrix4fv(pLoc, 1, GL_FALSE, glm::value_ptr(pMat)); //send projection matrix data
@@ -144,6 +153,8 @@ void WindowGL::update(){
         this->processInput();
 		display(deltaTime);
 		glfwSwapBuffers(window);
+        glfwSetScrollCallback(window, scroll_callback);
+        glfwSetCursorPosCallback(window, mouse_callback);  
 		glfwPollEvents();
     } 
 
@@ -248,4 +259,59 @@ void WindowGL::window_reshape_callback(GLFWwindow* window, int newWidth, int new
     aspect = static_cast<float>(newWidth) / static_cast<float>(newHeight);
     glViewport(0, 0, newWidth, newHeight);
     pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+}
+
+void WindowGL::mouse_callback(GLFWwindow* window, double xpos, double ypos){
+
+    // 1
+    /**
+     * We first calculate the offset of the mouse since last frame
+     * We first have to store the last mouse position in the application, 
+     * which we initialize to be the center of the screen. 
+     * This is done in the WindowGL initialization;
+     */
+
+    //2
+    /**
+     * We calculate the offset movement between the last and current frame;
+     */
+    //double xoffset = xpos - static_cast<double>(lastMouseX);
+    if (firstMouse)
+    {
+        lastMouseX = xpos;
+        lastMouseY = ypos;
+        firstMouse = false;
+    }
+  
+    float xoffset = xpos - lastMouseX;
+    float yoffset = lastMouseY - ypos; 
+    lastMouseX = xpos;
+    lastMouseY = ypos;
+
+    float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw   += xoffset;
+    pitch += yoffset;
+
+    if(pitch > 89.0f)
+        pitch = 89.0f;
+    if(pitch < -89.0f)
+        pitch = -89.0f;
+
+    glm::vec3 direction;
+    direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    direction.y = sin(glm::radians(pitch));
+    direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(direction);
+
+}
+
+void WindowGL::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
+    fov -= (float)yoffset;
+    if (fov < 1.0f)
+        fov = 1.0f;
+    if (fov > 45.0f)
+        fov = 45.0f; 
 }

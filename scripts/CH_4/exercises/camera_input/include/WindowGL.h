@@ -43,7 +43,7 @@ private:
 
     //INPUT 
     glm::vec3 cameraPos;
-    glm::vec3 cameraFront;
+    static glm::vec3 cameraFront;
     glm::vec3 cameraUp;
 
     glm::vec3 cameraRight;
@@ -57,10 +57,18 @@ private:
     float deltaTime= 0.0f;  //Time between current frame and last frame
     float lastFrame = 0.0f; //Time of the last frame
 
-
-
     //ROTATION
-    float rotationSpeed;
+    static float yaw; 
+    static float pitch;
+
+    //MOUSE INPUT
+    static float lastMouseX;
+    static float lastMouseY;
+
+    static bool firstMouse;
+
+    //FIELD OF VIEW
+    static float fov;
 
     //Matrix Stack 
     stack<glm::mat4> mvStack;
@@ -94,6 +102,10 @@ public:
     void window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight);
 
     void processInput();
+
+    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
+    static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
 };
 
