@@ -28,10 +28,12 @@ private:
     float cameraX, cameraY, cameraZ;
     float cubeLocX, cubeLocY, cubeLocZ;
     float pyrLocX, pyrLocY, pyrLocZ;
+    
     GLuint renderingProgram;
     GLuint vao[numVAOs];//Vertex array object
     GLuint vbo[numVBOs]; 
     GLFWwindow* window;
+    
     GLuint vLoc, pLoc ,mvLoc; // Location of the MV matrix in the vertex shader and Perspectvie matrix in vertexShader
     GLuint tfLoc; 
     int width, height;
@@ -43,11 +45,22 @@ private:
     glm::vec3 cameraPos;
     glm::vec3 cameraFront;
     glm::vec3 cameraUp;
-    
+
     glm::vec3 cameraRight;
+
+    float cameraSpeed = 0.5f;     
 
     //VIEW
     glm::mat4 viewMat; 
+
+    //Time 
+    float deltaTime= 0.0f;  //Time between current frame and last frame
+    float lastFrame = 0.0f; //Time of the last frame
+
+
+
+    //ROTATION
+    float rotationSpeed;
 
     //Matrix Stack 
     stack<glm::mat4> mvStack;
@@ -67,6 +80,8 @@ public:
     void display(double currentTime);
 
     void update();
+
+    void calculateDeltaTime();
 
     void setupVertices(void);
 

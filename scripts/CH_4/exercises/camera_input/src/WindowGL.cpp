@@ -71,6 +71,8 @@ void WindowGL::init(){
     cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
     cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
 
+    rotationSpeed =0.0f;
+
     setupVertices();    
 
     //Retrieves (in pixels) the size of the specified window
@@ -110,21 +112,11 @@ void WindowGL::display(double currentTime){
 
     vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX,-cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
 
-    //Although, OpenGl has already a function that generate the view mat 
-    // glm::mat4 view; 
-    // /**
-    //  * The lookAt function requieres a position,
-    //  *                               a target 
-    //  *                             and up Vector
-    //  */
-    // view = glm::lookAt( glm::vec3(0.0f,0.0f,cameraZ),
-    //                     glm::vec3(0.0f,0.0f,0.0f),
-    //                     glm::vec3(0.0f, 1.0f, 0.0f)
-    // );
-
     cameraRight = glm::normalize(glm::cross(cameraFront,cameraUp));
 
     viewMat = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
+
+    // viewMat*= glm::rotate(glm::mat4(1.0f),static_cast<float>(glfwGetTime()*rotationSpeed),cameraUp);
 
     glEnable(GL_CULL_FACE);
 
@@ -148,8 +140,9 @@ void WindowGL::display(double currentTime){
 void WindowGL::update(){
     
    while (!glfwWindowShouldClose(window)) {
+        calculateDeltaTime();
         this->processInput();
-		display(glfwGetTime());
+		display(deltaTime);
 		glfwSwapBuffers(window);
 		glfwPollEvents();
     } 
@@ -157,6 +150,11 @@ void WindowGL::update(){
     terminate();
 }
 
+void WindowGL::calculateDeltaTime(){
+    float currentFrame = static_cast<float>(glfwGetTime());
+    deltaTime = currentFrame - lastFrame;
+    lastFrame = currentFrame;
+}
 
 void WindowGL::setupVertices(void){
     
@@ -221,19 +219,28 @@ void WindowGL::start(){
 }
 
 void WindowGL::processInput(){
-    const float cameraSpeed = 0.05f; // adjust accordingly
+    
+    float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+    
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         cameraPos += cameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
         cameraPos -= cameraSpeed * cameraFront;
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
-        cameraPos -= cameraRight * cameraSpeed;
+        cameraPos -= cameraSpeed * cameraRight;
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
-        cameraPos += cameraRight * cameraSpeed;
+        cameraPos += cameraSpeed * cameraRight;
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
-        cameraPos += cameraUp * cameraSpeed;
+        cameraPos += cameraSpeed * cameraUp;
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
-        cameraPos -= cameraUp * cameraSpeed;
+        cameraPos -= cameraSpeed * cameraUp;
+
+
+    // if (glfwGetKey(window, GLFW_KEY_J) == GLFW_PRESS)
+    //     rotationSpeed = 0.1f;
+    // if (glfwGetKey(window, GLFW_KEY_J) == GLFW_RELEASE)
+    //     rotationSpeed = 0.0f;
+
 }
 
 void WindowGL::window_reshape_callback(GLFWwindow* window, int newWidth, int newHeight)
