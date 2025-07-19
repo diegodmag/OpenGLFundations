@@ -38,6 +38,12 @@ private:
     float m_yaw = -90.0f;
     float m_pitch = 0.0f;
 
+    //For rotation input 
+    float m_last_mouseX = 0.0;
+    float m_last_mouseY = 0.0;
+
+    bool m_first_mouse = true;
+
     glm::vec3 m_direction;
 
 public:
@@ -46,45 +52,24 @@ public:
 
     ~Camera();
 
-    //Method to generate the lookAt transform 
     const glm::mat4& GetViewMatrix() {return m_view_mat;}
     
     const glm::mat4& GetPerspectiveMatrix() {return m_perspective_mat;}
     
-    void CalculateViewMatrix(); //This is supose to be called in the dsiplay 
+    void CalculateViewMatrix(); 
 
     void CalculatePerspectiveMatrix(float aspect);
 
-    //For the INPUT 
+    // INPUT
     void Move_Foreward(float displacement);
 
     void Move_Right(float displacement);
 
     void Move_Up(float displacement);
     
+    void ComputeRotation(double xpos, double ypos);
 
-    void PrintVec3(const glm::vec3& vec, const std::string& name = "vec3"){
-        std::cout << std::fixed << std::setprecision(3);
-        std::cout << name << ": (" 
-                << vec.x << ", " 
-                << vec.y << ", " 
-                << vec.z << ")" << std::endl;
-    }
-
-    void PrintMat4(const glm::mat4& mat, const std::string& name = "mat4") {
-        std::cout << std::fixed << std::setprecision(3);
-        std::cout << name << " (4x4):" << std::endl;
-        for (int row = 0; row < 4; ++row) {
-            for (int col = 0; col < 4; ++col) {
-                std::cout << std::setw(10) << mat[col][row] << " ";
-            }
-            std::cout << std::endl;
-        }
-    }
-
-    //Method to set cameraFront 
-
-    //Method to set cameraPos
+    void ComputeScroll(double yoffset);
 };
 
 #endif

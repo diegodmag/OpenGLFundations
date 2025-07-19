@@ -40,3 +40,42 @@ void Camera::Move_Right(float displacement){
 void Camera::Move_Up(float displacement){
     m_position+=displacement*m_up;
 }
+
+void Camera::ComputeRotation(double xpos, double ypos){
+
+    if(m_first_mouse){
+        m_last_mouseX=xpos;
+        m_last_mouseY=ypos;
+        m_first_mouse=false;
+    }
+
+    float xoffset = xpos - m_last_mouseX;
+    float yoffset = m_last_mouseY - ypos; 
+    m_last_mouseX = xpos;
+    m_last_mouseY = ypos;
+
+    xoffset *= m_sensitivity;
+    yoffset *= m_sensitivity;
+
+    m_yaw   += xoffset;
+    m_pitch += yoffset;
+
+    if(m_pitch > 89.0f)
+        m_pitch = 89.0f;
+    if(m_pitch < -89.0f)
+        m_pitch = -89.0f;
+
+    m_direction.x = cos(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+    m_direction.y = sin(glm::radians(m_pitch));
+    m_direction.z = sin(glm::radians(m_yaw)) * cos(glm::radians(m_pitch));
+
+    m_foreward = glm::normalize(m_direction);
+}
+
+void Camera::ComputeScroll(double yoffset){
+    m_fov -= (float)yoffset;
+    if (m_fov < 1.0f)
+        m_fov = 1.0f;
+    if (m_fov > 45.0f)
+        m_fov = 45.0f; 
+}

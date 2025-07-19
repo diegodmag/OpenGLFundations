@@ -7,14 +7,14 @@ static Window window;
 void start();
 void update();
 void window_reshape_callback(GLFWwindow* glfw_window, int newWidth, int newHeight);
+void mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos);
+void scroll_callback(GLFWwindow* glfw_window, double xoffset, double yoffset);
 void process_input();
 
-//Todo el main esta atado a window 
+
 
 int main(void){
 
-    // WindowGL* wd = new WindowGL();
-    // wd->start();
     start();
 }
 
@@ -23,7 +23,8 @@ void start(){
         window.Initialize();
         glfwSetWindowUserPointer(window.GetGLFWWindow(), NULL); //Check
         glfwSetWindowSizeCallback(window.GetGLFWWindow(),window_reshape_callback);  
-        
+        glfwSetCursorPosCallback(window.GetGLFWWindow(), mouse_callback);
+        glfwSetScrollCallback(window.GetGLFWWindow(), scroll_callback);
         update();
     }
 }
@@ -37,8 +38,6 @@ void update(){
         window.Display();
         	
         glfwSwapBuffers(window.GetGLFWWindow());
-        // glfwSetScrollCallback(window.GetGLFWWindow(), scroll_callback); // Esto deberia ir en el main principal 
-        // glfwSetCursorPosCallback(window.GetGLFWWindow(), mouse_callback);  // Esto debería ir en el main pricipal 
 		glfwPollEvents();
     }
 
@@ -73,5 +72,12 @@ void process_input(){
 
 }
 
+void mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos){
+    window.GetCamera()->ComputeRotation(xpos, ypos);
+}
 
-// The main will handle the input 
+void scroll_callback(GLFWwindow* glfw_window, double xoffset, double yoffset){
+    window.GetCamera()->ComputeScroll(yoffset);
+}
+
+ 

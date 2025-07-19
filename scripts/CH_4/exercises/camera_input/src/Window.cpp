@@ -117,6 +117,9 @@ void Window::Terminate(){
     exit(EXIT_SUCCESS);
 }
 
+
+// This is expected to be moved 
+
 void Window::SetUpVertices(){
     float pyramidPositions[54] =    
         { 
