@@ -1,21 +1,17 @@
 #include "WindowGL.h"
 #include "Utils.h"
-//#include "Transformations.h"
 
-// void processInput(GLFWwindow *window)
-// {
-//     if(glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
-//         glfwSetWindowShouldClose(window, true);
-// }
-// WindowGL.cpp
+
+
+
 
 glm::vec3 WindowGL::cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
 float WindowGL::yaw = -90.0f;
 float WindowGL::pitch = 0.0f;
-float WindowGL::lastMouseX = 0.0;
-float WindowGL::lastMouseY = 0.0;
+float WindowGL::lastMouseX = 0.0; // This should be from the window ? 
+float WindowGL::lastMouseY = 0.0; // This should be from the windows
 float WindowGL::fov = 45.0f;
-bool WindowGL::firstMouse = true;
+bool WindowGL::firstMouse = true; // This could be from the main
 
 WindowGL::WindowGL(){
 
@@ -70,14 +66,14 @@ const bool WindowGL::validateGL(){
 void WindowGL::init(){
     
     renderingProgram = Utils::createShaderProgram("shaders/vertShader.glsl", "shaders/fragShader.glsl");
-    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f;
-    cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down the cube  Y to reveal perspective
-    pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective
+    cameraX = 0.0f; cameraY = 0.0f; cameraZ = 8.0f; // DELETE 
+    cubeLocX = 0.0f; cubeLocY = -2.0f; cubeLocZ = 0.0f; // shift down the cube  Y to reveal perspective NOT NEEDED
+    pyrLocX = 0.0f; pyrLocY = 0.0f; pyrLocZ = 0.0f; // shift down Y to reveal perspective //NOT NEEDED 
     
     // INPUT
-    cameraPos = glm::vec3(0.0f, 0.0f,  5.0f);
+    cameraPos = glm::vec3(0.0f, 0.0f,  5.0f); //MOVED TO CAMERA 
     //cameraFront = glm::vec3(0.0f, 0.0f, -1.0f);
-    cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f);
+    cameraUp    = glm::vec3(0.0f, 1.0f,  0.0f); //MOVE TO CAMERA 
 
     setupVertices();    
     //Capture and hide cursor
@@ -114,16 +110,24 @@ void WindowGL::display(double currentTime){
     pLoc = glGetUniformLocation(renderingProgram, "p_matrix"); // get locations of uniforms in the shader program
     
     //This now inside the display because we are re - calculating the fov using the zoom 
+    
+    // This matrix could be returned for the camera 
+    // This could be a function that calculate perspective receiving the aspect 
     pMat = glm::perspective(glm::radians(fov), aspect, 0.1f, 1000.0f); // 1.0472 radians = 60 degrees
 
-    //This has to be in the display 
+
+    //This is in the window class 
     glUniformMatrix4fv(pLoc, 1, GL_FALSE, glm::value_ptr(pMat)); //send projection matrix data
 
-    vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX,-cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
+    //This also could be in the camera class 
+    // As we can see this is not used 
+    // vMat = glm::translate(glm::mat4(1.0f), glm::vec3(-cameraX,-cameraY, -cameraZ));//Gen the matrix for camera view tranformation matrix
 
-    cameraRight = glm::normalize(glm::cross(cameraFront,cameraUp));
 
-    viewMat = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp);
+    //This NOW IS CALCULATED IN THE CAMERA CLASS
+    cameraRight = glm::normalize(glm::cross(cameraFront,cameraUp)); // Camera class 
+
+    viewMat = glm::lookAt(cameraPos, cameraPos+cameraFront, cameraUp); // Camera class 
 
     // viewMat*= glm::rotate(glm::mat4(1.0f),static_cast<float>(glfwGetTime()*rotationSpeed),cameraUp);
 
@@ -150,11 +154,14 @@ void WindowGL::update(){
     
    while (!glfwWindowShouldClose(window)) {
         calculateDeltaTime();
-        this->processInput();
+        this->processInput(); //Esto tambien debería ir en el main principal
 		display(deltaTime);
+
+        //Esa window se puede recuperar como referencia de la clase de Window  
+
 		glfwSwapBuffers(window);
-        glfwSetScrollCallback(window, scroll_callback);
-        glfwSetCursorPosCallback(window, mouse_callback);  
+        glfwSetScrollCallback(window, scroll_callback); // Esto deberia ir en el main principal 
+        glfwSetCursorPosCallback(window, mouse_callback);  // Esto debería ir en el main pricipal 
 		glfwPollEvents();
     } 
 
@@ -231,6 +238,10 @@ void WindowGL::start(){
 
 void WindowGL::processInput(){
     
+
+    //Which is the problem with the input, that it needs 
+    //to modified the camera 
+
     float cameraSpeed = static_cast<float>(2.5 * deltaTime);
     
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
@@ -258,8 +269,10 @@ void WindowGL::window_reshape_callback(GLFWwindow* window, int newWidth, int new
 {
     aspect = static_cast<float>(newWidth) / static_cast<float>(newHeight);
     glViewport(0, 0, newWidth, newHeight);
-    pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f);
+    //pMat = glm::perspective(1.0472f, aspect, 0.1f, 1000.0f); << This seems to not be necesary 
 }
+
+//This also affects the camera 
 
 void WindowGL::mouse_callback(GLFWwindow* window, double xpos, double ypos){
 
@@ -282,7 +295,11 @@ void WindowGL::mouse_callback(GLFWwindow* window, double xpos, double ypos){
         lastMouseY = ypos;
         firstMouse = false;
     }
+
+    // In fact, the lastMouse X is from the window 
   
+    //Esto puede ir en un metodo de la camara 
+
     float xoffset = xpos - lastMouseX;
     float yoffset = lastMouseY - ypos; 
     lastMouseX = xpos;
@@ -292,6 +309,8 @@ void WindowGL::mouse_callback(GLFWwindow* window, double xpos, double ypos){
     xoffset *= sensitivity;
     yoffset *= sensitivity;
 
+    //Acces to camera 
+    //Maybe this calculations could be in the camera 
     yaw   += xoffset;
     pitch += yoffset;
 
@@ -304,9 +323,14 @@ void WindowGL::mouse_callback(GLFWwindow* window, double xpos, double ypos){
     direction.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     direction.y = sin(glm::radians(pitch));
     direction.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+
+    //Acces to camera 
+    //Here we are only 
     cameraFront = glm::normalize(direction);
 
 }
+
+// This also affects the camera 
 
 void WindowGL::scroll_callback(GLFWwindow* window, double xoffset, double yoffset){
     fov -= (float)yoffset;

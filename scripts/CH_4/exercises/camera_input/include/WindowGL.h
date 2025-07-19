@@ -38,7 +38,8 @@ private:
     GLuint tfLoc; 
     int width, height;
     float aspect, timeFactor; //timeFactor is added for Chapter 4_6
-    glm::mat4 pMat, vMat, mMat, mvMat;
+    glm::mat4 pMat; //Perspective mat 
+    // glm::mat4 vMat, mvMat, ,mMat;
     glm::mat4 tMat, rMat; // Translation and rotation matrices for model animation
 
     //INPUT 
@@ -103,7 +104,11 @@ public:
 
     void processInput();
 
+    //This had to be static because of the method glfwSetScrollCallback
+
     static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
+    //This had to be static because of glfwSetCursorPosCallback
 
     static void scroll_callback(GLFWwindow* window, double xoffset, double yoffset);
 
