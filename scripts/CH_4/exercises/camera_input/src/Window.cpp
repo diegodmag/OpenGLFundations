@@ -7,7 +7,7 @@ Window::Window()
 
 Window::~Window()
 {
-        
+    delete m_camera;    
 }
 
 const bool Window::ValidateGL(){
@@ -92,27 +92,26 @@ void Window::Display(){
     
     m_camera->CalculateViewMatrix();
     
-    m_camera->PrintMat4(m_camera->GetViewMatrix());
-    
-    glEnable(GL_CULL_FACE); 
+    //m_camera->PrintMat4(m_camera->GetViewMatrix());
     
     glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_camera->GetViewMatrix()));
+    
+    glEnable(GL_CULL_FACE); 
     
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
-    glDrawArrays(GL_TRIANGLES, 0, 18); // draw the pyramid - sun
-
+    
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glFrontFace(GL_CCW); 
-
+    
+    glDrawArrays(GL_TRIANGLES, 0, 18); // draw the pyramid - sun
 }
 
 void Window::Terminate(){
-    delete m_camera;
     glfwDestroyWindow(m_window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
@@ -129,7 +128,7 @@ void Window::SetUpVertices(){
             1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f// base – right back
         };
 
-    glGenVertexArrays(1, m_vao); //produce integer ID for the Vertex Array Object
+    glGenVertexArrays(num_VAOs, m_vao); //produce integer ID for the Vertex Array Object
     glBindVertexArray(m_vao[0]); // makes the vao[0] array "active"
 
     //Now, because there are two figures, we need 2 vbos

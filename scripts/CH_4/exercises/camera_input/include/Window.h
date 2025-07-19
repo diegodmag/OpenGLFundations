@@ -18,7 +18,7 @@
 using namespace std;
 
 #define num_VAOs 1
-#define num_VBOs 1 
+#define num_VBOs 2
 
 class Window
 {
