@@ -18,7 +18,7 @@
 using namespace std;
 
 #define num_VAOs 1
-#define num_VBOs 2
+#define num_VBOs 3
 
 class Window
 {
@@ -80,6 +80,7 @@ public:
     // >> 
     void SetUpVertices();
 
+    void MatrixStackPlanets();
 
 };
 

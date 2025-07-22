@@ -96,68 +96,7 @@ void Window::Display(){
     
     m_camera->CalculateViewMatrix();
     
-    
-    //We are requiered to calculate the model and view matrix for the pyramid based on the view camera matrix
-    //So for each model we have to calculate its own model view matrix based on the cameras view 
-
-    //glm::mat4 view = m_camera->GetViewMatrix();
-    m_model_view_stack_mat.push(m_camera->GetViewMatrix());
-
-    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // First copy for the model <- It must be popped
-
-    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),glm::vec3(0.0f, 0.0f, 0.0f));
-
-    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves sun's rotation
-
-    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
-
-    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-    
-    glDrawArrays(GL_TRIANGLES, 0, 18); // draw the pyramid - sun
-
-    //Removes the rotation
-    m_model_view_stack_mat.pop();
-
-
-    //glm::mat4 view = m_camera->GetViewMatrix();
-    
-    m_model_view_stack_mat.push(m_camera->GetViewMatrix());
-
-    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // First copy for the model <- It must be popped
-
-    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f), 
-                                    glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); // Planet translation
-
-    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
-
-    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-
-    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves for the scale
-    
-    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f),glm::vec3(0.5f, 0.5f, 0.5f));
-
-    //Removes the scale
-    m_model_view_stack_mat.pop();
-
-    //Removes the rotation
-    m_model_view_stack_mat.pop();
-
-    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-    
-    glDrawArrays(GL_TRIANGLES, 0, 18); // draw the pyramid - sun
-
-
-    
-
-    m_model_view_stack_mat.pop();
-
-    m_model_view_stack_mat.pop();
+    MatrixStackPlanets();
 
 
 }
@@ -172,7 +111,59 @@ void Window::Terminate(){
 // This is expected to be moved 
 
 void Window::SetUpVertices(){
-    float pyramidPositions[54] =    
+
+    float cubeVertices[108] = {
+        // Back face (z = -1)
+        -1.0f, -1.0f, -1.0f, // bottom-left
+        1.0f,  1.0f, -1.0f, // top-right
+        1.0f, -1.0f, -1.0f, // bottom-right
+        1.0f,  1.0f, -1.0f, // top-right
+        -1.0f, -1.0f, -1.0f, // bottom-left
+        -1.0f,  1.0f, -1.0f, // top-left
+
+        // Front face (z = +1)
+        -1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+
+        // Left face (x = -1)
+        -1.0f,  1.0f,  1.0f,
+        -1.0f,  1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f, -1.0f,
+        -1.0f, -1.0f,  1.0f,
+        -1.0f,  1.0f,  1.0f,
+
+        // Right face (x = +1)
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+
+        // Bottom face (y = -1)
+        -1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f, -1.0f,
+        1.0f, -1.0f,  1.0f,
+        1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f,  1.0f,
+        -1.0f, -1.0f, -1.0f,
+
+        // Top face (y = +1)
+        -1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f,  1.0f,
+        1.0f,  1.0f, -1.0f,
+        -1.0f,  1.0f, -1.0f,
+    };
+
+
+    float pyramidVertices[54] =    
         { 
             -1.0f, -1.0f, 1.0f, 1.0f, -1.0f, 1.0f, 0.0f, 1.0f, 0.0f,// front face
             1.0f, -1.0f, 1.0f, 1.0f, -1.0f, -1.0f, 0.0f, 1.0f, 0.0f,// right face
@@ -182,12 +173,156 @@ void Window::SetUpVertices(){
             1.0f, -1.0f, 1.0f, -1.0f, -1.0f, -1.0f, 1.0f, -1.0f, -1.0f// base – right back
         };
 
+    float tetrahedronVertices[36] = {
+        // Face 1 (base)
+        1.0f,  1.0f,  1.0f,   // Vertex 0
+        -1.0f, -1.0f,  1.0f,   // Vertex 1
+        -1.0f,  1.0f, -1.0f,   // Vertex 2
+
+        // Face 2
+        1.0f,  1.0f,  1.0f,   // Vertex 0
+        -1.0f,  1.0f, -1.0f,   // Vertex 2
+        1.0f, -1.0f, -1.0f,   // Vertex 3
+
+        // Face 3
+        1.0f,  1.0f,  1.0f,   // Vertex 0
+        1.0f, -1.0f, -1.0f,   // Vertex 3
+        -1.0f, -1.0f,  1.0f,   // Vertex 1
+
+        // Face 4 (bottom)
+        -1.0f, -1.0f,  1.0f,   // Vertex 1
+        1.0f, -1.0f, -1.0f,   // Vertex 3
+        -1.0f,  1.0f, -1.0f,   // Vertex 2
+    };
+
+
     glGenVertexArrays(num_VAOs, m_vao); //produce integer ID for the Vertex Array Object
     glBindVertexArray(m_vao[0]); // makes the vao[0] array "active"
 
     //Now, because there are two figures, we need 2 vbos
     glGenBuffers(num_VBOs, m_vbo); //produce integer ID for the n=vertex buffer object
 
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]); // makes the vbo[0] buffer active 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]); // makes the vbo[0] buffer active 
-    glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidPositions), pyramidPositions, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+    glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVertices), pyramidVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]); // makes the vbo[0] buffer active 
+    glBufferData(GL_ARRAY_BUFFER, sizeof(tetrahedronVertices), tetrahedronVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+}
+
+void Window::MatrixStackPlanets(){
+        //We are requiered to calculate the model and view matrix for the pyramid based on the view camera matrix
+    //So for each model we have to calculate its own model view matrix based on the cameras view 
+
+    //General 
+    m_model_view_stack_mat.push(m_camera->GetViewMatrix());
+    
+    //--- Sun 
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top());
+
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),glm::vec3(0.0f, 0.0f, 0.0f));
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves sun's rotation
+
+    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 18); 
+
+    m_model_view_stack_mat.pop(); // Pop Rotation
+
+
+    // -- Planet 
+    
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top());
+
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f), 
+                                    glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); // Planet translation
+
+
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f)); // This scale is inherited to the moon because is not popped 
+    
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
+
+    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    //glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 36); 
+
+    m_model_view_stack_mat.pop(); // Planet Rotatio 
+    
+    // --- Moon 
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Planet translation   
+
+    m_model_view_stack_mat.top()*= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*3.0,
+                                   cos((float)glfwGetTime())*3.0));
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Save Matrix Rotation   
+
+    m_model_view_stack_mat.top()*=glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.35f,0.35f,0.35f)); // This scale is inherited to the moon because is not popped
+
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 36); 
+
+    m_model_view_stack_mat.pop(); // Pop Moon Rotation 
+
+
+    // Popping translation matrices
+
+    m_model_view_stack_mat.pop(); // Moon
+    
+    m_model_view_stack_mat.pop(); // Planet
+
+    // Second Planet
+
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f), 
+                                    glm::vec3(0.0f, sin((float)glfwGetTime())*3.0, -cos((float)glfwGetTime())*3.0)); // Planet translation
+
+
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f)); // This scale is inherited to the moon because is not popped 
+    
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
+
+    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+
+    
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    //glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+    
+    glDrawArrays(GL_TRIANGLES, 0, 12); 
+
+    m_model_view_stack_mat.pop(); // Planet Rotatio
+
+
+    m_model_view_stack_mat.pop(); // Sun
+
+    m_model_view_stack_mat.pop(); // Camera view matrix
+
+
+    //Verifying matrix stack 
+    //cout << m_model_view_stack_mat.size() << '\n';
+
 }
