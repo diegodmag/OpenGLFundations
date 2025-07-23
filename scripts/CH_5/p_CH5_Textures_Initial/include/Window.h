@@ -11,6 +11,8 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <stack> //For the matrix stack 
+#include <SOIL2/SOIL2.h>
+
 
 #include "Utils.h"
 #include "Camera.h"
