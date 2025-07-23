@@ -11,10 +11,6 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <stack> //For the matrix stack 
-#include <SOIL2/SOIL2.h>
-
-//ssOME CHANGE
-
 
 #include "Utils.h"
 #include "Camera.h"
@@ -22,7 +18,7 @@
 using namespace std;
 
 #define num_VAOs 1
-#define num_VBOs 3
+#define num_VBOs 4
 
 class Window
 {
@@ -51,6 +47,9 @@ private:
 
     //Final Project Chapter 4 
     stack<glm::mat4> m_model_view_stack_mat;
+
+    //For texture 
+    GLuint brickTexture;
 
 
 public: 
@@ -83,6 +82,8 @@ public:
     //Temporal until separate models 
     // >> 
     void SetUpVertices();
+
+    void SetUpTextureCoordinates();
 
     void MatrixStackPlanets();
 

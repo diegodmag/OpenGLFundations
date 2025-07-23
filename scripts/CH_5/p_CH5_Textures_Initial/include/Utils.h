@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h> //
 #include <iostream>
 #include <fstream>
+#include <SOIL2/SOIL2.h>
 
 using namespace std;
 
@@ -24,6 +25,9 @@ private:
 public:
     //Creating shader program
     static const GLuint createShaderProgram(const char *vp, const char *fp);
+
+    //Texture
+    static GLuint LoadTexture(const char *texImagePath);
 };
 
 #endif
