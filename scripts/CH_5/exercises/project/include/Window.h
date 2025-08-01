@@ -18,7 +18,7 @@
 using namespace std;
 
 #define num_VAOs 1
-#define num_VBOs 5
+#define num_VBOs 6
 
 class Window
 {
@@ -49,8 +49,10 @@ private:
     stack<glm::mat4> m_model_view_stack_mat;
 
     //For texture 
-    GLuint brickTexture;
-    GLuint leavesTexture;
+    GLuint earthTexture;
+    GLuint fireTexture;
+    GLuint waterTexture;
+    GLuint plasmaTexture;
 
 
 public: 

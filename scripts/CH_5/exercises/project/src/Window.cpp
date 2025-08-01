@@ -225,8 +225,8 @@ void Window::SetUpVertices(){
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]); // makes the vbo[0] buffer active
     glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVertices), pyramidVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
 
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]); // makes the vbo[0] buffer active
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(tetrahedronVertices), tetrahedronVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]); // makes the vbo[0] buffer active
+    glBufferData(GL_ARRAY_BUFFER, sizeof(tetrahedronVertices), tetrahedronVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
 }
 
 void Window::SetUpTextureCoordinates(){
@@ -313,20 +313,47 @@ void Window::SetUpTextureCoordinates(){
         0.0f, 1.0f
     };
 
+    float tetrahedronTexCoords[24] = {
+        // Face 1 (base)
+        0.5f, 1.0f,  // Vertex 0
+        0.0f, 0.0f,  // Vertex 1
+        1.0f, 0.0f,  // Vertex 2
+
+        // Face 2
+        0.5f, 1.0f,  // Vertex 0
+        0.0f, 0.0f,  // Vertex 2
+        1.0f, 0.0f,  // Vertex 3
+
+        // Face 3
+        0.5f, 1.0f,  // Vertex 0
+        0.0f, 0.0f,  // Vertex 3
+        1.0f, 0.0f,  // Vertex 1
+
+        // Face 4 (bottom)
+        0.0f, 0.0f,  // Vertex 1
+        1.0f, 0.0f,  // Vertex 3
+        0.5f, 1.0f   // Vertex 2
+    };
 
 
     //We add a new VBO (vertices buffer object) for the texture coordinates
-    //brickTexture = Utils::LoadTexture("assets/textures/texture-2.jpg");
-    brickTexture = Utils::LoadTexture("assets/textures/brick.png");
+    //earthTexture = Utils::LoadTexture("assets/textures/texture-2.jpg");
+    earthTexture = Utils::LoadTexture("assets/textures/earth_tex.jpg");
+    
+    fireTexture = Utils::LoadTexture("assets/textures/fire_tex.jpg");
+
+    waterTexture = Utils::LoadTexture("assets/textures/water_tex.png");
+
+    plasmaTexture = Utils::LoadTexture("assets/textures/plasma_tex.jpg");
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[3]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(pyrTexCoords), pyrTexCoords, GL_STATIC_DRAW);
 
-    
-    leavesTexture = Utils::LoadTexture("assets/textures/leaves.png");
-
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[4]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(cubeTexCoords), cubeTexCoords, GL_STATIC_DRAW);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[5]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(tetrahedronTexCoords), tetrahedronTexCoords, GL_STATIC_DRAW);
 }
 
 
@@ -361,8 +388,7 @@ void Window::MatrixStackPlanets(){
 
     // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, brickTexture);
-
+    glBindTexture(GL_TEXTURE_2D, earthTexture);
 
     Mipmapping();
 
@@ -403,7 +429,7 @@ void Window::MatrixStackPlanets(){
 
     // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, leavesTexture);
+    glBindTexture(GL_TEXTURE_2D, fireTexture);
 
     Mipmapping();
     
@@ -413,70 +439,87 @@ void Window::MatrixStackPlanets(){
     m_model_view_stack_mat.pop(); // Planet Rotatio
 
 
+    // --- Moon
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Planet translation
+
+    m_model_view_stack_mat.top()*= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*3.0,
+                                   cos((float)glfwGetTime())*3.0));
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Save Matrix Rotation
+
+    m_model_view_stack_mat.top()*=glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
+
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.7f,0.7f,0.7f)); // This scale is inherited to the moon because is not popped
+
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[5]);
+    //Binding the location 1 (layout (location=1) in vec2 texCoord;) with the buffer data [3] (all the texture positions)
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
+
+    // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, waterTexture);
+
+    Mipmapping();
+
+    glDrawArrays(GL_TRIANGLES, 0, 12);
+
+    m_model_view_stack_mat.pop(); // Pop Moon Rotation
 
 
-    // // --- Moon
+    // Popping translation matrices
 
-    // m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Planet translation
+    m_model_view_stack_mat.pop(); // Moon
 
-    // m_model_view_stack_mat.top()*= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*3.0,
-    //                                cos((float)glfwGetTime())*3.0));
-
-    // m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Save Matrix Rotation
-
-    // m_model_view_stack_mat.top()*=glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0, 0.0, 1.0));
-
-    // m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.35f,0.35f,0.35f)); // This scale is inherited to the moon because is not popped
-
-    // glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    // glEnableVertexAttribArray(0);
-
-    // glDrawArrays(GL_TRIANGLES, 0, 36);
-
-    // m_model_view_stack_mat.pop(); // Pop Moon Rotation
-
-
-    // // Popping translation matrices
-
-    // m_model_view_stack_mat.pop(); // Moon
-
-    // m_model_view_stack_mat.pop(); // Planet
+    m_model_view_stack_mat.pop(); // Planet
 
     // Second Planet
 
-    // m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
-    //                                 glm::vec3(0.0f, sin((float)glfwGetTime())*3.0, -cos((float)glfwGetTime())*3.0)); // Planet translation
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(0.0f, sin((float)glfwGetTime())*3.0, -cos((float)glfwGetTime())*3.0)); // Planet translation
 
 
-    // m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f)); // This scale is inherited to the moon because is not popped
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f)); // This scale is inherited to the moon because is not popped
 
-    // m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
 
-    // m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
-
-
-    // glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
-    // //glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    // glEnableVertexAttribArray(0);
-
-    // glDrawArrays(GL_TRIANGLES, 0, 12);
-
-    // m_model_view_stack_mat.pop(); // Planet Rotatio
+    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-    m_model_view_stack_mat.pop(); // Planet
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    //glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, plasmaTexture);
+
+    Mipmapping();
+
+    glDrawArrays(GL_TRIANGLES, 0, 12);
+
+    m_model_view_stack_mat.pop(); // Planet Rotatio
+
+    
+    
+    // m_model_view_stack_mat.pop(); // Moon
+
+    // m_model_view_stack_mat.pop(); // Planet
     
     m_model_view_stack_mat.pop(); // Sun
 
     m_model_view_stack_mat.pop(); // Camera view matrix
 
 
-    //Verifying matrix stack
-    //cout << m_model_view_stack_mat.size() << '\n';
+    // Verifying matrix stack
+   //cout << m_model_view_stack_mat.size() << '\n';
 
 }
 
