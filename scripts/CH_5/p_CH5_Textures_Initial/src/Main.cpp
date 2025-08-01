@@ -71,7 +71,8 @@ void process_input(){
 }
 
 void mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos){
-    window.GetCamera()->ComputeRotation(xpos, ypos);
+    //Temporally deactivated >>
+    // window.GetCamera()->ComputeRotation(xpos, ypos);
 }
 
 void scroll_callback(GLFWwindow* glfw_window, double xoffset, double yoffset){

@@ -125,5 +125,18 @@ GLuint Utils::LoadTexture(const char *texImagePath){
     
     else cout << "texture succesfully loaded" << texImagePath << endl;
 
+    //Using OpenGL mipmaps
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    //Check for Anisotropic filtering 
+    if(glewIsSupported("GL_EXT_texture_filter_anisotropic")){
+        GLfloat anisoSetting = 0.0f;
+        // Set to the maximun level of anisotropic degree of sampling supported >> 
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisoSetting);
+        
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoSetting);
+    }
+
     return textureID;
 }

@@ -25,7 +25,7 @@ const bool Window::ValidateGL(){
     }
     //std::cout << "🚀 Programa iniciado correctamente" << std::endl;
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     //2 Initialize GLFWwindow
     m_window = glfwCreateWindow(1280,720,"Chapter1-program-1", NULL, NULL);
 
@@ -95,10 +95,20 @@ void Window::Display(){
     m_mvLoc = glGetUniformLocation(m_rendering_program, "mv_matrix"); 
     m_pLoc = glGetUniformLocation(m_rendering_program, "p_matrix"); 
 
+    //If we get -1 from glGetUniformLocation then the uniform variable couldn't be found  
+
     m_camera->CalculatePerspectiveMatrix(m_aspect); 
 
     
     glUniformMatrix4fv(m_pLoc, 1, GL_FALSE, glm::value_ptr(m_camera->GetPerspectiveMatrix())); //send projection matrix data
+    //The postfix determined the type of the uniform
+    /**
+     * f: the function expects a float as its value.
+     * i: the function expects an int as its value.
+     * ui: the function expects an unsigned int as its value.
+     * 3f: the function expects 3 floats as its value.
+     * fv: the function expects a float vector/array as its value.
+     */
     
     m_camera->CalculateViewMatrix();
     
@@ -253,7 +263,8 @@ void Window::SetUpTextureCoordinates(){
 
 
     //We add a new VBO (vertices buffer object) for the texture coordinates 
-    brickTexture = Utils::LoadTexture("assets/textures/brick.png");
+    //brickTexture = Utils::LoadTexture("assets/textures/texture-2.jpg");
+    brickTexture = Utils::LoadTexture("assets/textures/leaves.png");
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[3]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(pyrTexCoords), pyrTexCoords, GL_STATIC_DRAW);    
@@ -278,16 +289,46 @@ void Window::MatrixStackPlanets(){
     m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
     glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    /**
+     * Just as a reminder about this function 
+     *      The first parameter makes reference to "layout (location=0) in vec3 position;" in the verShader.glsl.
+     *      The instruction "layout (location=0) in vec3 position;" sets the location of the vertex attribute to 0
+     *      and since we want to pass data to this vertex attribute, we passed to 0 using the first parameter of 
+     *      glVertexAttribPointer. 
+     * 
+     *      The next parameter specifies the SIZE of the vertex attribute. The vertex attribute is a vec3 so it is 
+     *      composed of 3 values. 
+     * 
+     *      The third argument specifies the type of data which is GL_FLOAT.
+     * 
+     *      The fourth argument specifies if we want to nornmalize the data.
+     * 
+     *      The fifth argument is known as the stride and tell us the spece between consecutive vertex attributes.
+     *  
+     *      The last parameter is of type void* and thus requires that weird cast. This is the offset of where the position data begins in the buffer.            
+     */
+    
+    /**
+     *      Each vertex attribute takes its data from memory managed by the "active VBO" (in this case 1). In other words
+     *      the one currently bound to GL_ARRAY_BUFFER. 
+     */
+    
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
     
+    
+    //Bind the current GL_ARRAY_BUFFER with the buffer which stores the texture coordinates  
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[3]);
+    //Binding the location 1 (layout (location=1) in vec2 texCoord;) with the buffer data [3] (all the texture positions)
     glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(1);
 
+    // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, brickTexture);
+
 
     glDrawArrays(GL_TRIANGLES, 0, 18); 
 
