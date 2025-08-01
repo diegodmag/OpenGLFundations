@@ -72,6 +72,8 @@ void Window::Initialize(){
     glfwGetFramebufferSize(m_window, &m_width, &m_height);
     m_aspect = (float)m_width / (float)m_height;
 
+    //AnisotropicFiltering();
+
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
@@ -217,8 +219,8 @@ void Window::SetUpVertices(){
     //Now, because there are two figures, we need 2 vbos
     glGenBuffers(num_VBOs, m_vbo); //produce integer ID for the n=vertex buffer object
 
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]); // makes the vbo[0] buffer active
-    // glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]); // makes the vbo[0] buffer active
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeVertices), cubeVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]); // makes the vbo[0] buffer active
     glBufferData(GL_ARRAY_BUFFER, sizeof(pyramidVertices), pyramidVertices, GL_STATIC_DRAW); // copy the array of verte into the active buffer (whihch is vbo[0])
@@ -261,19 +263,74 @@ void Window::SetUpTextureCoordinates(){
         1.0f, 1.0f   //  1, -1, -1
     };
 
+    float cubeTexCoords[72] = {
+        // Back face
+        0.0f, 0.0f, // bottom-left
+        1.0f, 1.0f, // top-right
+        1.0f, 0.0f, // bottom-right
+        1.0f, 1.0f, // top-right
+        0.0f, 0.0f, // bottom-left
+        0.0f, 1.0f, // top-left
+
+        // Front face
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+
+        // Left face
+        1.0f, 1.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+
+        // Right face
+        0.0f, 1.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+
+        // Bottom face
+        0.0f, 1.0f,
+        1.0f, 1.0f,
+        1.0f, 0.0f,
+        1.0f, 0.0f,
+        0.0f, 0.0f,
+        0.0f, 1.0f,
+
+        // Top face
+        0.0f, 1.0f,
+        0.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 0.0f,
+        1.0f, 1.0f,
+        0.0f, 1.0f
+    };
+
+
 
     //We add a new VBO (vertices buffer object) for the texture coordinates
     //brickTexture = Utils::LoadTexture("assets/textures/texture-2.jpg");
-    brickTexture = Utils::LoadTexture("assets/textures/primeape.png");
+    brickTexture = Utils::LoadTexture("assets/textures/brick.png");
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[3]);
     glBufferData(GL_ARRAY_BUFFER, sizeof(pyrTexCoords), pyrTexCoords, GL_STATIC_DRAW);
+
+    
+    leavesTexture = Utils::LoadTexture("assets/textures/leaves.png");
+
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[4]);
+    glBufferData(GL_ARRAY_BUFFER, sizeof(cubeTexCoords), cubeTexCoords, GL_STATIC_DRAW);
 }
 
 
 void Window::MatrixStackPlanets(){
-        //We are requiered to calculate the model and view matrix for the pyramid based on the view camera matrix
-    //So for each model we have to calculate its own model view matrix based on the cameras view
 
     //General
     m_model_view_stack_mat.push(m_camera->GetViewMatrix());
@@ -288,34 +345,9 @@ void Window::MatrixStackPlanets(){
 
     m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    // m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(9.0f,9.0f,9.0f));
-
     glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
 
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    /**
-     * Just as a reminder about this function
-     *      The first parameter makes reference to "layout (location=0) in vec3 position;" in the verShader.glsl.
-     *      The instruction "layout (location=0) in vec3 position;" sets the location of the vertex attribute to 0
-     *      and since we want to pass data to this vertex attribute, we passed to 0 using the first parameter of
-     *      glVertexAttribPointer.
-     *
-     *      The next parameter specifies the SIZE of the vertex attribute. The vertex attribute is a vec3 so it is
-     *      composed of 3 values.
-     *
-     *      The third argument specifies the type of data which is GL_FLOAT.
-     *
-     *      The fourth argument specifies if we want to nornmalize the data.
-     *
-     *      The fifth argument is known as the stride and tell us the spece between consecutive vertex attributes.
-     *
-     *      The last parameter is of type void* and thus requires that weird cast. This is the offset of where the position data begins in the buffer.
-     */
-
-    /**
-     *      Each vertex attribute takes its data from memory managed by the "active VBO" (in this case 1). In other words
-     *      the one currently bound to GL_ARRAY_BUFFER.
-     */
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
@@ -332,59 +364,54 @@ void Window::MatrixStackPlanets(){
     glBindTexture(GL_TEXTURE_2D, brickTexture);
 
 
-        //Using OpenGL mipmaps
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-    glGenerateMipmap(GL_TEXTURE_2D);
+    Mipmapping();
 
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_MIRRORED_REPEAT);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_MIRRORED_REPEAT);
-
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);
-    // glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_BORDER);
-    // float redColor[4] = { 1.0f, 0.0f, 0.0f, 1.0f };
-    // glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, redColor);
-
-    //Check for Anisotropic filtering
-    if(glewIsSupported("GL_EXT_texture_filter_anisotropic")){
-        GLfloat anisoSetting = 0.0f;
-        // Set to the maximun level of anisotropic degree of sampling supported >>
-        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisoSetting);
-
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoSetting);
-    }
+    //AnisotropicFiltering();
 
     glDrawArrays(GL_TRIANGLES, 0, 18);
 
     m_model_view_stack_mat.pop(); // Pop Rotation
 
 
-
-
     // -- Planet
 
-    // m_model_view_stack_mat.push(m_model_view_stack_mat.top());
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top());
 
-    // m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
-    //                                 glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); // Planet translation
-
-
-    // m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f)); // This scale is inherited to the moon because is not popped
-
-    // m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
-
-    // m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); // Planet translation
 
 
-    // glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
-    // //glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    // glEnableVertexAttribArray(0);
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f)); // This scale is inherited to the moon because is not popped
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves the rotation
+
+    m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
 
-    // glDrawArrays(GL_TRIANGLES, 0, 36);
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    //glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
 
-    // m_model_view_stack_mat.pop(); // Planet Rotatio
+
+    //Bind the current GL_ARRAY_BUFFER with the buffer which stores the texture coordinates
+    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[4]);
+    //Binding the location 1 (layout (location=1) in vec2 texCoord;) with the buffer data [3] (all the texture positions)
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
+
+    // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, leavesTexture);
+
+    Mipmapping();
+    
+    glDrawArrays(GL_TRIANGLES, 0, 36);
+
+
+    m_model_view_stack_mat.pop(); // Planet Rotatio
+
 
 
 
@@ -441,6 +468,8 @@ void Window::MatrixStackPlanets(){
     // m_model_view_stack_mat.pop(); // Planet Rotatio
 
 
+    m_model_view_stack_mat.pop(); // Planet
+    
     m_model_view_stack_mat.pop(); // Sun
 
     m_model_view_stack_mat.pop(); // Camera view matrix
@@ -470,4 +499,24 @@ void testingSOIL2(){
     // Don't forget to free the image data
     SOIL_free_image_data(image);
 
+}
+
+
+//For Textures 
+
+void Window::Mipmapping(){
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+}
+
+void Window::AnisotropicFiltering(){
+        //Check for Anisotropic filtering
+    if(glewIsSupported("GL_EXT_texture_filter_anisotropic")){
+        GLfloat anisoSetting = 0.0f;
+        // Set to the maximun level of anisotropic degree of sampling supported >>
+        glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &anisoSetting);
+
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, anisoSetting);
+    }
 }
