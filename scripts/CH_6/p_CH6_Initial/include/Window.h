@@ -15,6 +15,7 @@
 #include "Utils.h"
 #include "Camera.h"
 #include "Sphere.h"
+#include "Torus.h"
 
 using namespace std;
 
@@ -55,6 +56,10 @@ private:
     //Sphere
     Sphere* m_Sphere;
 
+    //Torus
+    Torus* m_Torus;
+
+
 public: 
 
     Window();
@@ -86,6 +91,8 @@ public:
     // >> 
     
     void SetupSphereVertices();
+
+    void SetupTorusVertices();
 
     void SetUpTextureCoordinates();
 

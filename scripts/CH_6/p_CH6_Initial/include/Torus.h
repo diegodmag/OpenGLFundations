@@ -26,9 +26,9 @@ private:
     void init();
     float toRadians(float degrees);
 public:
-    Torus();
-    ~Torus();
+    // Torus();
     Torus(float innerRadius, float outerRadius, int prec);
+    ~Torus();
     int getNumVertices();
     int getNumIndices();
     std::vector<int> getIndices();
