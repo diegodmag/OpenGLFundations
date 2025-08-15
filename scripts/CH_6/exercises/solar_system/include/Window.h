@@ -59,12 +59,7 @@ private:
     //Torus
     Torus* m_Torus;
 
-    //Temp boool to store the current model to be rendered 
-    bool m_sphere_torus = false; 
-    /**
-     * false -> sphere 
-     * true -> torus
-     */
+
 
 public: 
 
@@ -85,13 +80,17 @@ public:
 
     const bool ValidateGL();
 
-    void Initialize(bool model); 
+    void Initialize(); 
 
     void CalculateDeltaTime();
 
     void Display();
 
     void Terminate();
+
+    void ActivatePositionVertexAttribute(const GLuint& vbo);
+
+    void ActivateTextureVertexAttribute(const GLuint& vbo);
 
     //Temporal until separate models 
     // >> 

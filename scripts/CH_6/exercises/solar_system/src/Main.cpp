@@ -3,7 +3,7 @@
 
 static Window window;
 
-void start(char* option = "sphere");
+void start();
 void update();
 void window_reshape_callback(GLFWwindow* glfw_window, int newWidth, int newHeight);
 void mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos);
@@ -12,23 +12,15 @@ void process_input();
 
 
 
-int main(int argc, char* argv[]){
+int main(void){
 
-    std::cout << "Model " << argv[1] << '\n';
-    if(argv[1]){
-        start(argv[1]);
-    }else{
-        start();
-    }
+    start();
+
 }
 
-void start(char* option){
+void start(){
     if(window.ValidateGL()){
-        
-        // sphere (default) : true 
-        // torus : false 
-        window.Initialize( ((std::string)option =="torus") ? false : true);
-        
+        window.Initialize();
         glfwSetWindowUserPointer(window.GetGLFWWindow(), NULL); //Check
         glfwSetWindowSizeCallback(window.GetGLFWWindow(),window_reshape_callback);  
         glfwSetCursorPosCallback(window.GetGLFWWindow(), mouse_callback);
@@ -82,7 +74,7 @@ void process_input(){
 
 void mouse_callback(GLFWwindow* glfw_window, double xpos, double ypos){
     //Temporally deactivated >>
-    window.GetCamera()->ComputeRotation(xpos, ypos);
+    //window.GetCamera()->ComputeRotation(xpos, ypos);
 }
 
 void scroll_callback(GLFWwindow* glfw_window, double xoffset, double yoffset){

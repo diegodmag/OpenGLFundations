@@ -29,7 +29,7 @@ const bool Window::ValidateGL(){
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 5);
     //2 Initialize GLFWwindow
-    m_window = glfwCreateWindow(1280,720,"Chapter1-program-1", NULL, NULL);
+    m_window = glfwCreateWindow(1280,720,"Solar System", NULL, NULL);
 
     if (!m_window) {
         std::cerr << "Failed to create window" << std::endl;
@@ -59,23 +59,13 @@ const bool Window::ValidateGL(){
 }
 
 
-void Window::Initialize(bool model){
+void Window::Initialize(){
     m_rendering_program = Utils::createShaderProgram("shaders/vertShader.glsl", "shaders/fragShader.glsl");
 
     m_camera= new Camera();
 
-    m_sphere_torus = model; // Determine the model to render 
-
-    if(m_sphere_torus){
-        //Render a sphere 
-        m_Sphere = new Sphere(48);
-        SetupSphereVertices();
-
-    }else{
-        //Render a torus
-        m_Torus = new Torus(0.5f, 0.2f, 48);
-        SetupTorusVertices();
-    }
+    m_Sphere = new Sphere(48);
+    SetupSphereVertices();
     
     SetUpTextureCoordinates();
     //This instruction stores the width and height from the ones specified in glfwCreateWindow
@@ -131,6 +121,29 @@ void Window::Terminate(){
     glfwDestroyWindow(m_window);
     glfwTerminate();
     exit(EXIT_SUCCESS);
+}
+
+void Window::ActivatePositionVertexAttribute(const GLuint& vbo){
+    //Position >>
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //Binding the location 0 layout (location=0) in vec3 position 
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+}
+
+void Window::ActivateTextureVertexAttribute(const GLuint& vbo){
+    //Texture >>
+    //Bind the current GL_ARRAY_BUFFER with the buffer which stores the texture coordinates
+    glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //Binding the location 1 (layout (location=1) in vec2 texCoord;) with the buffer data [3] (all the texture positions)
+    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(1);
+
+    // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, worldTexture);
+
 }
 
 void Window::SetUpTextureCoordinates(){
@@ -223,10 +236,6 @@ void Window::MatrixStackPlanets(){
 
     //--- Sun
 
-    // So it would be better if we had a member function that just add a new model 
-    // to the matrix stack taking the top matrix as reference but then also 
-    // I would had to apply a transform to the top 
-
     m_model_view_stack_mat.push(m_model_view_stack_mat.top());
 
     m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),glm::vec3(0.0f, 0.0f, 0.0f)); // translate the copy to the center
@@ -239,44 +248,103 @@ void Window::MatrixStackPlanets(){
 
     glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
 
-    //Position >>
+    ActivatePositionVertexAttribute(m_vbo[0]);
 
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
-    //Binding the location 0 layout (location=0) in vec3 position 
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(0);
-
-    //Texture >>
-    //Bind the current GL_ARRAY_BUFFER with the buffer which stores the texture coordinates
-    glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    //Binding the location 1 (layout (location=1) in vec2 texCoord;) with the buffer data [3] (all the texture positions)
-    glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-    glEnableVertexAttribArray(1);
-
-    // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, worldTexture);
+    ActivateTextureVertexAttribute(m_vbo[1]);
 
     MipMapping(); 
 
-    if(m_sphere_torus){
-        //Draw Sphere
-        glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
-    }else{
-        //Draw Torus
-        glDrawElements(GL_TRIANGLES, m_Torus->getNumIndices(), GL_UNSIGNED_INT, 0);
-    }
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
 
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]);
-         
-    m_model_view_stack_mat.pop(); // Pop Rotation
-    m_model_view_stack_mat.pop(); // Sun
+    //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]); <-- Maybe it was for the torus
+    
+    m_model_view_stack_mat.pop(); // Pop Sun Rotation
+    
+    // Planet 1 >>
+    
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top());
+
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); 
+    
+    // m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Planet 1's rotation (same as sun)
+
+    // m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+    
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1]);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
+
+    // m_model_view_stack_mat.pop(); // Pop Rotation
+
+
+    // Moon - Planet 1 >>
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Planet translation
+
+    m_model_view_stack_mat.top()*= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*2.0,
+                                   cos((float)glfwGetTime())*2.0));
+
+    
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // For moon scalation
+
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f));
+
+
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1]);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
+
+    m_model_view_stack_mat.pop(); // Pop Moon Planet 1 Scale 
+
+
+    
+    m_model_view_stack_mat.pop(); // Pop Moon Planet 1
+
+    m_model_view_stack_mat.pop(); // Pop Planet 1 
+
+
+    // Planet 2 >>
+
+    m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Suns translation
+
+    m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(0.0f, sin((float)glfwGetTime())*4.0, -cos((float)glfwGetTime())*4.0));
+
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f));
+    
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1]);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
+
+
+    m_model_view_stack_mat.pop(); // Pop Planet 2 
+
+    m_model_view_stack_mat.pop(); // Pop Sun
 
     m_model_view_stack_mat.pop(); // Camera view matrix
 
 
     //Verifying matrix stack
-    // cout << m_model_view_stack_mat.size() << '\n';
+    cout << m_model_view_stack_mat.size() << '\n';
 
 }
 
