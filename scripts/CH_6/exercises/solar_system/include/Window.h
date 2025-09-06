@@ -17,6 +17,9 @@
 #include "Sphere.h"
 #include "Torus.h"
 
+/**NEW >> */
+#include "Planet.h"
+
 using namespace std;
 
 #define num_VAOs 1
@@ -53,8 +56,9 @@ private:
     std::vector<glm::mat4> planets_stack_mat; 
 
     //For texture 
-    GLuint worldTexture;
     GLuint sunTexture;
+    GLuint mercuryTexture;
+    GLuint worldTexture;
     GLuint venusTexture;
 
     //Sphere
@@ -100,6 +104,7 @@ public:
     // >> 
     
     /**NEW >> */
+
     void MatrixStackPlanetsVector();
 
     void SetupSphereVertices();

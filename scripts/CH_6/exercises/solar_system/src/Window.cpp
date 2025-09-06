@@ -113,8 +113,8 @@ void Window::Display(){
     m_camera->CalculateViewMatrix();
 
     
-    MatrixStackPlanets();
-
+    //MatrixStackPlanets();
+    MatrixStackPlanetsVector();
 }
 
 void Window::Terminate(){
@@ -153,6 +153,7 @@ void Window::SetUpTextureCoordinates(){
     worldTexture = Utils::LoadTexture("assets/textures/resized/earth_resized.jpg");
     sunTexture = Utils::LoadTexture("assets/textures/resized/sun_resized.jpg");
     venusTexture = Utils::LoadTexture("assets/textures/venus.jpg");
+    mercuryTexture = Utils::LoadTexture("assets/textures/resized/mercury_resized.jpg");
 }
 
 void Window::SetupSphereVertices(){
@@ -228,6 +229,82 @@ void Window::SetupTorusVertices(){
     glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]); // indices
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * 4, &ind[0], GL_STATIC_DRAW);
+}
+
+void Window::MatrixStackPlanetsVector(){
+    
+    
+    /*NUEVO >> */planets_stack_mat.push_back(m_camera->GetViewMatrix());
+
+    //--- Sun
+    // Creation of a sun 
+    Planet sun {planets_stack_mat, m_camera->GetViewMatrix()}; //Deberian crearse antes 
+    // Adding the planet 
+    sun.AddPlanet();
+    // Traslation of a sun 
+    sun.Traslate(glm::translate(glm::mat4(1.0f),glm::vec3(0.0f, 0.0f, 0.0f)));
+
+    /*NUEVO >> */glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1],sunTexture);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
+
+
+
+    // Planet 1 
+    Planet mercury {planets_stack_mat, sun.GetCopyModelMatrix()}; //Deberian crearse antes
+    // Adding the planet 
+    mercury.AddPlanet();
+    // Traslation of a mercury
+    mercury.Traslate(glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)));
+
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1],mercuryTexture);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
+
+
+    // Moon 
+        // Planet 1 
+    Planet moon {planets_stack_mat, mercury.GetCopyModelMatrix()}; //Deberian crearse antes
+    // Adding the planet 
+    mercury.AddPlanet();
+    // Traslation of a mercury
+    mercury.Traslate(glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*2.0,
+                                   cos((float)glfwGetTime())*2.0)));
+
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1],worldTexture);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
+
+
+    moon.RemovePlanet();
+
+    mercury.RemovePlanet();
+
+    sun.RemovePlanet();
+
+    planets_stack_mat.pop_back();
+
+    cout << planets_stack_mat.size() << '\n';
+    
 }
 
 void Window::MatrixStackPlanets(){
