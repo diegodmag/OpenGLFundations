@@ -91,7 +91,7 @@ void Window::Display(){
 
     glUseProgram(m_rendering_program);
 
-
+    
     m_mvLoc = glGetUniformLocation(m_rendering_program, "mv_matrix");
     m_pLoc = glGetUniformLocation(m_rendering_program, "p_matrix");
 
@@ -132,7 +132,7 @@ void Window::ActivatePositionVertexAttribute(const GLuint& vbo){
 
 }
 
-void Window::ActivateTextureVertexAttribute(const GLuint& vbo){
+void Window::ActivateTextureVertexAttribute(const GLuint& vbo, const GLuint& texture){
     //Texture >>
     //Bind the current GL_ARRAY_BUFFER with the buffer which stores the texture coordinates
     glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -142,14 +142,17 @@ void Window::ActivateTextureVertexAttribute(const GLuint& vbo){
 
     // We made the 0th texture unit active by specifying GL_TEXTURE0 in the glActiveTexture
     glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, worldTexture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+
+
 
 }
 
 void Window::SetUpTextureCoordinates(){
 
-    worldTexture = Utils::LoadTexture("assets/textures/world.jpg");
-
+    worldTexture = Utils::LoadTexture("assets/textures/resized/earth_resized.jpg");
+    sunTexture = Utils::LoadTexture("assets/textures/resized/sun_resized.jpg");
+    venusTexture = Utils::LoadTexture("assets/textures/venus.jpg");
 }
 
 void Window::SetupSphereVertices(){
@@ -234,23 +237,32 @@ void Window::MatrixStackPlanets(){
     //General
     m_model_view_stack_mat.push(m_camera->GetViewMatrix());
 
+    /*NUEVO >> */planets_stack_mat.push_back(m_camera->GetViewMatrix());
+
     //--- Sun
 
     m_model_view_stack_mat.push(m_model_view_stack_mat.top());
+    /*NUEVO >> */planets_stack_mat.push_back(planets_stack_mat.back());
+
 
     m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),glm::vec3(0.0f, 0.0f, 0.0f)); // translate the copy to the center
+    /*NUEVO >> */planets_stack_mat.back()*=glm::translate(glm::mat4(1.0f),glm::vec3(0.0f, 0.0f, 0.0f)); // translate the copy to the center
 
     m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Saves sun's rotation
+    /*NUEVO >> */planets_stack_mat.push_back(planets_stack_mat.back());
 
     m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
+    /*NUEVO >> */planets_stack_mat.back()*=glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 
-    // m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(9.0f,9.0f,9.0f));
+    m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(2.0f,2.0f,2.0f));
+    /*NUEVO >> */planets_stack_mat.back()*=glm::scale(glm::mat4(1.0f), glm::vec3(2.0f,2.0f,2.0f));
 
-    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    //glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    /*NUEVO >> */glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
 
     ActivatePositionVertexAttribute(m_vbo[0]);
 
-    ActivateTextureVertexAttribute(m_vbo[1]);
+    ActivateTextureVertexAttribute(m_vbo[1],sunTexture);
 
     MipMapping(); 
 
@@ -259,23 +271,29 @@ void Window::MatrixStackPlanets(){
     //glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]); <-- Maybe it was for the torus
     
     m_model_view_stack_mat.pop(); // Pop Sun Rotation
+    /*NUEVO >> */planets_stack_mat.pop_back();
     
     // Planet 1 >>
     
     m_model_view_stack_mat.push(m_model_view_stack_mat.top());
+    /*NUEVO >> */planets_stack_mat.push_back(planets_stack_mat.back());
 
     m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
                                     glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); 
     
+    /*NUEVO >> */planets_stack_mat.back()*=glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(sin((float)glfwGetTime())*4.0, 0.0f, cos((float)glfwGetTime())*4.0)); 
+
     // m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // Planet 1's rotation (same as sun)
 
     // m_model_view_stack_mat.top() *= glm::rotate(glm::mat4(1.0f), (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
     
-    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    //glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    /*NUEVO >> */glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
 
     ActivatePositionVertexAttribute(m_vbo[0]);
 
-    ActivateTextureVertexAttribute(m_vbo[1]);
+    ActivateTextureVertexAttribute(m_vbo[1],worldTexture);
 
     MipMapping(); 
 
@@ -287,49 +305,61 @@ void Window::MatrixStackPlanets(){
     // Moon - Planet 1 >>
 
     m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Planet translation
+    /*NUEVO >> */planets_stack_mat.push_back(planets_stack_mat.back());
+
 
     m_model_view_stack_mat.top()*= glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*2.0,
                                    cos((float)glfwGetTime())*2.0));
-
+    /*NUEVO >> */planets_stack_mat.back()*=glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, sin((float)glfwGetTime())*2.0,
+                                   cos((float)glfwGetTime())*2.0));
     
     m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // For moon scalation
+    /*NUEVO >> */planets_stack_mat.push_back(planets_stack_mat.back());
 
     m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f));
+    /*NUEVO >> */planets_stack_mat.back()*=glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f));
 
-
-    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
-
+    //glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    /*NUEVO >> */glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
+    
     ActivatePositionVertexAttribute(m_vbo[0]);
 
-    ActivateTextureVertexAttribute(m_vbo[1]);
+    ActivateTextureVertexAttribute(m_vbo[1],worldTexture);
 
     MipMapping(); 
 
     glDrawArrays(GL_TRIANGLES, 0, m_Sphere->getNumIndices());
 
     m_model_view_stack_mat.pop(); // Pop Moon Planet 1 Scale 
-
+    /*NUEVO >> */planets_stack_mat.pop_back();
 
     
     m_model_view_stack_mat.pop(); // Pop Moon Planet 1
+    /*NUEVO >> */planets_stack_mat.pop_back();
 
     m_model_view_stack_mat.pop(); // Pop Planet 1 
-
+    /*NUEVO >> */planets_stack_mat.pop_back();
 
     // Planet 2 >>
 
     m_model_view_stack_mat.push(m_model_view_stack_mat.top()); // This inherit Suns translation
+    /*NUEVO >> */planets_stack_mat.push_back(planets_stack_mat.back());
 
     m_model_view_stack_mat.top() *= glm::translate(glm::mat4(1.0f),
                                     glm::vec3(0.0f, sin((float)glfwGetTime())*4.0, -cos((float)glfwGetTime())*4.0));
+    /*NUEVO >> */planets_stack_mat.back()*=glm::translate(glm::mat4(1.0f),
+                                    glm::vec3(0.0f, sin((float)glfwGetTime())*4.0, -cos((float)glfwGetTime())*4.0));
 
     m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f));
+    /*NUEVO >> */planets_stack_mat.back()*=glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f));
+
+    //glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
     
-    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_model_view_stack_mat.top()));
+    /*NUEVO >> */glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(planets_stack_mat.back()));
 
     ActivatePositionVertexAttribute(m_vbo[0]);
 
-    ActivateTextureVertexAttribute(m_vbo[1]);
+    ActivateTextureVertexAttribute(m_vbo[1],worldTexture);
 
     MipMapping(); 
 
@@ -337,14 +367,17 @@ void Window::MatrixStackPlanets(){
 
 
     m_model_view_stack_mat.pop(); // Pop Planet 2 
+    /*NUEVO >> */planets_stack_mat.pop_back();
 
     m_model_view_stack_mat.pop(); // Pop Sun
+    /*NUEVO >> */planets_stack_mat.pop_back();
 
     m_model_view_stack_mat.pop(); // Camera view matrix
-
+    /*NUEVO >> */planets_stack_mat.pop_back();
 
     //Verifying matrix stack
-    cout << m_model_view_stack_mat.size() << '\n';
+    //cout << m_model_view_stack_mat.size() << '\n';
+    cout << planets_stack_mat.size() << '\n';
 
 }
 

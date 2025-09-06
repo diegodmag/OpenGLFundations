@@ -50,8 +50,12 @@ private:
     //Final Project Chapter 4 
     stack<glm::mat4> m_model_view_stack_mat;
 
+    std::vector<glm::mat4> planets_stack_mat; 
+
     //For texture 
     GLuint worldTexture;
+    GLuint sunTexture;
+    GLuint venusTexture;
 
     //Sphere
     Sphere* m_Sphere;
@@ -90,11 +94,14 @@ public:
 
     void ActivatePositionVertexAttribute(const GLuint& vbo);
 
-    void ActivateTextureVertexAttribute(const GLuint& vbo);
+    void ActivateTextureVertexAttribute(const GLuint& vbo, const GLuint& texture);
 
     //Temporal until separate models 
     // >> 
     
+    /**NEW >> */
+    void MatrixStackPlanetsVector();
+
     void SetupSphereVertices();
 
     void SetupTorusVertices();
