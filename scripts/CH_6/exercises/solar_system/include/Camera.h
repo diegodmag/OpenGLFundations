@@ -53,6 +53,8 @@ public:
     ~Camera();
 
     const glm::mat4& GetViewMatrix() {return m_view_mat;}
+
+    glm::mat4& GetViewMatrixByRef() {return m_view_mat;}
     
     const glm::mat4& GetPerspectiveMatrix() {return m_perspective_mat;}
     

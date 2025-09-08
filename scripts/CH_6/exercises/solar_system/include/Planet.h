@@ -9,14 +9,14 @@
 class Planet{
 private:
     std::vector<glm::mat4>& m_matrix_stack; 
-    const glm::mat4& m_parent; //no queremos modificar el padre, solo copiarlo 
+    glm::mat4& m_parent; //no queremos modificar el padre, solo copiarlo 
     size_t m_model_mat_index{};
     size_t m_traslation_mat_index{};
     size_t m_rotation_mat_index{};  
     //A partir de mi padre yo multiplico mis matrices y lo agrego al stack 
 public:
 
-    Planet(std::vector<glm::mat4>& matrix_stack, const glm::mat4& parent)
+    Planet(std::vector<glm::mat4>& matrix_stack, glm::mat4& parent)
         : m_matrix_stack{matrix_stack}
         , m_parent{parent}
     {
@@ -25,6 +25,16 @@ public:
 
     glm::mat4& GetModelMatrix(){
         return m_matrix_stack[m_model_mat_index];
+    }
+
+    void SetParent(const glm::mat4 new_parent){
+        m_parent=new_parent;
+    }
+
+    //Get stack 
+
+    void SetStack(const std::vector<glm::mat4>& stack){
+        m_matrix_stack=stack;
     }
 
     void AddPlanet(){
@@ -37,24 +47,14 @@ public:
         m_matrix_stack.erase(m_matrix_stack.begin()+m_model_mat_index);
     }
 
-    void AddPlanetTraslation(){
-        //Buscamos donde esta su model mat y lo trasladamos 
-    }
-
-    //glm::scale(glm::mat4(1.0f), glm::vec3(0.5f,0.5f,0.5f))
-
     void Traslate(glm::vec3 traslation_vec){    
         // Se traslada la matriz del modelo, no se hace copia
         m_matrix_stack[m_model_mat_index]*=glm::translate(glm::mat4(1.0f),traslation_vec);
     }
 
     void Scale(glm::vec3 scale_vec){
-        // Se scala la matriz del modelo, no se agrega copia al stack
         m_matrix_stack[m_model_mat_index]*=glm::scale(glm::mat4(1.0f), scale_vec);
-        //m_model_view_stack_mat.top() *= glm::scale(glm::mat4(1.0f), glm::vec3(2.0f,2.0f,2.0f)); 
     }
-
-    //AddToStack 
 
 };
 

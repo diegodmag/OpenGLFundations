@@ -76,6 +76,9 @@ void Window::Initialize(){
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glFrontFace(GL_CCW);
+
+    //Initialize all planets ?  
+
 }
 
 void Window::CalculateDeltaTime(){
@@ -174,11 +177,12 @@ void Window::SetupVertices(){
 void Window::MatrixStackPlanets(){
     
     
-    /*NUEVO >> */planets_stack_mat.push_back(m_camera->GetViewMatrix());
+    /*NUEVO >> */planets_stack_mat.push_back(m_camera->GetViewMatrixByRef());
 
     //--- Sun
     // Creation of a sun 
-    Planet sun {planets_stack_mat, m_camera->GetViewMatrix()}; //Deberian crearse antes 
+    Planet sun {planets_stack_mat, planets_stack_mat.back()}; //Deberian crearse antes 
+
     // Adding the planet 
     sun.AddPlanet();
     // Traslation of a sun 

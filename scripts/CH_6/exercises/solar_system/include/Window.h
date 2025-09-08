@@ -55,18 +55,20 @@ private:
 
     std::vector<glm::mat4> planets_stack_mat; 
 
+    
+    //Sphere
+    Sphere* m_Sphere;
+    
+    //Torus
+    Torus* m_Torus;
+    
     //For texture 
     GLuint sunTexture;
     GLuint mercuryTexture;
     GLuint worldTexture;
     GLuint venusTexture;
 
-    //Sphere
-    Sphere* m_Sphere;
-
-    //Torus
-    Torus* m_Torus;
-
+    //std::vector<Planet> planets; 
 
 
 public: 
