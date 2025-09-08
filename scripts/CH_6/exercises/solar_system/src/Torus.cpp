@@ -86,3 +86,39 @@ std::vector<glm::vec2> Torus::getTexCoords() { return texCoords; }
 std::vector<glm::vec3> Torus::getNormals() { return normals; }
 std::vector<glm::vec3> Torus::getStangents() { return sTangents; }
 std::vector<glm::vec3> Torus::getTtangents() { return tTangents; }
+
+// void Window::SetupTorusVertices(){
+//     std::vector<int> ind = m_Torus->getIndices();
+//     std::vector<glm::vec3> vert = m_Torus->getVertices();
+//     std::vector<glm::vec2> tex = m_Torus->getTexCoords();
+//     std::vector<glm::vec3> norm = m_Torus->getNormals();
+//     std::vector<float> pvalues;
+//     std::vector<float> tvalues;
+//     std::vector<float> nvalues;
+//     int numVertices = m_Torus->getNumVertices();
+//     for (int i = 0; i < numVertices; i++) {
+//             pvalues.push_back(vert[i].x);
+//             pvalues.push_back(vert[i].y);
+//             pvalues.push_back(vert[i].z);
+//             tvalues.push_back(tex[i].s);
+//             tvalues.push_back(tex[i].t);
+//             nvalues.push_back(norm[i].x);
+//             nvalues.push_back(norm[i].y);
+//             nvalues.push_back(norm[i].z);
+//     }
+//     glGenVertexArrays(1, m_vao);
+//     glBindVertexArray(m_vao[0]);
+//     glGenBuffers(4, m_vbo);
+//     // generate VBOs as before, plus one for indices
+//     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
+//     // vertex positions
+//     glBufferData(GL_ARRAY_BUFFER, pvalues.size() * 4, &pvalues[0], GL_STATIC_DRAW);
+//     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+//     // texture coordinates
+//     glBufferData(GL_ARRAY_BUFFER, tvalues.size() * 4, &tvalues[0], GL_STATIC_DRAW);
+//     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
+//     // normal vectors
+//     glBufferData(GL_ARRAY_BUFFER, nvalues.size() * 4, &nvalues[0], GL_STATIC_DRAW);
+//     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_vbo[3]); // indices
+//     glBufferData(GL_ELEMENT_ARRAY_BUFFER, ind.size() * 4, &ind[0], GL_STATIC_DRAW);
+// }

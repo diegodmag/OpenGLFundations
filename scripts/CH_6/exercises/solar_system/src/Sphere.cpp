@@ -46,12 +46,37 @@ void Sphere::init(int prec){
                 indices[6 * (i*prec + j) + 5] = (i + 1)*(prec + 1) + j;
             }
     }
+
+    //SetupValues  
+    setupValues();
+
 }
 
 // accessors
 int Sphere::getNumVertices() { return numVertices; }
 int Sphere::getNumIndices() { return numIndices; }
-std::vector<int> Sphere::getIndices() { return indices; }
-std::vector<glm::vec3> Sphere::getVertices() { return vertices; }
-std::vector<glm::vec2> Sphere::getTexCoords() { return texCoords; }
-std::vector<glm::vec3> Sphere::getNormals() { return normals; }
+std::vector<int>& Sphere::getIndices() { return indices; }
+std::vector<glm::vec3>& Sphere::getVertices() { return vertices; }
+std::vector<glm::vec2>& Sphere::getTexCoords() { return texCoords; }
+std::vector<glm::vec3>& Sphere::getNormals() { return normals; }
+
+const std::vector<float>& Sphere::getPValues(){return m_pvalues;}
+const std::vector<float>& Sphere::getTValues(){return m_tvalues;}
+const std::vector<float>& Sphere::getNValues(){return m_nvalues;}
+//const std::vector<float>& Sphere::getTValues(return m_tvalues;)
+// const std::vector<float>& Sphere::geNPValues(return m_nvalues);
+
+void Sphere::setupValues(){
+    
+    int numIndices = getNumIndices();
+    for (int i = 0; i < numIndices; i++) {
+            m_pvalues.push_back((getVertices()[getIndices()[i]]).x);
+            m_pvalues.push_back((getVertices()[getIndices()[i]]).y);
+            m_pvalues.push_back((getVertices()[getIndices()[i]]).z);
+            m_tvalues.push_back((getTexCoords()[getIndices()[i]]).s);
+            m_tvalues.push_back((getTexCoords()[getIndices()[i]]).t);
+            m_nvalues.push_back((getNormals()[getIndices()[i]]).x);
+            m_nvalues.push_back((getNormals()[getIndices()[i]]).y);
+            m_nvalues.push_back((getNormals()[getIndices()[i]]).z);
+    }
+}

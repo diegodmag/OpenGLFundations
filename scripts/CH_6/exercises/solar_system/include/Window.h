@@ -105,11 +105,7 @@ public:
     
     /**NEW >> */
 
-    void MatrixStackPlanetsVector();
-
-    void SetupSphereVertices();
-
-    void SetupTorusVertices();
+    void SetupVertices();
 
     void SetUpTextureCoordinates();
 
