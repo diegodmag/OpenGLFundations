@@ -30,8 +30,12 @@ void WindowGL::InitGLEW(){
     if (glewInit() != GLEW_OK) {
         std::cerr << "FAILED TO INITIALIZE GLEW\n";
         exit(EXIT_FAILURE);
-    }else{
-        std::cout << "GLEW STARTED\n";
     }
+    std::cout<<"GLEW STARTED" <<std::endl;  
+
+    glEnable(GL_DEPTH_TEST);  // Prueba de profundidad
+    glEnable(GL_CULL_FACE);   // Habilitar culling de caras
+    glCullFace(GL_BACK);      // Culling de caras traseras
+    glFrontFace(GL_CCW);      // Las caras frontales son las que tienen vértices en sentido antihorario
 
 }
