@@ -1,5 +1,6 @@
 #include "WindowGL.h"
 
+
 void WindowGL::InitGLFW(){
     if (!glfwInit()) {
         std::cerr << "FAILED TO INITIALIZE GLFW\n";
@@ -17,9 +18,10 @@ void WindowGL::InitGLFW(){
         std::cerr << "FAILED TO CREATE WINDOW\n";
         glfwTerminate();
         exit(EXIT_FAILURE);
-    }else{
-        std::cout<<"WINDOW CREATED\n";
     }
+    
+    glfwMakeContextCurrent(m_window);
+    std::cout<<"WINDOW CREATED\n";
 }
 
 

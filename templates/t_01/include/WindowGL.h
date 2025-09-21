@@ -1,10 +1,14 @@
+#ifndef WINDOWGL_H
+#define WINDOWGL_H
+
 #include <iostream>
 #include <GL/glew.h> //Manejo de ventanas e input 
 #include <GLFW/glfw3.h> //
 
-#ifndef WINDOWGL_H
-#define WINDOWGL_H
-
+/**
+ * @class WindowGL
+ * @brief Clase que modela una ventana de OpenGL junto con inicializacion de GLEW y GLFW
+ */
 class WindowGL
 {
 
@@ -29,12 +33,20 @@ public:
             }
             
     ~WindowGL(){
-
+        if(m_window){glfwDestroyWindow(m_window);}
+        glfwTerminate();
     }
 
-    GLFWwindow* getWindow(){return m_window;}
+    GLFWwindow* getWindow() const {return m_window;}
 
+    /**
+     * @brief Inicializa la biblioteca GLFW y la ventana m_window
+     */
     void InitGLFW();
+
+    /**
+     * @brief Inicializa la biblioteca GLEW
+     */
     void InitGLEW();
 
 };
