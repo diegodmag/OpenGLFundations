@@ -46,13 +46,13 @@ public:
     virtual void initModel() = 0; // Debe ser implementada por una derivada
 
     // Renderiza el modelo con matrices de vista y proyección
-    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection);
+    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection) = 0;
 
     // Actualiza animaciones o transformaciones
-    virtual void updateModel(float timeValue);
+    virtual void updateModel(float timeValue) = 0;
 
     // Limpia buffers y recursos OpenGL
-    virtual void finish();
+    virtual void finish() = 0;
 
 };
 

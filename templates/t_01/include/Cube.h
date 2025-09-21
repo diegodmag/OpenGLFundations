@@ -60,7 +60,7 @@ public:
 
         m_shaderProgram->use();
 
-        m_shaderProgram->setVec3("posCam", glm::vec3(0.0f,0.0f,-3.0f));
+        //m_shaderProgram->setVec3("posCam", glm::vec3(0.0f,0.0f,-3.0f));
         m_shaderProgram->setMat4x4("model", m_model_mat);
         m_shaderProgram->setMat4x4("view", view);
         m_shaderProgram->setMat4x4("projection", projection);
@@ -68,6 +68,14 @@ public:
         glBindVertexArray(VAO);
         glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
 
+    }
+
+    void updateModel(float timeValue) override {
+
+    }
+
+    void finish() override{
+        
     }
 
 }; 

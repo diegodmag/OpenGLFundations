@@ -22,7 +22,7 @@ private:
 
 public: 
 
-    WindowGL(char * name="Window", int major=4, int minor=3, int width=1280 , int height=720)
+    WindowGL(char * name=(char*)"OpenGL Window", int major=4, int minor=3, int width=1280 , int height=720)
             : m_name{name}
             , m_glfwMajor{major}
             , m_glfwMinor{minor}

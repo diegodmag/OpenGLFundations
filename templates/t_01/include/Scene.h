@@ -10,7 +10,7 @@
 #include "WindowGL.h"
 #include "ShaderProgram.h"
 #include "Model.h"
-#include "Cube.h";
+#include "Cube.h"
 
 /**
  * @class Scene

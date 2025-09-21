@@ -8,7 +8,7 @@ void Scene::init(){
     //Inicializacion del Modelo -> Cubo 
     m_model = new Cube(m_shaderProgram);
     //Matriz de vista 
-    m_view =  glm::lookAt(glm::vec3(0.0f,0.0f,-3.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
+    m_view =  glm::lookAt(glm::vec3(0.0f,3.0f,-3.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
     m_projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
 }
@@ -25,11 +25,14 @@ void Scene::render() const {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
         //Tal vez aqui se puede renderizar cada modelo
+        m_model->renderModel(m_view, m_projection);
 
         glfwSwapBuffers(m_window->getWindow());
         
         //
         glfwPollEvents();
+
+        //Aqui se puede hacer un update 
     }
 
 }
