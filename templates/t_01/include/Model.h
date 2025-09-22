@@ -22,6 +22,17 @@ protected:
     glm::mat4 m_model_mat;
     // float angle 
 
+    /**
+     * @brief Inicializa vertices  
+     */
+    virtual void initGeometry() = 0; // Debe ser implementada por una derivada
+    
+    /**
+     * @brief Inicializa buffers 
+     */
+    virtual void init() = 0; // Debe ser implementada por una derivada
+
+
 public: 
 
     Model(ShaderProgram* program)
@@ -41,17 +52,21 @@ public:
     }
 
     /**
-     * @brief Inicializa vertices, indeices, etc dependiendo del modelo que derive 
+     * @brief Utiliza el ShaderProgram para renderizar el modelo a partir de las matrices de projection y de vista
+     * @param view Matriz de vista 
+     * @param projection Matriz de proyeccion 
      */
-    virtual void initModel() = 0; // Debe ser implementada por una derivada
-
-    // Renderiza el modelo con matrices de vista y proyección
     virtual void renderModel(const glm::mat4& view, const glm::mat4& projection) = 0;
 
-    // Actualiza animaciones o transformaciones
-    virtual void updateModel(float timeValue) = 0;
+    /**
+     * @brief Aplica transformaciones o animaciones 
+     * @param deltaTime Referencia del tiempo transcurrido entre frames  
+     */
+    virtual void updateModel(float deltaTime) = 0;
 
-    // Limpia buffers y recursos OpenGL
+    /**
+     * @brief Limpia recursos 
+     */
     virtual void finish() = 0;
 
 };

@@ -9,8 +9,9 @@
 
 #include "WindowGL.h"
 #include "ShaderProgram.h"
+
 #include "Model.h"
-#include "Cube.h"
+#include "models/Cube.h"
 
 /**
  * @class Scene
@@ -19,28 +20,24 @@
 class Scene
 {
 private:
-    //-> Tal vez tendra una ventana 
-    //-> Tal vez una matriz de projection 
-    //-> Tal vez una matriz de vista -> Que despues debe tener la camara 
-    //-> Tambien un shader program 
+
     WindowGL* m_window; 
     ShaderProgram*  m_shaderProgram;
     Model* m_model; 
-
     glm::mat4 m_view;
     glm::mat4 m_projection; 
-
 
     /**
      * @brief Inicializacion 
      */
     void init();
 
-    // La escena es la que tiene que actualizarse 
 public:
+
     Scene(){
         init();
     }
+
     ~Scene(){
         delete m_window;
         delete m_shaderProgram;
@@ -51,9 +48,6 @@ public:
      */
     void render() const; 
 
-    /**
-     * @brief Termino de la scena. 
-     */
 };
 
 

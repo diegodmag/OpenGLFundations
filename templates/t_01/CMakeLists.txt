@@ -20,10 +20,12 @@ find_package(glfw3 REQUIRED)
 
 
 # Ejecutable
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.cpp
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/Main.cpp
                                ${PROJECT_SOURCE_DIR}/src/Scene.cpp
                                ${PROJECT_SOURCE_DIR}/src/ShaderProgram.cpp
-                               ${PROJECT_SOURCE_DIR}/src/WindowGL.cpp)
+                               ${PROJECT_SOURCE_DIR}/src/WindowGL.cpp
+                               ${PROJECT_SOURCE_DIR}/src/models/Cube.cpp
+                               )
 
 # Librerías
 # Linkear las bibliotecas encontradas
