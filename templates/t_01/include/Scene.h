@@ -22,8 +22,9 @@ class Scene
 private:
 
     WindowGL* m_window; 
-    ShaderProgram*  m_shaderProgram;
-    Model* m_model; 
+    ShaderProgram*  m_shaderProgram; // This could be a std::vector of shader programs 
+    Model* m_model; // This could be a std::vector of Models 
+
     glm::mat4 m_view;
     glm::mat4 m_projection; 
 
@@ -44,7 +45,7 @@ public:
     }
 
     /**
-     * @brief Control del ciclo de renderizado
+     * @brief Ciclo de renderizado general 
      */
     void render() const; 
 

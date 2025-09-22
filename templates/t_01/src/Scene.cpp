@@ -17,22 +17,20 @@ void Scene::render() const {
 
     while(!glfwWindowShouldClose(m_window->getWindow())){
 
-        //Falta calcular el tiempo 
+        // Compute time  
 
         if (glfwGetKey(m_window->getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(m_window->getWindow(), true);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        //Tal vez aqui se puede renderizar cada modelo
         m_model->renderModel(m_view, m_projection);
 
         glfwSwapBuffers(m_window->getWindow());
         
-        //
         glfwPollEvents();
 
-        //Aqui se puede hacer un update 
+        // update models 
     }
 
 }
