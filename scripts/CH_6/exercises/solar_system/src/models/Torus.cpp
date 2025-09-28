@@ -1,4 +1,4 @@
-#include "Torus.h"
+#include "models/Torus.h"
 
 using namespace std;
 // Torus::Torus() {

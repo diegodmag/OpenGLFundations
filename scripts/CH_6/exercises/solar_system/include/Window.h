@@ -14,12 +14,15 @@
 
 #include "Utils.h"
 #include "Camera.h"
-#include "Sphere.h"
-#include "Torus.h"
+#include "models/Sphere.h"
+#include "models/Torus.h"
+#include "models/CustomModel.h"
+
 
 /**NEW >> */
 #include "Planet.h"
 
+/** NEW>> */
 using namespace std;
 
 #define num_VAOs 1
@@ -61,12 +64,17 @@ private:
     
     //Torus
     Torus* m_Torus;
+
+    //
+    CustomModel* m_custom; 
     
     //For texture 
     GLuint sunTexture;
     GLuint mercuryTexture;
     GLuint worldTexture;
     GLuint venusTexture;
+
+    GLuint cubeTexture; 
 
     //std::vector<Planet> planets; 
 
@@ -106,6 +114,8 @@ public:
     // >> 
     
     /**NEW >> */
+
+    void RenderCustom();
 
     void SetupVertices();
 

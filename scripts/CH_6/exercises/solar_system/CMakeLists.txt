@@ -19,7 +19,16 @@ file(COPY ${PROJECT_SOURCE_DIR}/assets DESTINATION ${CMAKE_BINARY_DIR})
 
 
 # Create the executable from the source files
-add_executable(solar_system ${SOURCES})
+add_executable(solar_system ${PROJECT_SOURCE_DIR}/src/Main.cpp
+                            ${PROJECT_SOURCE_DIR}/src/Camera.cpp
+                            ${PROJECT_SOURCE_DIR}/src/Utils.cpp
+                            ${PROJECT_SOURCE_DIR}/src/Window.cpp
+                            ${PROJECT_SOURCE_DIR}/src/obj_helpers/ImportedModel.cpp
+                            ${PROJECT_SOURCE_DIR}/src/obj_helpers/ModelImporter.cpp
+                            ${PROJECT_SOURCE_DIR}/src/models/Sphere.cpp
+                            ${PROJECT_SOURCE_DIR}/src/models/Torus.cpp
+                            ${PROJECT_SOURCE_DIR}/src/models/CustomModel.cpp
+)       
 
 # Link with required libraries
 target_link_libraries(solar_system

@@ -9,6 +9,7 @@ Window::~Window()
 {
     delete m_camera;
     delete m_Sphere;
+    delete m_custom;
     delete m_Torus;
 }
 
@@ -65,6 +66,8 @@ void Window::Initialize(){
     m_camera= new Camera();
 
     m_Sphere = new Sphere(48);
+
+    m_custom = new CustomModel();
     SetupVertices();
     
     SetUpTextureCoordinates();
@@ -115,8 +118,8 @@ void Window::Display(){
 
     m_camera->CalculateViewMatrix();
 
-    MatrixStackPlanets();
-    
+    //MatrixStackPlanets();
+    RenderCustom();
 }
 
 void Window::Terminate(){
@@ -150,10 +153,14 @@ void Window::ActivateTextureVertexAttribute(const GLuint& vbo, const GLuint& tex
 
 void Window::SetUpTextureCoordinates(){
 
-    worldTexture = Utils::LoadTexture("assets/textures/resized/earth_resized.jpg");
-    sunTexture = Utils::LoadTexture("assets/textures/resized/sun_resized.jpg");
-    venusTexture = Utils::LoadTexture("assets/textures/venus.jpg");
-    mercuryTexture = Utils::LoadTexture("assets/textures/resized/mercury_resized.jpg");
+    // Temporary disabled
+
+    // worldTexture = Utils::LoadTexture("assets/textures/resized/earth_resized.jpg");
+    // sunTexture = Utils::LoadTexture("assets/textures/resized/sun_resized.jpg");
+    // venusTexture = Utils::LoadTexture("assets/textures/venus.jpg");
+    // mercuryTexture = Utils::LoadTexture("assets/textures/resized/mercury_resized.jpg");
+
+    cubeTexture = Utils::LoadTexture("assets/textures/default.png");
 }
 
 void Window::SetupVertices(){
@@ -162,17 +169,42 @@ void Window::SetupVertices(){
     glBindVertexArray(m_vao[0]);
     glGenBuffers(3, m_vbo);
     // put the vertices into buffer #0
+    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
+    // glBufferData(GL_ARRAY_BUFFER, m_Sphere->getPValues().size()*4, &m_Sphere->getPValues()[0], GL_STATIC_DRAW);
+    // // put the texture coordinates into buffer #1
+    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
+    // glBufferData(GL_ARRAY_BUFFER, m_Sphere->getTValues().size()*4, &m_Sphere->getTValues()[0], GL_STATIC_DRAW);
+    // // put the normals into buffer #2
+    // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
+    // glBufferData(GL_ARRAY_BUFFER, m_Sphere->getNValues().size()*4, &m_Sphere->getNValues()[0], GL_STATIC_DRAW);
+
+
+    // VBO for vertex locations
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, m_Sphere->getPValues().size()*4, &m_Sphere->getPValues()[0], GL_STATIC_DRAW);
-    // put the texture coordinates into buffer #1
+    glBufferData(GL_ARRAY_BUFFER, m_custom->getPValues().size() * 4, &m_custom->getPValues()[0], GL_STATIC_DRAW);
+    // VBO for texture coordinates
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, m_Sphere->getTValues().size()*4, &m_Sphere->getTValues()[0], GL_STATIC_DRAW);
-    // put the normals into buffer #2
+    glBufferData(GL_ARRAY_BUFFER, m_custom->getTValues().size() * 4, &m_custom->getTValues()[0], GL_STATIC_DRAW);
+    // VBO for normal vectors
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
-    glBufferData(GL_ARRAY_BUFFER, m_Sphere->getNValues().size()*4, &m_Sphere->getNValues()[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_custom->getNValues().size() * 4, &m_custom->getNValues()[0], GL_STATIC_DRAW);
 
 }
 
+void Window::RenderCustom(){
+
+    
+    glUniformMatrix4fv(m_mvLoc, 1, GL_FALSE, glm::value_ptr(m_camera->GetViewMatrixByRef()));
+
+    ActivatePositionVertexAttribute(m_vbo[0]);
+
+    ActivateTextureVertexAttribute(m_vbo[1],cubeTexture);
+
+    MipMapping(); 
+
+    glDrawArrays(GL_TRIANGLES, 0, m_custom->getNumVertices());
+
+}
 
 void Window::MatrixStackPlanets(){
     
@@ -248,7 +280,7 @@ void Window::MatrixStackPlanets(){
 
     planets_stack_mat.pop_back();
 
-    cout << planets_stack_mat.size() << '\n';
+    //cout << planets_stack_mat.size() << '\n';
     
 }
 
