@@ -178,16 +178,20 @@ void Window::SetupVertices(){
     // glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
     // glBufferData(GL_ARRAY_BUFFER, m_Sphere->getNValues().size()*4, &m_Sphere->getNValues()[0], GL_STATIC_DRAW);
 
+    std::cout<<"PValues: "<<m_custom->getPValues().size()<<std::endl;
+    std::cout<<"TValues: "<<m_custom->getTValues().size()<<std::endl; 
+    std::cout<<"NValues: "<<m_custom->getNValues().size()<<std::endl; 
+
 
     // VBO for vertex locations
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[0]);
-    glBufferData(GL_ARRAY_BUFFER, m_custom->getPValues().size() * 4, &m_custom->getPValues()[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_custom->getPValues().size() * sizeof(float), &m_custom->getPValues()[0], GL_STATIC_DRAW);
     // VBO for texture coordinates
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[1]);
-    glBufferData(GL_ARRAY_BUFFER, m_custom->getTValues().size() * 4, &m_custom->getTValues()[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_custom->getTValues().size() * sizeof(float), &m_custom->getTValues()[0], GL_STATIC_DRAW);
     // VBO for normal vectors
     glBindBuffer(GL_ARRAY_BUFFER, m_vbo[2]);
-    glBufferData(GL_ARRAY_BUFFER, m_custom->getNValues().size() * 4, &m_custom->getNValues()[0], GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, m_custom->getNValues().size() * sizeof(float), &m_custom->getNValues()[0], GL_STATIC_DRAW);
 
 }
 

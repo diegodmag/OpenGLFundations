@@ -1,9 +1,12 @@
 #ifndef CUSTOMMODEL_H
 #define CUSTOMMODEL_H
 
+#include <iostream>
+
 #include <cmath>
 #include <vector>
 #include <glm/glm.hpp>
+
 
 #include "obj_helpers/ImportedModel.h"
 
@@ -13,12 +16,8 @@ private:
 
     ImportedModel* m_custom_model; 
 
-    int numVertices;
-    int numIndices;
-    std::vector<int> indices;
-    std::vector<glm::vec3> vertices;
-    std::vector<glm::vec2> texCoords; 
-    std::vector<glm::vec3> normals;
+    int m_numVertices;
+    int m_numIndices;
 
     std::vector<float> m_pvalues;		
     std::vector<float> m_tvalues;		
@@ -36,12 +35,8 @@ public:
     }
 
     // accessors
-    int getNumVertices() { return numVertices; }
-    int getNumIndices() { return numIndices; }
-    std::vector<int>& getIndices() { return indices; }
-    std::vector<glm::vec3>& getVertices() { return vertices; }
-    std::vector<glm::vec2>& getTexCoords() { return texCoords; }
-    std::vector<glm::vec3>& getNormals() { return normals; }
+    int getNumVertices() { return m_numVertices; }
+    int getNumIndices() { return m_numIndices; }
 
     const std::vector<float>& getPValues(){return m_pvalues;}
     const std::vector<float>& getTValues(){return m_tvalues;}
