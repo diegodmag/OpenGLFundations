@@ -10,7 +10,8 @@ void Scene::init(){
     //Matriz de vista 
     m_view =  glm::lookAt(glm::vec3(0.0f,3.0f,-1.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
-    m_projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    // m_projection = glm::perspective(glm::radians(45.0f), 800.0f / 600.0f, 0.1f, 100.0f);
+    m_projection = glm::perspective(glm::radians(45.0f), m_window->getAspectRation(), 0.1f, 100.0f);
 }
 
 void Scene::render() const {

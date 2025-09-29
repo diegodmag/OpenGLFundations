@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.24)
-project(opengl_intro)
+project(going_3d)
 
 # Estándar de C++
 set(CMAKE_CXX_STANDARD 20)

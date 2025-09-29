@@ -39,6 +39,8 @@ public:
 
     GLFWwindow* getWindow() const {return m_window;}
 
+    float getAspectRation() const {return static_cast<float>(m_width)/static_cast<float>(m_height);}
+
     /**
      * @brief Inicializa la biblioteca GLFW y la ventana m_window
      */

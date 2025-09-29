@@ -1,6 +1,5 @@
 #include "WindowGL.h"
 
-
 void WindowGL::InitGLFW(){
     if (!glfwInit()) {
         std::cerr << "FAILED TO INITIALIZE GLFW\n";
