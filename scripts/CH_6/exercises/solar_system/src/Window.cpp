@@ -202,7 +202,7 @@ void Window::RenderCustom(){
 
     ActivatePositionVertexAttribute(m_vbo[0]);
 
-    ActivateTextureVertexAttribute(m_vbo[1],cubeTexture);
+    //ActivateTextureVertexAttribute(m_vbo[1],cubeTexture);
 
     MipMapping(); 
 
