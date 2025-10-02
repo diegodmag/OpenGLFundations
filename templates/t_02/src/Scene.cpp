@@ -27,7 +27,7 @@ void Scene::render() const {
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         
-        //m_model->renderModel(m_view, m_projection);
+        m_model->renderModel(m_view, m_projection);
 
         glfwSwapBuffers(m_window->getWindow());
         

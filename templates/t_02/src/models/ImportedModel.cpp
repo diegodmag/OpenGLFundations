@@ -52,14 +52,33 @@ void ImportedModel::init(){
 
     if(m_normalVecs.size()>0){
         std::cout<<"Normal Vectors: "<<m_normalVecs.size()<<'\n';
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO[3]);
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO[2]);
         glBufferData(GL_ARRAY_BUFFER, m_normalVecs.size() * sizeof(float), &m_normalVecs[0], GL_STATIC_DRAW);
     }else{
         std::cerr<<"NORMALS ERROR"<<std::endl; 
     }
+
 }
 
 void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projection){
+
+    m_shaderProgram->use();
+
+    m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f));
+
+
+    m_shaderProgram->setMat4x4("model", m_model_mat);
+    m_shaderProgram->setMat4x4("view", view);
+    m_shaderProgram->setMat4x4("projection", projection);
+
+    glBindVertexArray(VAO);
+    ///glBindBuffer(GL_ARRAY_BUFFER, vbo);
+    //Binding the location 0 layout (location=0) in vec3 position 
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(0);
+
+    glDrawArrays(GL_POINTS, 0, numVertices);
 
 }
 
