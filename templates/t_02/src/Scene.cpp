@@ -7,7 +7,7 @@ void Scene::init(){
     m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
     //Inicializacion del Modelo -> Cubo 
     //m_model = new Cube(m_shaderProgram);
-    m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapots.obj");
+    m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
     //Matriz de vista View Matrix
     m_view =  glm::lookAt(glm::vec3(-2.0f,3.0f,-5.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
