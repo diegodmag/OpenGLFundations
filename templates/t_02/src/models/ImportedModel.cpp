@@ -9,7 +9,7 @@ void ImportedModel::initGeometry(){
     std::vector<float> tcs = modelImporter.getTextureCoordinates();
     std::vector<float> normals = modelImporter.getNormals();
 
-    for(size_t i=0; i<numVertices;i++){
+    for(int i=0; i<numVertices;i++){
         
         m_vertices.push_back(verts[i*3]);
         m_vertices.push_back(verts[i*3+1]);
@@ -64,16 +64,11 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
 
     m_shaderProgram->use();
 
-    m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f));
-
-
     m_shaderProgram->setMat4x4("model", m_model_mat);
     m_shaderProgram->setMat4x4("view", view);
     m_shaderProgram->setMat4x4("projection", projection);
 
-    glBindVertexArray(VAO);
-    ///glBindBuffer(GL_ARRAY_BUFFER, vbo);
-    //Binding the location 0 layout (location=0) in vec3 position 
+    glBindVertexArray(VAO); 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
@@ -83,7 +78,8 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
 }
 
 void ImportedModel::updateModel(float deltaTime){
-
+    //m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f));
+    m_model_mat=glm::rotate(m_model_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 } 
 
 void ImportedModel::finish(){
