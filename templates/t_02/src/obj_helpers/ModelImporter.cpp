@@ -65,7 +65,9 @@ void ModelImporter::parseOBJ(const char *filePath) {
                 triangleVerts.push_back(vertVals[vIndex * 3]);
                 triangleVerts.push_back(vertVals[vIndex * 3 + 1]);
                 triangleVerts.push_back(vertVals[vIndex * 3 + 2]);
-
+                    //vect vertices
+                    //vect textcoords
+                    //vect normales
                 // agregar texcoords si existen
                 if (tIndex >= 0) {
                     textureCoords.push_back(stVals[tIndex * 2]);

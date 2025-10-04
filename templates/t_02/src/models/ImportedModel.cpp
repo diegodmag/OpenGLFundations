@@ -73,12 +73,14 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
-    glDrawArrays(GL_POINTS, 0, numVertices);
+    //glDrawArrays(GL_POINTS, 0, numVertices);
+    // glDrawArrays(GL_TRIANGLES, 0, numVertices);
+    glDrawArrays(GL_LINE_STRIP, 0, numVertices);
 
 }
 
 void ImportedModel::updateModel(float deltaTime){
-    //m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.4f));
+    m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.75f));
     m_model_mat=glm::rotate(m_model_mat, (float)glfwGetTime(), glm::vec3(0.0f, 1.0f, 0.0f));
 } 
 

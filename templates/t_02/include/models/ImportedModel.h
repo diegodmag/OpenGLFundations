@@ -12,7 +12,7 @@
 
 class ImportedModel: public Model{
 private:
-const char * m_filePath; 
+    const char * m_filePath; 
     int numVertices; 
     // std::vector<glm::vec3> vertices; 
     // std::vector<glm::vec2> texCoords; 
