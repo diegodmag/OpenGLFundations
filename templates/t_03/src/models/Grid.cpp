@@ -112,7 +112,7 @@ void Grid::initGeometry(){
     // La escala se precalcula para calcularla en el update 
     m_model_mat = glm::mat4(1.0f);
     m_model_mat = glm::translate(m_model_mat, glm::vec3(0.0f));
-    m_model_mat = glm::scale(m_model_mat, glm::vec3(0.05f)); // SOLO una vez
+    m_model_mat = glm::scale(m_model_mat, glm::vec3(0.25f)); // SOLO una vez
 }
 
 void Grid::init(){
@@ -129,7 +129,6 @@ void Grid::init(){
     // size_t NumFloats = 0; 
     // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(NumFloats*sizeof(float)));
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Vertex), (GLvoid*)0);
-
     glEnableVertexAttribArray(0);
 
 }

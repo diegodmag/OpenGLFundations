@@ -32,7 +32,7 @@ private:
     void init() override;
     
     /**
-     * @brief Genera una cadena a partir de una ruta de un shader
+     * @brief Genera una lista de triangulos que componen a cada QUAD de una grid 
      */
     void CreateTriangleList();
 

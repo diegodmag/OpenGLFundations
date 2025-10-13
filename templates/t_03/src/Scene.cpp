@@ -6,10 +6,9 @@ void Scene::init(){
     //Inicializacion de ProgramShader 
     m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
     //Inicializacion del Modelo
-    //m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
     m_model = new Grid(m_shaderProgram, 100, 100);
     //Matriz de vista View Matrix
-    m_view =  glm::lookAt(glm::vec3(0.0f,5.0f,-8.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
+    m_view =  glm::lookAt(glm::vec3(0.0f,8.0f,-20.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
     m_projection = glm::perspective(glm::radians(45.0f), m_window->getAspectRation(), 0.1f, 100.0f);
 }
