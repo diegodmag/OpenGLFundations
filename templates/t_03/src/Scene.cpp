@@ -7,9 +7,9 @@ void Scene::init(){
     m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
     //Inicializacion del Modelo
     //m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
-    m_model = new Grid(m_shaderProgram, 300, 300);
+    m_model = new Grid(m_shaderProgram, 100, 100);
     //Matriz de vista View Matrix
-    m_view =  glm::lookAt(glm::vec3(0.0f,5.0f,-20.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
+    m_view =  glm::lookAt(glm::vec3(0.0f,5.0f,-8.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
     m_projection = glm::perspective(glm::radians(45.0f), m_window->getAspectRation(), 0.1f, 100.0f);
 }
@@ -23,9 +23,14 @@ void Scene::render() const {
     glEnable(GL_CULL_FACE);   // Habilitar culling de caras
     glEnable(GL_DEPTH_TEST);  // Prueba de profundidad
 
+    double lastTime = glfwGetTime();
+
     while(!glfwWindowShouldClose(m_window->getWindow())){
 
         // Compute delta time   
+        double currentTime = glfwGetTime();
+        float deltaTime = static_cast<float>(currentTime - lastTime);
+        lastTime = currentTime;
 
         if (glfwGetKey(m_window->getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(m_window->getWindow(), true);
@@ -38,7 +43,7 @@ void Scene::render() const {
         glfwSwapBuffers(m_window->getWindow());
         glfwPollEvents();
 
-        m_model->updateModel(glfwGetTime());
+        m_model->updateModel(deltaTime);
         
     }
 
