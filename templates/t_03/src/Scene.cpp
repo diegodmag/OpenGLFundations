@@ -5,12 +5,11 @@ void Scene::init(){
     m_window = new WindowGL();
     //Inicializacion de ProgramShader 
     m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
-    //Inicializacion del Modelo -> Cubo 
-    //m_model = new Cube(m_shaderProgram);
-    // m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
-    m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
+    //Inicializacion del Modelo
+    //m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
+    m_model = new Grid(m_shaderProgram, 100, 100);
     //Matriz de vista View Matrix
-    m_view =  glm::lookAt(glm::vec3(-3.0f,5.0f,-4.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
+    m_view =  glm::lookAt(glm::vec3(0.0f,5.0f,-20.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
     m_projection = glm::perspective(glm::radians(45.0f), m_window->getAspectRation(), 0.1f, 100.0f);
 }
@@ -26,7 +25,7 @@ void Scene::render() const {
 
     while(!glfwWindowShouldClose(m_window->getWindow())){
 
-        // Compute time  
+        // Compute delta time   
 
         if (glfwGetKey(m_window->getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(m_window->getWindow(), true);
