@@ -30,14 +30,80 @@ void Grid::InitVertices(std::vector<Vertex>& Vertices){
 
 }
 
+// void Grid::InitVertices(std::vector<Vertex>& Vertices) {
+//     int Index{0};
+
+//     // Escala base: el radio controla tanto el ancho como la altura de la montaña
+//     float radius = std::max(m_width, m_depth) / 2.0f;
+//     float maxHeight = radius * 0.75f; // la altura es el 20% del tamaño del grid
+
+//     for (int z = -m_depth / 2; z < m_depth / 2; z++) {
+//         for (int x = -m_width / 2; x < m_width / 2; x++) {
+//             assert(Index < Vertices.size());
+
+//             float dist = sqrt(x * x + z * z);
+
+//             // Función de altura (Gaussiana, más suave que una parábola)
+//             float y = maxHeight * exp(-pow(dist / (radius * 0.5f), 2));
+
+//             Vertices[Index].InitVertex(x, y, z);
+//             Index++;
+//         }
+//     }
+
+//     assert(Index == Vertices.size());
+// }
+
+
+
+void Grid::InitIndices(std::vector<uint>& Indices){
+    int Index{0};
+
+    int depth {(m_depth/2)-1};
+    int width {(m_width/2)-1};
+
+    for(int z=-depth; z< depth ; z++){
+        for(int x=-width; x< width; x++){
+            assert(Index<Indices.size());
+
+            uint IndexBottomLeft = z * m_width + x; 
+            uint IndexTopLeft = (z+1) * m_width + x; 
+            uint IndexTopRight = (z+1) * m_width + (x+1);
+            uint IndexBottomRight = z * m_width + (x+1);
+
+
+            //Add top Left Triangle 
+            Indices[Index++]=IndexBottomLeft; 
+            Indices[Index++]=IndexTopLeft; 
+            Indices[Index++]=IndexTopRight; 
+
+            //Add Bottom Right Triangle
+            Indices[Index++]=IndexBottomLeft;
+            Indices[Index++]=IndexTopRight;
+            Indices[Index++]=IndexBottomRight; 
+        }
+    }
+
+}
+
+
+
 void Grid::initGeometry(){
     std::vector<Grid::Vertex> vertices; 
     vertices.resize(m_width*m_depth);
     
     InitVertices(vertices);
     //Populate the VBO 
+
+    //Init indices 
+    std::vector<unsigned int> Indices; 
+    int NumQuads = (m_width-1)*(m_depth-1);
+    Indices.resize(NumQuads*6);// Cada Quad tiene 6 vertices 
+    InitIndices(Indices);
+
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices[0])*vertices.size(), &vertices[0], GL_STATIC_DRAW); 
 
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices[0])*Indices.size(), &Indices[0],GL_STATIC_DRAW);
 }
 
 void Grid::init(){
@@ -46,6 +112,9 @@ void Grid::init(){
 
     glGenBuffers(1, &VBO);
     glBindBuffer(GL_ARRAY_BUFFER,VBO);
+
+    glGenBuffers(1, &EBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
 
     //Enable vertex attribute
     size_t NumFloats = 0; 
@@ -65,16 +134,17 @@ void Grid::renderModel(const glm::mat4& view, const glm::mat4& projection){
     glBindVertexArray(VAO); 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
 
-    //glDrawArrays(GL_POINTS, 0, numVertices);
-    // glDrawArrays(GL_TRIANGLES, 0, numVertices);
-    glDrawArrays(GL_POINTS, 0, m_depth*m_width);
+    // glDrawArrays(GL_POINTS, 0, m_depth*m_width);
+
+    // glDrawElements(GL_POINTS, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, NULL);
 
     glBindVertexArray(0);
 }   
 
 void Grid::updateModel(float deltaTime){
-    m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.25f));
-    //m_model_mat=glm::rotate(m_model_mat, deltaTime/2, glm::vec3(0.0f, 1.0f, 0.0f));
+    m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
+    m_model_mat=glm::rotate(m_model_mat, deltaTime/2, glm::vec3(0.0f, 1.0f, 0.0f));
 }
 
 void Grid::finish(){
