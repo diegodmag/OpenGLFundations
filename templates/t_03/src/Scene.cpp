@@ -6,7 +6,7 @@ void Scene::init(){
     //Inicializacion de ProgramShader 
     m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
     //Inicializacion del Modelo
-    m_model = new Grid(m_shaderProgram, 500, 500);
+    m_model = new Grid(m_shaderProgram, 80, 80);
     //Matriz de vista View Matrix
     m_view =  glm::lookAt(glm::vec3(0.0f,8.0f,-20.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
     //Matriz de projeccion
@@ -17,7 +17,7 @@ void Scene::render() const {
 
     //Ciclo de Renderizado
     glClearColor(0.0f, 0.0f,0.0f, 0.0f);
-    glFrontFace(GL_CW);      // Las caras frontales son las que tienen vértices en sentido antihorario
+    glFrontFace(GL_CCW);      // Las caras frontales son las que tienen vértices en sentido antihorario
     glCullFace(GL_BACK);      // Culling de caras traseras
     glEnable(GL_CULL_FACE);   // Habilitar culling de caras
     glEnable(GL_DEPTH_TEST);  // Prueba de profundidad

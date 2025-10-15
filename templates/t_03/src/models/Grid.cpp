@@ -112,7 +112,7 @@ void Grid::initGeometry(){
     // La escala se precalcula para calcularla en el update 
     m_model_mat = glm::mat4(1.0f);
     m_model_mat = glm::translate(m_model_mat, glm::vec3(0.0f));
-    m_model_mat = glm::scale(m_model_mat, glm::vec3(0.01f)); // SOLO una vez
+    m_model_mat = glm::scale(m_model_mat, glm::vec3(0.25f)); // SOLO una vez
 }
 
 void Grid::init(){
@@ -142,15 +142,15 @@ void Grid::renderModel(const glm::mat4& view, const glm::mat4& projection){
     m_shaderProgram->setMat4x4("projection", projection);
 
     glBindVertexArray(VAO); 
-    glDrawArrays(GL_POINTS, 0, m_depth*m_width);
+    // glDrawArrays(GL_TRIANGLES, 0, m_depth*m_width);
     
-    //glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    // glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
+    // glBindBuffer(GL_ARRAY_BUFFER, VBO);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,EBO);
 
 
     // glDrawElements(GL_POINTS, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, NULL);
-    // glDrawElements(GL_TRIANGLES, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, nullptr);
-    // glDrawElements(GL_TRIANGLES, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, NULL);
+    // glDrawElements(GL_POINTS, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, NULL);
+    glDrawElements(GL_TRIANGLES, (m_depth-1)*(m_width-1)*6, GL_UNSIGNED_INT, NULL);
     
 
     glBindVertexArray(0);
