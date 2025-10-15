@@ -1,11 +1,9 @@
 cmake_minimum_required(VERSION 3.24)
-project(grid)
+project(going_3d)
 
 # Estándar de C++
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-
-set(CMAKE_CXX_FLAGS_RELEASE "-O3 -std=c++20")
 
 # Flags del compilador (equivalente a -Wall -Wextra)
 if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU" OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
@@ -28,8 +26,8 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/Main.cpp
                                ${PROJECT_SOURCE_DIR}/src/Scene.cpp
                                ${PROJECT_SOURCE_DIR}/src/ShaderProgram.cpp
                                ${PROJECT_SOURCE_DIR}/src/WindowGL.cpp
+                               ${PROJECT_SOURCE_DIR}/src/models/Cube.cpp
                                ${PROJECT_SOURCE_DIR}/src/models/ImportedModel.cpp
-                               ${PROJECT_SOURCE_DIR}/src/models/Grid.cpp
                                ${PROJECT_SOURCE_DIR}/src/obj_helpers/ModelImporter.cpp
                                )
 
