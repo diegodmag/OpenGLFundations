@@ -22,6 +22,8 @@ This project is the final exercise from Chapter 5 of [Computer Graphics Programm
 - Procedural sphere generation for each planet, including vertex, normal, and texture coordinate creation. 
 - Texture mapping (with resizing for performance) using [SOIL2](https://github.com/SpartanJ/SOIL2).  
 
+![solar_system](https://github.com/user-attachments/assets/cadf7790-bdba-4549-bacd-0f84ede58e28)
+
 ### OBJ Loader 
 
 A basic Wavefront `.OBJ` parser and model loader, implemented following Chapter 6 of[Computer Graphics Programming in OpenGL with C++](https://www.degruyterbrill.com/document/doi/10.1515/9781501519567/html?lang=en).
@@ -30,13 +32,10 @@ A basic Wavefront `.OBJ` parser and model loader, implemented following Chapter 
 - Reading and parsing `.OBJ` files. 
 - Project template using a class hierarchy for model subclasses. 
 - Testing multiple OpenGL primitives: `TRIANGLES`, `LINES`, and `POINTS`. 
-
+![teapot_show](https://github.com/user-attachments/assets/7880e26c-f666-4cce-ad0f-48dddc19fee2)
 
 ### 🏔️ Grid Generator (for Height Maps)
 
 A simple grid generator for terrain and height-map rendering, inspired by the [OGLDEV](https://www.youtube.com/@OGLDEV) tutorials.
 
-
-
-  <!-- ![Star-Snatch](https://github.com/user-attachments/assets/789e42a5-ed31-4e3d-8752-15816ffd08fd)
-    - Contador global sincronizado para todos los jugadores - Global countdown timer synchronized for all players. -->
+![grid_show](https://github.com/user-attachments/assets/b9ae6856-532e-4bac-b80d-3ec380e9004f)
