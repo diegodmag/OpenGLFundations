@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-// Input functions 
+// Input Callbacks functions 
 
 void windos_reshape_call_back(GLFWwindow* glfw_window, int newWidth, int newHeight){
     //Se recupera el objeto scene que guardo la ventana
@@ -13,13 +13,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     (void)scancode;
     (void)mods;
 
+    //Get the pointer of the escen 
     Scene* scene = static_cast<Scene*>(glfwGetWindowUserPointer(window));
 
     if (action == GLFW_PRESS) {
         if (key == GLFW_KEY_A)
-            std::cout << "Click A desde Scene\n";
-        if (key == GLFW_KEY_D)
-            std::cout << "Click D desde Scene\n";
+            scene->getModel()->changeRenderMode(0);
+        if (key == GLFW_KEY_S){
+            glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+            scene->getModel()->changeRenderMode(1);
+        }
+        if (key == GLFW_KEY_D){
+            glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+            scene->getModel()->changeRenderMode(1);
+        }
 
     }
 }
@@ -63,9 +70,14 @@ void Scene::render() const {
     glEnable(GL_CULL_FACE);   // Habilitar culling de caras
     glEnable(GL_DEPTH_TEST);  // Prueba de profundidad
 
+    double lastTime = glfwGetTime();
+
     while(!glfwWindowShouldClose(m_window->getWindow())){
 
-        // Compute time  
+        // Compute delta time   
+        double currentTime = glfwGetTime();
+        float deltaTime = static_cast<float>(currentTime - lastTime);
+        lastTime = currentTime; 
 
         if (glfwGetKey(m_window->getWindow(), GLFW_KEY_ESCAPE) == GLFW_PRESS)
             glfwSetWindowShouldClose(m_window->getWindow(), true);
@@ -78,7 +90,7 @@ void Scene::render() const {
         glfwSwapBuffers(m_window->getWindow());
         glfwPollEvents();
 
-        m_model->updateModel(glfwGetTime());
+        m_model->updateModel(deltaTime);
         
     }
 

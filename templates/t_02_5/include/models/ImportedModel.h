@@ -23,6 +23,12 @@ private:
     std::vector<float> m_vertices;
     std::vector<float> m_textCoords;
     std::vector<float> m_normalVecs;
+
+    void initGeometry() override;
+
+    void init() override;
+    
+    void finish() override;
 public: 
 
     ImportedModel(ShaderProgram* program, const char *filePath) 
@@ -35,17 +41,12 @@ public:
         init();
 
     }
-
-    void initGeometry() override;
-
-    void init() override;
-
+    
     void renderModel(const glm::mat4& view, const glm::mat4& projection) override;
 
+    void changeRenderMode(uint mode) override;
+
     void updateModel(float deltaTime) override;
-
-    void finish() override;
-
 };
 
 

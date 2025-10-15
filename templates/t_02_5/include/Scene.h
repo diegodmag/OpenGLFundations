@@ -11,7 +11,6 @@
 #include "ShaderProgram.h"
 
 #include "Model.h"
-#include "models/Cube.h"
 #include "models/ImportedModel.h"
 
 /**
@@ -48,6 +47,8 @@ public:
     }
 
     WindowGL* getWindowGL(){return m_window;}
+
+    Model* getModel(){return m_model;}
 
     /**
      * @brief Ciclo de renderizado general 
