@@ -1,8 +1,8 @@
 # 💻  My path learning OpenGL  
 
-This repository saves my evlution in my mission of learn OpenGL and improve my C++ skills. 
+This repository documents my progress and evolution in learning OpenGL while improving my C++ programming skills.
 
-My sources: 
+## 📚 Learning Resources: 
 
 - [LearnOpenGL](https://learnopengl.com/). 
 - [opengl-tutorial](https://www.opengl-tutorial.org/)
@@ -10,31 +10,31 @@ My sources:
 - [OGLDEV](https://www.youtube.com/@OGLDEV)
 
 
-## 🎮 Valuable Proyects 
+## 🎮 Featured Projects 
 
 ### Planetary System 
 
-This is the final proyect for the Chapter 5 from [Computer Graphics Programming in OpenGL with C++](https://www.degruyterbrill.com/document/doi/10.1515/9781501519567/html?lang=en). 
+This project is the final exercise from Chapter 5 of [Computer Graphics Programming in OpenGL with C++](https://www.degruyterbrill.com/document/doi/10.1515/9781501519567/html?lang=en). 
 
-#### ⚔️ Important Features
-- First person camera navigation. Based on the camera description from [learnOpenGL](https://learnopengl.com/Getting-started/Camera).
-- Matrix Stack: In order to dermine the rotation of each planet relative of the parent's matrix (tipically another planet or the camera matrix). 
-- Procedural Model Sphere Generation for each planet. Creating vertices, normals and texture coordinates. 
-- Applying textures (and resiing for better performance) using [SOIL2](https://github.com/SpartanJ/SOIL2).  
+#### ⚔️ Key Features
+- First-person camera navigation, based on the camera system from [learnOpenGL](https://learnopengl.com/Getting-started/Camera).
+- Matrix stack implementation to determine each planet’s rotation relative to its parent’s transformation matrix (typically another planet or the camera), 
+- Procedural sphere generation for each planet, including vertex, normal, and texture coordinate creation. 
+- Texture mapping (with resizing for performance) using [SOIL2](https://github.com/SpartanJ/SOIL2).  
 
 ### OBJ Loader 
 
-A basic Wavefront .OBJ parser and Model loader. The implementation is based on Chapter 6 from [Computer Graphics Programming in OpenGL with C++](https://www.degruyterbrill.com/document/doi/10.1515/9781501519567/html?lang=en).
+A basic Wavefront `.OBJ` parser and model loader, implemented following Chapter 6 of[Computer Graphics Programming in OpenGL with C++](https://www.degruyterbrill.com/document/doi/10.1515/9781501519567/html?lang=en).
 
-#### ⚔️ Important Features
-- Reading and parsing an `.obj` file. 
-- Proyect template using hierarchy for Model subclases. 
-- Testing primitives: `TRIANGLES`, `LINES`, `POINTS`. 
+#### ⚔️ Key Features
+- Reading and parsing `.OBJ` files. 
+- Project template using a class hierarchy for model subclasses. 
+- Testing multiple OpenGL primitives: `TRIANGLES`, `LINES`, and `POINTS`. 
 
 
-### Basics of Grid (for Height-Maps)
+### 🏔️ Grid Generator (for Height Maps)
 
-Basic Grid generator for Height-Maps and terrains, based on [OGLDEV](https://www.youtube.com/@OGLDEV).
+A simple grid generator for terrain and height-map rendering, inspired by the [OGLDEV](https://www.youtube.com/@OGLDEV) tutorials.
 
 
 
