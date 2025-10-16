@@ -48,7 +48,7 @@ public:
     
     void renderModel(const glm::mat4& view, const glm::mat4& projection) override;
 
-    void changeRenderMode(uint mode) override;
+    void changeRenderMode() override;
 
     void updateModel(float deltaTime) override;
 };

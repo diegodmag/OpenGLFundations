@@ -9,9 +9,14 @@
 
 #include "WindowGL.h"
 #include "ShaderProgram.h"
+#include "Camera.h"
+
 
 #include "Model.h"
 #include "models/ImportedModel.h"
+
+
+
 
 /**
  * @class Scene
@@ -23,10 +28,13 @@ private:
 
     WindowGL* m_window; 
     ShaderProgram*  m_shaderProgram; // This could be a std::vector of shader programs 
+    Camera* m_camera; 
     Model* m_model; // This could be a std::vector of Models 
-
+    
     glm::mat4 m_view;
     glm::mat4 m_projection; 
+
+    float m_detalTime{}; 
 
     /**
      * @brief Inicializacion 
@@ -44,16 +52,21 @@ public:
     ~Scene(){
         delete m_window;
         delete m_shaderProgram;
+        delete m_camera;
     }
 
     WindowGL* getWindowGL(){return m_window;}
 
     Model* getModel(){return m_model;}
 
+    Camera * getCamera(){return m_camera;}
+
+    float getDeltaTime(){return m_detalTime;}
+
     /**
      * @brief Ciclo de renderizado general 
      */
-    void render() const; 
+    void render(); 
 
     /**
      * @brief Procesa entrada de usuario

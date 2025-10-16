@@ -86,17 +86,22 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     m_shaderProgram->ativateTexAttribute(m_VBO[1], texture);
 
     Utils::MipMapping();
-    //glDrawArrays(GL_POINTS, 0, numVertices);
-    // glDrawArrays(GL_TRIANGLES, 0, numVertices);
+
     if(m_render_mode==0)
         glDrawArrays(GL_POINTS, 0, numVertices);
-    if(m_render_mode==1)
+    if(m_render_mode==1 || m_render_mode==2)
         glDrawArrays(GL_TRIANGLES, 0, numVertices);
 
 }
 
-void ImportedModel::changeRenderMode(uint n_mode){
-    m_render_mode=n_mode;
+void ImportedModel::changeRenderMode(){
+    m_render_mode= (m_render_mode+1)%3;
+    if(m_render_mode==1)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    else if(m_render_mode==2)
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+    std::cout<<m_render_mode<<'\n';
 }
 
 void ImportedModel::updateModel(float deltaTime){

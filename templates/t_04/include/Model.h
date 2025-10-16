@@ -22,7 +22,7 @@ protected:
     glm::mat4 m_model_mat;
     // float angle 
 
-    uint m_render_mode {0};
+    int m_render_mode {0};
     
     /**
      * @brief Inicializa vertices  
@@ -73,7 +73,7 @@ public:
     virtual void finish() = 0;
 
 
-    virtual void changeRenderMode(uint mode)=0; 
+    virtual void changeRenderMode()=0; 
 };
 
 #endif
