@@ -40,6 +40,8 @@ void camera_movement(Scene* scene, int action, int key){
     }
 }
 
+
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     (void)scancode;
     (void)mods;
@@ -49,7 +51,7 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     if(scene != nullptr){
         model_interactions(scene, action, key);
     
-        camera_movement(scene, action, key);
+        //camera_movement(scene, action, key);
     }else{
         std::cerr<<"scene for input is nullptr\n"; 
     }
@@ -90,6 +92,26 @@ void Scene::initCallbacks() {
 
 }
 
+void Scene::proccess_input(float deltaTime){
+    
+    float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+    
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_W) == GLFW_PRESS)
+        m_camera->Move_Foreward(cameraSpeed);
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_S) == GLFW_PRESS)
+        m_camera->Move_Foreward(-cameraSpeed);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
+        m_camera->Move_Right(cameraSpeed);
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
+        m_camera->Move_Right(-cameraSpeed);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_E) == GLFW_PRESS)
+        m_camera->Move_Up(cameraSpeed);
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_Q) == GLFW_PRESS)
+        m_camera->Move_Up(-cameraSpeed);
+}
+
 void Scene::render(){
 
     //Ciclo de Renderizado
@@ -121,6 +143,8 @@ void Scene::render(){
         // update models 
         glfwSwapBuffers(m_window->getWindow());
         glfwPollEvents();
+
+        proccess_input(m_detalTime);
 
         m_model->updateModel(m_detalTime);
         

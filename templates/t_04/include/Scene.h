@@ -71,7 +71,7 @@ public:
     /**
      * @brief Procesa entrada de usuario
      */
-    void proccess_input() const; 
+    void proccess_input(float deltaTime); 
 
 };
 
