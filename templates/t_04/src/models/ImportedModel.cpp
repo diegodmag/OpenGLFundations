@@ -78,6 +78,13 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     m_shaderProgram->setMat4x4("view", view);
     m_shaderProgram->setMat4x4("projection", projection);
 
+    //Enviando color de luz  
+    m_shaderProgram->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+
+    //Enviando posicion de la luz 
+    //Hardcodeado, tal vez se tendria ue pasar como parametro de render 
+    m_shaderProgram->setVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
+
     glBindVertexArray(VAO); 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
@@ -86,6 +93,13 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     m_shaderProgram->ativateTexAttribute(m_VBO[1], texture);
 
     Utils::MipMapping();
+
+    /**
+     * Sending normals 
+     */
+    glBindBuffer(GL_ARRAY_BUFFER, m_VBO[2]);
+    glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    glEnableVertexAttribArray(2);
 
     if(m_render_mode==0)
         glDrawArrays(GL_POINTS, 0, numVertices);

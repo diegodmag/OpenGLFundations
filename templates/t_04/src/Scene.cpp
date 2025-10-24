@@ -2,6 +2,8 @@
 
 // Input Callbacks functions 
 
+constexpr glm::vec3 lightPos (1.2f, 1.0f, 2.0f);
+
 void windos_reshape_call_back(GLFWwindow* glfw_window, int newWidth, int newHeight){
     //Se recupera el objeto scene que guardo la ventana
     Scene* scene = static_cast<Scene*>(glfwGetWindowUserPointer(glfw_window));
@@ -43,7 +45,7 @@ void Scene::init(){
     m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
     m_light_m = new Cube(m_light_shaderProgram);
     
-    m_light_m->translate(glm::vec3(1.2f, 1.0f, 2.0f));
+    m_light_m->translate(lightPos); //This is the light position 
     m_light_m->scale(glm::vec3(0.5f));
     
     m_camera = new Camera();
@@ -118,7 +120,7 @@ void Scene::render(){
         m_camera->CalculatePerspectiveMatrix(m_window->getAspectRation());
 
         m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
-        m_light_m->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
+        // m_light_m->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
 
         // update models 
         glfwSwapBuffers(m_window->getWindow());
