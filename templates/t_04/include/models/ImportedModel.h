@@ -16,9 +16,6 @@ private:
     const char * m_filePath; 
     int numVertices; 
     GLuint texture;
-    // std::vector<glm::vec3> vertices; 
-    // std::vector<glm::vec2> texCoords; 
-    // std::vector<glm::vec3> normalVecs;
 
     GLuint m_VBO[num_VBOs];
 
@@ -30,7 +27,7 @@ private:
     
     void initGeometry() override;
 
-    void init() override;
+    void initGLState() override;
     
     void finish() override;
 public: 
@@ -42,13 +39,13 @@ public:
 
         initGeometry();
         
-        init();
+        initGLState();
 
     }
     
     void renderModel(const glm::mat4& view, const glm::mat4& projection) override;
 
-    void changeRenderMode() override;
+    void changeRenderMode();
 
     void updateModel(float deltaTime) override;
 };

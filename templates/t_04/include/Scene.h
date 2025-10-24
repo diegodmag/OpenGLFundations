@@ -14,7 +14,7 @@
 
 #include "Model.h"
 #include "models/ImportedModel.h"
-
+#include "models/Cube.h"
 
 
 
@@ -27,10 +27,13 @@ class Scene
 private:
 
     WindowGL* m_window; 
-    ShaderProgram*  m_shaderProgram; // This could be a std::vector of shader programs 
     Camera* m_camera; 
-    Model* m_model; // This could be a std::vector of Models 
+    ShaderProgram*  m_shaderProgram; // This could be a std::vector of shader programs 
+    ImportedModel* m_model; // This could be a std::vector of Models 
     
+    ShaderProgram*  m_light_shaderProgram; // This could be a std::vector of shader programs 
+    Model* m_light_m; 
+
     glm::mat4 m_view;
     glm::mat4 m_projection; 
 
@@ -57,7 +60,7 @@ public:
 
     WindowGL* getWindowGL(){return m_window;}
 
-    Model* getModel(){return m_model;}
+    ImportedModel* getModel(){return m_model;}
 
     Camera * getCamera(){return m_camera;}
 

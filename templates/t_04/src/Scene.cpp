@@ -16,32 +16,6 @@ void model_interactions(Scene* scene, int action, int key){
     }
 }
 
-//Conviene cambiar al proccess input 
-
-void camera_movement(Scene* scene, int action, int key){
-
-    float cameraSpeed = static_cast<float>(2.5*scene->getDeltaTime());
-
-    if (action == GLFW_REPEAT) {
-        if (key == GLFW_KEY_A)
-            scene->getCamera()->Move_Right(-cameraSpeed);
-        else if(key == GLFW_KEY_D)
-            scene->getCamera()->Move_Right(cameraSpeed);
-            
-        else if(key == GLFW_KEY_S)
-            scene->getCamera()->Move_Foreward(-cameraSpeed);
-        else if(key == GLFW_KEY_W)
-            scene->getCamera()->Move_Foreward(cameraSpeed);
-
-        else if(key == GLFW_KEY_Q)
-            scene->getCamera()->Move_Up(-cameraSpeed);
-        else if(key == GLFW_KEY_E)
-            scene->getCamera()->Move_Up(cameraSpeed);
-    }
-}
-
-
-
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods) {
     (void)scancode;
     (void)mods;
@@ -66,7 +40,10 @@ void Scene::init(){
     m_shaderProgram = new ShaderProgram("shaders/vs_tex.glsl","shaders/fs_tex.glsl");
     //Inicializacion del Modelo
     m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj");
-    
+
+    m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
+    m_light_m = new Cube(m_light_shaderProgram);
+
     m_camera = new Camera();
 
     m_view = m_camera->GetViewMatrix();
@@ -115,11 +92,11 @@ void Scene::proccess_input(float deltaTime){
 void Scene::render(){
 
     //Ciclo de Renderizado
-    glClearColor(0.0f, 0.0f,0.0f, 0.0f);
-    glFrontFace(GL_CCW);      // Las caras frontales son las que tienen vértices en sentido antihorario
-    glCullFace(GL_BACK);      // Culling de caras traseras
-    glEnable(GL_CULL_FACE);   // Habilitar culling de caras
+    // glClearColor(0.0f, 0.0f,0.0f, 0.0f);
     glEnable(GL_DEPTH_TEST);  // Prueba de profundidad
+    glEnable(GL_CULL_FACE);   // Habilitar culling de caras
+    glCullFace(GL_BACK);      // Culling de caras traseras
+    glFrontFace(GL_CCW);      // Las caras frontales son las que tienen vértices en sentido antihorario
 
     double lastTime = glfwGetTime();
 
@@ -138,7 +115,8 @@ void Scene::render(){
         m_camera->CalculateViewMatrix();
         m_camera->CalculatePerspectiveMatrix(m_window->getAspectRation());
 
-        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
+        // m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
+        m_light_m->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
 
         // update models 
         glfwSwapBuffers(m_window->getWindow());
@@ -146,7 +124,7 @@ void Scene::render(){
 
         proccess_input(m_detalTime);
 
-        m_model->updateModel(m_detalTime);
+        //m_model->updateModel(m_detalTime);
         
     }
 

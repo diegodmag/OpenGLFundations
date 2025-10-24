@@ -29,6 +29,7 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/Main.cpp
                                ${PROJECT_SOURCE_DIR}/src/WindowGL.cpp
                                ${PROJECT_SOURCE_DIR}/src/Utils.cpp
                                ${PROJECT_SOURCE_DIR}/src/models/ImportedModel.cpp
+                               ${PROJECT_SOURCE_DIR}/src/models/Cube.cpp
                                ${PROJECT_SOURCE_DIR}/src/obj_helpers/ModelImporter.cpp
                                )
 

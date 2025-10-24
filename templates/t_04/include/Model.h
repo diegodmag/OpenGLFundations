@@ -32,7 +32,7 @@ protected:
     /**
      * @brief Inicializa buffers 
      */
-    virtual void init() = 0; // Debe ser implementada por una derivada
+    virtual void initGLState() = 0; // Debe ser implementada por una derivada
 
 
 public: 
@@ -72,8 +72,6 @@ public:
      */
     virtual void finish() = 0;
 
-
-    virtual void changeRenderMode()=0; 
 };
 
 #endif

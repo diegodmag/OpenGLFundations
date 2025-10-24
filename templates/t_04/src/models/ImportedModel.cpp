@@ -27,7 +27,7 @@ void ImportedModel::initGeometry(){
 
 }
 
-void ImportedModel::init(){
+void ImportedModel::initGLState(){
 
     glGenVertexArrays(1,&VAO);
     glGenBuffers(3, m_VBO);
