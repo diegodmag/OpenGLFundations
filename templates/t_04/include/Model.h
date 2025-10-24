@@ -72,6 +72,13 @@ public:
      */
     virtual void finish() = 0;
 
+    void translate(glm::vec3 destiny){
+        m_model_mat = glm::translate(m_model_mat, destiny);
+    }
+
+    void scale(glm::vec3 factor){
+        m_model_mat = glm::scale(m_model_mat, factor);
+    }
 };
 
 #endif

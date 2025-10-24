@@ -35,15 +35,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void Scene::init(){
     //Inicializacion de ventana 
     m_window = new WindowGL();
-    //Inicializacion de ProgramShader 
-    // m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
+
     m_shaderProgram = new ShaderProgram("shaders/vs_tex.glsl","shaders/fs_tex.glsl");
-    //Inicializacion del Modelo
     m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj");
 
+    
     m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
     m_light_m = new Cube(m_light_shaderProgram);
-
+    
+    m_light_m->translate(glm::vec3(1.2f, 1.0f, 2.0f));
+    m_light_m->scale(glm::vec3(0.5f));
+    
     m_camera = new Camera();
 
     m_view = m_camera->GetViewMatrix();
@@ -115,7 +117,7 @@ void Scene::render(){
         m_camera->CalculateViewMatrix();
         m_camera->CalculatePerspectiveMatrix(m_window->getAspectRation());
 
-        // m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
+        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
         m_light_m->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
 
         // update models 
@@ -124,7 +126,7 @@ void Scene::render(){
 
         proccess_input(m_detalTime);
 
-        //m_model->updateModel(m_detalTime);
+        m_model->updateModel(m_detalTime);
         
     }
 
