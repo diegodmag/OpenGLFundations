@@ -61,6 +61,7 @@ void ImportedModel::initGLState(){
 
     intiTexture();
 
+    //Esto es propio de la escena no del modelo
     m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
     m_model_mat = glm::translate(m_model_mat, glm::vec3(0.0f,-20.0f,0.0f));
     m_model_mat=glm::rotate(m_model_mat, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
@@ -70,7 +71,7 @@ void ImportedModel::intiTexture(){
     texture= Utils::LoadTexture("assets/textures/beagle.jpg");
 }
 
-void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projection){
+void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projection,Light& light){
 
     m_shaderProgram->use();
 
@@ -78,29 +79,27 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     m_shaderProgram->setMat4x4("view", view);
     m_shaderProgram->setMat4x4("projection", projection);
 
-    //Enviando color de luz  
-    m_shaderProgram->setVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
-
-    //Enviando posicion de la luz 
-    //Hardcodeado, tal vez se tendria ue pasar como parametro de render 
-    m_shaderProgram->setVec3("lightPos", glm::vec3(0.0f, 0.0f, 0.0f));
-
     glBindVertexArray(VAO); 
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(0);
 
-    m_shaderProgram->ativateTexAttribute(m_VBO[1], texture);
 
+    //Texturing 
+    m_shaderProgram->ativateTexAttribute(m_VBO[1], texture);
     Utils::MipMapping();
 
+    //Light
     /**
      * Sending normals 
      */
     glBindBuffer(GL_ARRAY_BUFFER, m_VBO[2]);
     glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 0, 0);
     glEnableVertexAttribArray(2);
+    computeLight(light);
 
+
+    //For input 
     if(m_render_mode==0)
         glDrawArrays(GL_POINTS, 0, numVertices);
     if(m_render_mode==1 || m_render_mode==2)
@@ -127,6 +126,13 @@ void ImportedModel::updateModel(float deltaTime){
     
     m_model_mat=glm::rotate(m_model_mat, deltaTime*rotationSpeed, glm::vec3(0.0f, 0.0f, 1.0f));
 } 
+
+void ImportedModel::computeLight(Light& light){
+
+    m_shaderProgram->setVec3("lightColor", light.getColor());
+
+    m_shaderProgram->setVec3("lightPos", light.getPosition());
+}
 
 void ImportedModel::finish(){
 

@@ -38,7 +38,7 @@ void Cube::initGLState(){
 }
 
 
-void Cube::renderModel(const glm::mat4& view, const glm::mat4& projection){
+void Cube::renderModel(const glm::mat4& view, const glm::mat4& projection,Light& light){
     
     m_shaderProgram->use();
 
@@ -48,9 +48,19 @@ void Cube::renderModel(const glm::mat4& view, const glm::mat4& projection){
 
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, 0);
+
+    /**
+     * For now we dont don anything with the light model in the cube 
+     */
 }
 
 void Cube::updateModel(float deltaTime ){
+    /**
+     * To implement 
+     */
+}
+
+void Cube::computeLight(Light& light){
     /**
      * To implement 
      */

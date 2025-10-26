@@ -43,11 +43,13 @@ public:
 
     }
     
-    void renderModel(const glm::mat4& view, const glm::mat4& projection) override;
+    void renderModel(const glm::mat4& view, const glm::mat4& projection,Light& light) override;
 
     void changeRenderMode();
 
     void updateModel(float deltaTime) override;
+
+    void computeLight(Light& light) override; 
 };
 
 

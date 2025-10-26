@@ -8,6 +8,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.h"
+#include "Light.h"
+
+class Light;
 
 /**
  * @class Model
@@ -34,7 +37,6 @@ protected:
      */
     virtual void initGLState() = 0; // Debe ser implementada por una derivada
 
-
 public: 
 
     Model(ShaderProgram* program)
@@ -58,14 +60,22 @@ public:
      * @brief Utiliza el ShaderProgram para renderizar el modelo a partir de las matrices de projection y de vista
      * @param view Matriz de vista 
      * @param projection Matriz de proyeccion 
+     * @param light Objeto con informacion sobre la luz 
      */
-    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection) = 0;
+    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection, Light& light) = 0;
 
     /**
      * @brief Aplica transformaciones o animaciones 
      * @param deltaTime Referencia del tiempo transcurrido entre frames  
      */
     virtual void updateModel(float deltaTime) = 0;
+
+    /**
+     * @brief Metodo para calcular la ilumminacion que se llama en el update
+     * por ahora 
+     */
+    virtual void computeLight(Light& light) = 0; 
+
 
     /**
      * @brief Limpia recursos 
@@ -79,6 +89,23 @@ public:
     void scale(glm::vec3 factor){
         m_model_mat = glm::scale(m_model_mat, factor);
     }
+
+    
+    //ROTATIONS 
+    void rotateX(float degrees){
+        m_model_mat = glm::rotate(m_model_mat, glm::radians(degrees),glm::vec3(1.0f, 0.0f, 0.0f));  
+    }
+
+    void rotateY(float degrees){
+        m_model_mat = glm::rotate(m_model_mat, glm::radians(degrees),glm::vec3(0.0f, 1.0f, 0.0f));  
+    }
+
+    void rotateZ(float degrees){
+        m_model_mat = glm::rotate(m_model_mat, glm::radians(degrees),glm::vec3(0.0f, 0.0f, 1.0f));  
+    }
+    
+
+    void setModelMatByRef(glm::mat4& transform){m_model_mat=transform;}
 };
 
 #endif

@@ -37,26 +37,25 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void Scene::init(){
     //Inicializacion de ventana 
     m_window = new WindowGL();
+    
+    // light-color, light-position 
+    m_light = new Light(glm::vec3(1.0,1.0,1.0), lightPos);
 
     m_shaderProgram = new ShaderProgram("shaders/vs_tex.glsl","shaders/fs_tex.glsl");
     m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj");
 
     
-    m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
-    m_light_m = new Cube(m_light_shaderProgram);
+    // m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
+    // m_light_m = new Cube(m_light_shaderProgram);
     
-    m_light_m->translate(lightPos); //This is the light position 
-    m_light_m->scale(glm::vec3(0.5f));
+    // m_light_m->translate(lightPos); //This is the light position 
+    // m_light_m->scale(glm::vec3(0.5f));
     
     m_camera = new Camera();
 
     m_view = m_camera->GetViewMatrix();
 
     m_projection = m_camera->GetPerspectiveMatrix();
-    //Matriz de vista View Matrix
-    // m_view =  glm::lookAt(glm::vec3(-3.0f,5.0f,-4.0f), glm::vec3(0.0f), glm::vec3(0.0,1.0,0.0));
-    // //Matriz de projeccion
-    // m_projection = glm::perspective(glm::radians(45.0f), m_window->getAspectRation(), 0.1f, 100.0f);
 
     initCallbacks();
 }
@@ -119,16 +118,19 @@ void Scene::render(){
         m_camera->CalculateViewMatrix();
         m_camera->CalculatePerspectiveMatrix(m_window->getAspectRation());
 
-        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
-        // m_light_m->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
-
-        // update models 
+        //Render
+        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix(),*m_light);
+        m_light->render(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
+        
         glfwSwapBuffers(m_window->getWindow());
         glfwPollEvents();
 
         proccess_input(m_detalTime);
 
+        //Update 
+        m_light->update(m_detalTime);
         m_model->updateModel(m_detalTime);
+
         
     }
 

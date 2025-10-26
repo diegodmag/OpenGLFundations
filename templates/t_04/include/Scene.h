@@ -10,7 +10,7 @@
 #include "WindowGL.h"
 #include "ShaderProgram.h"
 #include "Camera.h"
-
+#include "Light.h"
 
 #include "Model.h"
 #include "models/ImportedModel.h"
@@ -28,6 +28,8 @@ private:
 
     WindowGL* m_window; 
     Camera* m_camera; 
+    Light * m_light; 
+
     ShaderProgram*  m_shaderProgram; // This could be a std::vector of shader programs 
     ImportedModel* m_model; // This could be a std::vector of Models 
     
