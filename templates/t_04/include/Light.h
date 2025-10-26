@@ -34,6 +34,8 @@ public:
 
     glm::vec3& getColor(){return m_color;}
 
+    void setPos(const glm::vec3& new_pos);
+
     /**
      * @brief Metodo de renderizado para la luz que establece la matriz modelo 
      * del modelo m_lamp como la matriz de la luz y llama al metodo renderModel

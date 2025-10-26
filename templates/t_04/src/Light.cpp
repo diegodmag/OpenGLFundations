@@ -18,6 +18,17 @@ Light::Light(glm::vec3 color, glm::vec3 position)
     m_lamp->scale(glm::vec3(0.2f));
 }
 
+void Light::setPos(const glm::vec3& new_pos){
+    m_pos = new_pos;
+
+    // Actualiza la matriz de modelo del cubo visual
+    m_transform = glm::mat4(1.0f);
+    m_transform = glm::translate(m_transform, m_pos);
+    m_transform = glm::scale(m_transform, glm::vec3(0.2f));
+
+    m_lamp->setModelMatByRef(m_transform);
+}
+
 void Light::render(const glm::mat4& view, const glm::mat4& projection){
 
     //Seteo de la matriz del modelo
@@ -32,6 +43,8 @@ void Light::update(const float deltaTime){
     
     //El m_transform depende del m_pos 
     // m_transform = glm::translate(m_transform, m_pos);
+    std::cout<<m_pos.x<<", "<<m_pos.y<<", "<<m_pos.z<< '\n';
+    // m_lamp->setModelMatByRef(m_lamp->ge)
     
     m_lamp->updateModel(deltaTime);
 }

@@ -66,6 +66,8 @@ public:
 
     Camera * getCamera(){return m_camera;}
 
+    Light * getLight(){return m_light;}
+
     float getDeltaTime(){return m_detalTime;}
 
     /**

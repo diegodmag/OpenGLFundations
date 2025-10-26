@@ -75,7 +75,7 @@ void Scene::proccess_input(float deltaTime){
         m_camera->Move_Foreward(-cameraSpeed);
 
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_D) == GLFW_PRESS)
-        m_camera->Move_Right(cameraSpeed);
+        m_camera->Move_Right(cameraSpeed);        
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_A) == GLFW_PRESS)
         m_camera->Move_Right(-cameraSpeed);
 
@@ -83,6 +83,26 @@ void Scene::proccess_input(float deltaTime){
         m_camera->Move_Up(cameraSpeed);
     if (glfwGetKey(m_window->getWindow(), GLFW_KEY_Q) == GLFW_PRESS)
         m_camera->Move_Up(-cameraSpeed);
+    
+    
+    
+    
+
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_RIGHT) == GLFW_PRESS)
+        // m_camera->Move_Up(-cameraSpeed);
+        m_light->setPos(m_light->getPosition() + glm::vec3(1.0f, 0.0f, 0.0f)*cameraSpeed);
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_LEFT) == GLFW_PRESS)
+        // m_camera->Move_Up(-cameraSpeed);
+        m_light->setPos(m_light->getPosition() + glm::vec3(-1.0f, 0.0f, 0.0f)*cameraSpeed);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_UP) == GLFW_PRESS)
+        // m_camera->Move_Up(-cameraSpeed);
+        m_light->setPos(m_light->getPosition() + glm::vec3(0.0f, 1.0f, 0.0f)*cameraSpeed);
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
+        // m_camera->Move_Up(-cameraSpeed);
+        m_light->setPos(m_light->getPosition() + glm::vec3(0.0f, -1.0f, 0.0f)*cameraSpeed);
+    
 }
 
 void Scene::render(){

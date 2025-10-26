@@ -57,6 +57,7 @@ void Cube::updateModel(float deltaTime ){
     /**
      * To implement 
      */
+    // m_model_mat = glm::translate(m_model_mat)
 }
 
 void Cube::finish(){
