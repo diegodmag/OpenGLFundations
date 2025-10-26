@@ -2,7 +2,7 @@
 
 // Input Callbacks functions 
 
-constexpr glm::vec3 lightPos (1.2f, 1.0f, 2.0f);
+constexpr glm::vec3 lightPos (0.0f, 5.0f, 0.0f);
 
 void windos_reshape_call_back(GLFWwindow* glfw_window, int newWidth, int newHeight){
     //Se recupera el objeto scene que guardo la ventana
@@ -43,13 +43,6 @@ void Scene::init(){
 
     m_shaderProgram = new ShaderProgram("shaders/vs_tex.glsl","shaders/fs_tex.glsl");
     m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj");
-
-    
-    // m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
-    // m_light_m = new Cube(m_light_shaderProgram);
-    
-    // m_light_m->translate(lightPos); //This is the light position 
-    // m_light_m->scale(glm::vec3(0.5f));
     
     m_camera = new Camera();
 
