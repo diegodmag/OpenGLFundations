@@ -39,3 +39,4 @@ A simple grid generator for terrain and height-map rendering, inspired by the [O
 ![grid](https://github.com/user-attachments/assets/cace10f4-1ea4-4d23-bbfe-cf5780d7215f)
 
 ### [Diffuse and Ambient light practice](templates/t_04/)
+![lightining](https://github.com/user-attachments/assets/158c8261-9de2-426c-a3f6-ee500ee3d31f)
