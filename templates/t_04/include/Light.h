@@ -5,8 +5,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-class Model;
-class ShaderProgram;
+#include "Model.h"
 
 class Light{
 
@@ -30,20 +29,6 @@ private:
 public:
 
     Light(glm::vec3 color, glm::vec3 position);
-
-    // Light(glm::vec3 color, glm::vec3 position)
-    //     : m_color{color}
-    //     , m_pos{position}
-    // {
-    //     m_transform = glm::mat4(1.0f);
-    //     m_transform = glm::translate(m_transform, m_pos);
-    //     //Inicializamos el shaderProgram 
-    //     m_light_shaderProgram = new ShaderProgram("shaders/vs_light.glsl","shaders/fs_light.glsl");
-    //     //Inicializamos el modelo 
-    //     m_lamp =  new Cube(m_light_shaderProgram); 
-    //     //Establecemos la matriz del modelo como la matriz de la luz 
-    //     m_lamp->setModelMatByRef(m_transform);
-    // }
 
     glm::vec3& getPosition(){return m_pos;}
 

@@ -37,8 +37,7 @@ void Cube::initGLState(){
     glEnableVertexAttribArray(1);
 }
 
-
-void Cube::renderModel(const glm::mat4& view, const glm::mat4& projection,Light& light){
+void Cube::renderModel(const glm::mat4& view, const glm::mat4& projection,glm::vec3 lightPosition, glm::vec3 lightColor){
     
     m_shaderProgram->use();
 
@@ -55,12 +54,6 @@ void Cube::renderModel(const glm::mat4& view, const glm::mat4& projection,Light&
 }
 
 void Cube::updateModel(float deltaTime ){
-    /**
-     * To implement 
-     */
-}
-
-void Cube::computeLight(Light& light){
     /**
      * To implement 
      */

@@ -22,11 +22,12 @@ public:
 
     void initGLState() override;
 
-    void renderModel(const glm::mat4& view, const glm::mat4& projection, Light& light) override;
+    // void renderModel(const glm::mat4& view, const glm::mat4& projection, Light& light) override;
+    void renderModel(const glm::mat4& view, const glm::mat4& projection, glm::vec3 lightPosition, glm::vec3 lightColor) override; 
 
     void updateModel(float deltaTime) override;
 
-    void computeLight(Light& light) override; 
+    // void computeLight(Light& light) override; 
 
     void finish() override;
 

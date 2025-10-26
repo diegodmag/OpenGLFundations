@@ -112,7 +112,7 @@ void Scene::render(){
         m_camera->CalculatePerspectiveMatrix(m_window->getAspectRation());
 
         //Render
-        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix(),*m_light);
+        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix(),m_light->getPosition(), m_light->getColor());
         m_light->render(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
         
         glfwSwapBuffers(m_window->getWindow());

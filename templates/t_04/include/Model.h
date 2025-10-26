@@ -8,9 +8,6 @@
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.h"
-#include "Light.h"
-
-class Light;
 
 /**
  * @class Model
@@ -56,13 +53,21 @@ public:
         glDeleteBuffers(1, &EBO);
     }
 
+    // /**
+    //  * @brief Utiliza el ShaderProgram para renderizar el modelo a partir de las matrices de projection y de vista
+    //  * @param view Matriz de vista 
+    //  * @param projection Matriz de proyeccion 
+    //  * @param light Objeto con informacion sobre la luz 
+    //  */
+    // virtual void renderModel(const glm::mat4& view, const glm::mat4& projection, Light& light) = 0;
+    
     /**
      * @brief Utiliza el ShaderProgram para renderizar el modelo a partir de las matrices de projection y de vista
      * @param view Matriz de vista 
      * @param projection Matriz de proyeccion 
      * @param light Objeto con informacion sobre la luz 
      */
-    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection, Light& light) = 0;
+    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection, glm::vec3 lightPosition, glm::vec3 lightColor) = 0;
 
     /**
      * @brief Aplica transformaciones o animaciones 
@@ -74,7 +79,7 @@ public:
      * @brief Metodo para calcular la ilumminacion que se llama en el update
      * por ahora 
      */
-    virtual void computeLight(Light& light) = 0; 
+    // virtual void computeLight(Light& light) = 0; 
 
 
     /**

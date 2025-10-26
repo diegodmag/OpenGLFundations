@@ -1,7 +1,6 @@
 #include "Light.h"
 
 #include "ShaderProgram.h"
-#include "Model.h"
 #include "models/Cube.h"  // Aquí sí podemos usar Cube
 
 Light::Light(glm::vec3 color, glm::vec3 position)
@@ -25,7 +24,7 @@ void Light::render(const glm::mat4& view, const glm::mat4& projection){
     m_lamp->setModelMatByRef(m_transform);
 
     // 
-    m_lamp->renderModel(view, projection, *this);
+    m_lamp->renderModel(view, projection, m_pos, m_color);
 
 }
 
