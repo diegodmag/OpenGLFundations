@@ -102,10 +102,17 @@ void ImportedModel::renderModel(  const glm::mat4& view
     glEnableVertexAttribArray(2);
     
     m_shaderProgram->setVec3("lightColor", lightColor);
-
     m_shaderProgram->setVec3("lightPos", lightPosition);
-    
     m_shaderProgram->setVec3("viewPos", viewPos);
+
+    //Setting the material 
+    m_shaderProgram->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    m_shaderProgram->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    m_shaderProgram->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    m_shaderProgram->setFloat("material.shininess", 32.0f);
+    
+    //Now it is supose to receive the components from the light and apply them to the shader 
+    //This is going to need another parameters 
 
     //For input 
     if(m_render_mode==0)
