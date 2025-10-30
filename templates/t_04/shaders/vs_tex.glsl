@@ -23,5 +23,6 @@ void main()
     
     
     // normal = aNormal;
+    
     normal = mat3(transpose(inverse(model))) * aNormal;
 }

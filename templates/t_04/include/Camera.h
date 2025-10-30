@@ -56,7 +56,7 @@ public:
     
     const glm::mat4& GetPerspectiveMatrix() {return m_perspective_mat;}
     
-    const glm::vec3& GetPosition(){return m_position;}
+    glm::vec3& GetPosition(){return m_position;}
 
     void CalculateViewMatrix(); 
 

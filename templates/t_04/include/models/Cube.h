@@ -23,7 +23,11 @@ public:
     void initGLState() override;
 
     // void renderModel(const glm::mat4& view, const glm::mat4& projection, Light& light) override;
-    void renderModel(const glm::mat4& view, const glm::mat4& projection, glm::vec3 lightPosition, glm::vec3 lightColor) override; 
+    void renderModel(const glm::mat4& view, 
+                     const glm::mat4& projection, 
+                     glm::vec3& lightPosition, 
+                     glm::vec3& lightColor,
+                     glm::vec3& cameraPos) override; 
 
     void updateModel(float deltaTime) override;
 

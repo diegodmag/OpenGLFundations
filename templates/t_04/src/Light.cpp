@@ -32,19 +32,14 @@ void Light::setPos(const glm::vec3& new_pos){
 void Light::render(const glm::mat4& view, const glm::mat4& projection){
 
     //Seteo de la matriz del modelo
-    m_lamp->setModelMatByRef(m_transform);
-
+    m_lamp->setModelMatByRef(m_transform);  
+    glm::vec3 temp (1.0f);
     // 
-    m_lamp->renderModel(view, projection, m_pos, m_color);
+    m_lamp->renderModel(view, projection, m_pos, m_color,temp);
 
 }
 
 void Light::update(const float deltaTime){
-    
-    //El m_transform depende del m_pos 
-    // m_transform = glm::translate(m_transform, m_pos);
-    std::cout<<m_pos.x<<", "<<m_pos.y<<", "<<m_pos.z<< '\n';
-    // m_lamp->setModelMatByRef(m_lamp->ge)
-    
+        
     m_lamp->updateModel(deltaTime);
 }
