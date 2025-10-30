@@ -71,7 +71,11 @@ void ImportedModel::intiTexture(){
     texture= Utils::LoadTexture("assets/textures/beagle.jpg");
 }
 
-void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projection,glm::vec3 lightPosition, glm::vec3 lightColor){
+void ImportedModel::renderModel(  const glm::mat4& view
+                                , const glm::mat4& projection
+                                , glm::vec3 lightPosition
+                                , glm::vec3 lightColor
+                                , glm::vec3 viewPos){
 
     m_shaderProgram->use();
 
@@ -100,6 +104,8 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     m_shaderProgram->setVec3("lightColor", lightColor);
 
     m_shaderProgram->setVec3("lightPos", lightPosition);
+    
+    m_shaderProgram->setVec3("viewPos", viewPos);
 
     //For input 
     if(m_render_mode==0)

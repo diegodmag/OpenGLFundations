@@ -35,7 +35,7 @@ void Light::render(const glm::mat4& view, const glm::mat4& projection){
     m_lamp->setModelMatByRef(m_transform);
 
     // 
-    m_lamp->renderModel(view, projection, m_pos, m_color);
+    m_lamp->renderModel(view, projection, m_pos, m_color, glm::vec3(1.0f));
 
 }
 

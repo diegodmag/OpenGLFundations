@@ -67,7 +67,11 @@ public:
      * @param projection Matriz de proyeccion 
      * @param light Objeto con informacion sobre la luz 
      */
-    virtual void renderModel(const glm::mat4& view, const glm::mat4& projection, glm::vec3 lightPosition, glm::vec3 lightColor) = 0;
+    virtual void renderModel( const glm::mat4& view
+                            , const glm::mat4& projection
+                            , glm::vec3 lightPosition
+                            , glm::vec3 lightColor
+                            , glm::vec3 viewPos) = 0;
 
     /**
      * @brief Aplica transformaciones o animaciones 

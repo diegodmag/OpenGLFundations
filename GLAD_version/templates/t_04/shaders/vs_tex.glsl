@@ -19,9 +19,9 @@ void main()
 {
     gl_Position = projection * view * model * vec4(position, 1.0);
     // tc = texCoord;
+    // This Fragments are in world space 
     FragPos = vec3(model*vec4(position, 1.0));
-    
-    
-    // normal = aNormal;
+        
+    // This normals are in world space because they are multiply by the model matrix 
     normal = mat3(transpose(inverse(model))) * aNormal;
 }
