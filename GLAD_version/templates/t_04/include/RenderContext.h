@@ -18,6 +18,12 @@ namespace render_context{
         glm::vec3 ambient{}; 
         glm::vec3 diffuse{};
         glm::vec3 specular{};
+
+        //Extra components for point light 
+        //For Attenuation (Setted for 50 distnace)
+        float constant{1.0};
+        float linear{0.09f};
+        float quadratic{0.032f};
     };
 };
 

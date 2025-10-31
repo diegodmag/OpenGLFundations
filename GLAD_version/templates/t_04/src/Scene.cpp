@@ -46,10 +46,10 @@ void Scene::init(){
     render_context::Material gold {.ambient{1.0f, 0.5f, 0.31f},
                                    .diffuse{1.0f, 0.5f, 0.31f},
                                    .specular{0.5f, 0.5f, 0.5f},
-                                   .shininess{64.0f}};
+                                   .shininess{16.0f}};
 
     render_context::LightComponents light { .ambient{0.2f, 0.2f, 0.2f},
-                                             .diffuse{0.5f, 0.5f, 0.5f},
+                                             .diffuse{0.9f, 0.9f, 0.9f},
                                              .specular{1.0f, 1.0f, 1.0f}};                                   
 
     m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj",gold,light);

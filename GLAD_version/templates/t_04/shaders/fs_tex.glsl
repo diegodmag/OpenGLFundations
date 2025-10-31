@@ -2,7 +2,8 @@
 
 struct Material {
     vec3 ambient;
-    vec3 diffuse;
+    // vec3 diffuse;
+    sampler2D diffuse;
     vec3 specular;
     float shininess;
 }; 
@@ -11,6 +12,12 @@ struct Light {
     vec3 ambient;
     vec3 diffuse;
     vec3 specular;
+
+    //For point light 
+    float constant;
+    float linear;
+    float quadratic;
+
 };
   
 in vec2 tc;// interpolated incoming texture coordinate
@@ -37,15 +44,17 @@ out vec4 FragColor;
 void main()
 {
     // vec3 objectColor = texture(samp, tc).rgb;
-    vec3 objectColor = vec3(0.5,0.35,0.0); //Color del objeto
-
+    // vec3 objectColor = vec3(0.5,0.35,0.0); //Color del objeto
+    float distance    = length(lightPos - FragPos);
+    float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance)); 
+    // float attenuation = 1.0 / (light.quadratic * (distance * distance)); 
     //Ambient 
     // float ambientStrength = 0.1;
     // vec3 ambient = ambientStrength * lightColor;
     // vec3 ambient = vec3(0.1) * material.ambient;
     // vec3 ambient = vec3(1.0f) * material.ambient;
-    vec3 ambient = light.ambient * material.ambient;
-
+    // vec3 ambient = light.ambient * material.ambient;
+    vec3 ambient = light.ambient * vec3(texture(material.diffuse, tc));
 
     // Diffuse 
     // Calculo de cada rayo de luz dada la normal y la posicion del fragmento
@@ -55,7 +64,8 @@ void main()
     // vec3 diffuse = diff * lightColor;
     // vec3 diffuse = lightColor*(diff*material.diffuse);
     // vec3 diffuse = vec3(1.0f)*(diff*material.diffuse);
-    vec3 diffuse = light.diffuse*(diff*material.diffuse);
+    // vec3 diffuse = light.diffuse*(diff*material.diffuse);
+    vec3 diffuse = light.diffuse * diff * vec3(texture(material.diffuse, tc)); 
 
     // Specular 
     // float specularStrength = 0.5;
@@ -71,11 +81,15 @@ void main()
 
 
     // vec3 result = (ambient + diffuse) * objectColor;
-    vec3 result = (ambient + diffuse + specular) * objectColor;
+    // vec3 result = (ambient + diffuse + specular) * objectColor;
     // vec3 result = (ambient + diffuse) * objectColor;
 
-
+    ambient  *= attenuation; 
+    diffuse  *= attenuation;
+    specular *= attenuation;
     // Sending color 
+    vec3 result = (ambient + diffuse + specular) * vec3(1.0f);
+    
     FragColor = vec4(result, 1.0);
 
     // color = texture(samp, tc);

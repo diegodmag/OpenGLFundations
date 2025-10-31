@@ -106,12 +106,6 @@ void ImportedModel::renderModel(  const glm::mat4& view
     m_shaderProgram->setVec3("lightPos", lightPosition);
     m_shaderProgram->setVec3("viewPos", viewPos);
 
-    //Setting the material 
-    // m_shaderProgram->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-    // m_shaderProgram->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-    // m_shaderProgram->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    // m_shaderProgram->setFloat("material.shininess", 32.0f);
-
     m_shaderProgram->setVec3("material.ambient", m_material.ambient);
     m_shaderProgram->setVec3("material.diffuse", m_material.diffuse);
     m_shaderProgram->setVec3("material.specular", m_material.specular);
@@ -121,7 +115,14 @@ void ImportedModel::renderModel(  const glm::mat4& view
     m_shaderProgram->setVec3("light.diffuse", m_lightComponents.diffuse);
     m_shaderProgram->setVec3("light.specular", m_lightComponents.specular);
 
-    
+    //Attenuation for Point Light
+    // m_shaderProgram->setFloat("light.constant",  m_lightComponents.constant);
+    m_shaderProgram->setFloat("light.constant",  1.0);
+    // m_shaderProgram->setFloat("light.linear",  m_lightComponents.linear);
+    m_shaderProgram->setFloat("light.linear",  0.09f);
+    // m_shaderProgram->setFloat("light.quadratic",  m_lightComponents.quadratic);
+    m_shaderProgram->setFloat("light.quadratic",  0.032f);
+
     //For input 
     if(m_render_mode==0)
         glDrawArrays(GL_POINTS, 0, numVertices);

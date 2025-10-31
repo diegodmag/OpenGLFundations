@@ -18,7 +18,7 @@ layout (binding=0) uniform sampler2D samp;
 void main()
 {
     gl_Position = projection * view * model * vec4(position, 1.0);
-    // tc = texCoord;
+    tc = texCoord;
     // This Fragments are in world space 
     FragPos = vec3(model*vec4(position, 1.0));
         
