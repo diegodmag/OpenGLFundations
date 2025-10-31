@@ -26,6 +26,7 @@ private:
     std::vector<float> m_normalVecs;
 
     render_context::Material m_material; 
+    render_context::LightComponents m_lightComponents; 
 
     void intiTexture(); 
     
@@ -36,10 +37,11 @@ private:
     void finish() override;
 public: 
 
-    ImportedModel(ShaderProgram* program, const char *filePath, render_context::Material& material) 
+    ImportedModel(ShaderProgram* program, const char *filePath, render_context::Material& material, render_context::LightComponents& lightComponents) 
         : Model(program)
         , m_filePath{filePath}
         , m_material{material}
+        , m_lightComponents{lightComponents}
     {
 
         initGeometry();

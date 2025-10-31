@@ -48,12 +48,11 @@ void Scene::init(){
                                    .specular{0.5f, 0.5f, 0.5f},
                                    .shininess{64.0f}};
 
-    // m_shaderProgram->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-    // m_shaderProgram->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-    // m_shaderProgram->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    // m_shaderProgram->setFloat("material.shininess", 32.0f);
+    render_context::LightComponents light { .ambient{0.2f, 0.2f, 0.2f},
+                                             .diffuse{0.5f, 0.5f, 0.5f},
+                                             .specular{1.0f, 1.0f, 1.0f}};                                   
 
-    m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj",gold);
+    m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj",gold,light);
     
     m_camera = new Camera();
 

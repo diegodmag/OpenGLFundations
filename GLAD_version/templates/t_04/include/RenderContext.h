@@ -6,6 +6,7 @@
 #include <glm/gtc/type_ptr.hpp>
 
 namespace render_context{
+
     struct Material{
         glm::vec3 ambient{}; 
         glm::vec3 diffuse{};
@@ -13,7 +14,13 @@ namespace render_context{
         float shininess{};
     };
 
+    struct LightComponents{
+        glm::vec3 ambient{}; 
+        glm::vec3 diffuse{};
+        glm::vec3 specular{};
+    };
 };
+
 
 // struct RenderContext{
 //     glm::vec3 lightPosition;

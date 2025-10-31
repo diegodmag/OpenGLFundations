@@ -116,10 +116,12 @@ void ImportedModel::renderModel(  const glm::mat4& view
     m_shaderProgram->setVec3("material.diffuse", m_material.diffuse);
     m_shaderProgram->setVec3("material.specular", m_material.specular);
     m_shaderProgram->setFloat("material.shininess", m_material.shininess);
-    
-    //Now it is supose to receive the components from the light and apply them to the shader 
-    //This is going to need another parameters 
 
+    m_shaderProgram->setVec3("light.ambient", m_lightComponents.ambient);
+    m_shaderProgram->setVec3("light.diffuse", m_lightComponents.diffuse);
+    m_shaderProgram->setVec3("light.specular", m_lightComponents.specular);
+
+    
     //For input 
     if(m_render_mode==0)
         glDrawArrays(GL_POINTS, 0, numVertices);
