@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-// Input Callbacks functions 
+#include "RenderContext.h"
 
 constexpr glm::vec3 lightPos (0.0f, 5.0f, 0.0f);
 
@@ -42,7 +42,18 @@ void Scene::init(){
     m_light = new Light(glm::vec3(1.0,1.0,1.0), lightPos);
 
     m_shaderProgram = new ShaderProgram("shaders/vs_tex.glsl","shaders/fs_tex.glsl");
-    m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj");
+
+    render_context::Material gold {.ambient{1.0f, 0.5f, 0.31f},
+                                   .diffuse{1.0f, 0.5f, 0.31f},
+                                   .specular{0.5f, 0.5f, 0.5f},
+                                   .shininess{64.0f}};
+
+    // m_shaderProgram->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    // m_shaderProgram->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    // m_shaderProgram->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    // m_shaderProgram->setFloat("material.shininess", 32.0f);
+
+    m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj",gold);
     
     m_camera = new Camera();
 

@@ -65,6 +65,7 @@ void ImportedModel::initGLState(){
     m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
     m_model_mat = glm::translate(m_model_mat, glm::vec3(0.0f,-20.0f,0.0f));
     m_model_mat=glm::rotate(m_model_mat, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
 }
 
 void ImportedModel::intiTexture(){
@@ -106,10 +107,15 @@ void ImportedModel::renderModel(  const glm::mat4& view
     m_shaderProgram->setVec3("viewPos", viewPos);
 
     //Setting the material 
-    m_shaderProgram->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
-    m_shaderProgram->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
-    m_shaderProgram->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
-    m_shaderProgram->setFloat("material.shininess", 32.0f);
+    // m_shaderProgram->setVec3("material.ambient", 1.0f, 0.5f, 0.31f);
+    // m_shaderProgram->setVec3("material.diffuse", 1.0f, 0.5f, 0.31f);
+    // m_shaderProgram->setVec3("material.specular", 0.5f, 0.5f, 0.5f);
+    // m_shaderProgram->setFloat("material.shininess", 32.0f);
+
+    m_shaderProgram->setVec3("material.ambient", m_material.ambient);
+    m_shaderProgram->setVec3("material.diffuse", m_material.diffuse);
+    m_shaderProgram->setVec3("material.specular", m_material.specular);
+    m_shaderProgram->setFloat("material.shininess", m_material.shininess);
     
     //Now it is supose to receive the components from the light and apply them to the shader 
     //This is going to need another parameters 

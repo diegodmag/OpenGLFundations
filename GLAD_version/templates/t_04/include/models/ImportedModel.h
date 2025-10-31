@@ -9,6 +9,8 @@
 
 #include "Utils.h"
 
+#include "RenderContext.h"
+
 #define num_VBOs 3
 
 class ImportedModel: public Model{
@@ -23,6 +25,8 @@ private:
     std::vector<float> m_textCoords;
     std::vector<float> m_normalVecs;
 
+    render_context::Material m_material; 
+
     void intiTexture(); 
     
     void initGeometry() override;
@@ -32,9 +36,10 @@ private:
     void finish() override;
 public: 
 
-    ImportedModel(ShaderProgram* program, const char *filePath) 
+    ImportedModel(ShaderProgram* program, const char *filePath, render_context::Material& material) 
         : Model(program)
         , m_filePath{filePath}
+        , m_material{material}
     {
 
         initGeometry();
