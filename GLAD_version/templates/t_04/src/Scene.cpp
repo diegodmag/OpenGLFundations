@@ -1,6 +1,6 @@
 #include "Scene.h"
 
-// Input Callbacks functions 
+#include "RenderContext.h"
 
 constexpr glm::vec3 lightPos (0.0f, 5.0f, 0.0f);
 
@@ -42,7 +42,17 @@ void Scene::init(){
     m_light = new Light(glm::vec3(1.0,1.0,1.0), lightPos);
 
     m_shaderProgram = new ShaderProgram("shaders/vs_tex.glsl","shaders/fs_tex.glsl");
-    m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj");
+
+    render_context::Material gold {.ambient{1.0f, 0.5f, 0.31f},
+                                   .diffuse{1.0f, 0.5f, 0.31f},
+                                   .specular{0.5f, 0.5f, 0.5f},
+                                   .shininess{16.0f}};
+
+    render_context::LightComponents light { .ambient{0.2f, 0.2f, 0.2f},
+                                             .diffuse{0.9f, 0.9f, 0.9f},
+                                             .specular{1.0f, 1.0f, 1.0f}};                                   
+
+    m_model = new ImportedModel(m_shaderProgram,"assets/obj/beagle.obj",gold,light);
     
     m_camera = new Camera();
 
@@ -132,7 +142,11 @@ void Scene::render(){
         m_camera->CalculatePerspectiveMatrix(m_window->getAspectRation());
 
         //Render
-        m_model->renderModel(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix(),m_light->getPosition(), m_light->getColor());
+        m_model->renderModel( m_camera->GetViewMatrix()
+                            , m_camera->GetPerspectiveMatrix()
+                            , m_light->getPosition()
+                            , m_light->getColor()
+                            , m_camera->GetPosition());
         m_light->render(m_camera->GetViewMatrix(), m_camera->GetPerspectiveMatrix());
         
         glfwSwapBuffers(m_window->getWindow());

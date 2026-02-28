@@ -16,8 +16,6 @@
 #include "models/ImportedModel.h"
 #include "models/Cube.h"
 
-
-
 /**
  * @class Scene
  * @brief Clase para modelar una escena que contiene una ventana, un shaderprogram y un modelo 

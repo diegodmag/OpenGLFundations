@@ -65,13 +65,18 @@ void ImportedModel::initGLState(){
     m_model_mat = glm::scale(glm::mat4(1.0f), glm::vec3(0.05f));
     m_model_mat = glm::translate(m_model_mat, glm::vec3(0.0f,-20.0f,0.0f));
     m_model_mat=glm::rotate(m_model_mat, glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
 }
 
 void ImportedModel::intiTexture(){
     texture= Utils::LoadTexture("assets/textures/beagle.jpg");
 }
 
-void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projection,glm::vec3 lightPosition, glm::vec3 lightColor){
+void ImportedModel::renderModel(  const glm::mat4& view
+                                , const glm::mat4& projection
+                                , glm::vec3 lightPosition
+                                , glm::vec3 lightColor
+                                , glm::vec3 viewPos){
 
     m_shaderProgram->use();
 
@@ -98,8 +103,25 @@ void ImportedModel::renderModel(const glm::mat4& view, const glm::mat4& projecti
     glEnableVertexAttribArray(2);
     
     m_shaderProgram->setVec3("lightColor", lightColor);
-
     m_shaderProgram->setVec3("lightPos", lightPosition);
+    m_shaderProgram->setVec3("viewPos", viewPos);
+
+    m_shaderProgram->setVec3("material.ambient", m_material.ambient);
+    m_shaderProgram->setVec3("material.diffuse", m_material.diffuse);
+    m_shaderProgram->setVec3("material.specular", m_material.specular);
+    m_shaderProgram->setFloat("material.shininess", m_material.shininess);
+
+    m_shaderProgram->setVec3("light.ambient", m_lightComponents.ambient);
+    m_shaderProgram->setVec3("light.diffuse", m_lightComponents.diffuse);
+    m_shaderProgram->setVec3("light.specular", m_lightComponents.specular);
+
+    //Attenuation for Point Light
+    // m_shaderProgram->setFloat("light.constant",  m_lightComponents.constant);
+    m_shaderProgram->setFloat("light.constant",  1.0);
+    // m_shaderProgram->setFloat("light.linear",  m_lightComponents.linear);
+    m_shaderProgram->setFloat("light.linear",  0.09f);
+    // m_shaderProgram->setFloat("light.quadratic",  m_lightComponents.quadratic);
+    m_shaderProgram->setFloat("light.quadratic",  0.032f);
 
     //For input 
     if(m_render_mode==0)

@@ -9,6 +9,8 @@
 
 #include "Utils.h"
 
+#include "RenderContext.h"
+
 #define num_VBOs 3
 
 class ImportedModel: public Model{
@@ -23,6 +25,9 @@ private:
     std::vector<float> m_textCoords;
     std::vector<float> m_normalVecs;
 
+    render_context::Material m_material; 
+    render_context::LightComponents m_lightComponents; 
+
     void intiTexture(); 
     
     void initGeometry() override;
@@ -32,9 +37,11 @@ private:
     void finish() override;
 public: 
 
-    ImportedModel(ShaderProgram* program, const char *filePath) 
+    ImportedModel(ShaderProgram* program, const char *filePath, render_context::Material& material, render_context::LightComponents& lightComponents) 
         : Model(program)
         , m_filePath{filePath}
+        , m_material{material}
+        , m_lightComponents{lightComponents}
     {
 
         initGeometry();
@@ -44,7 +51,11 @@ public:
     }
     
     // void renderModel(const glm::mat4& view, const glm::mat4& projection,Light& light) override;
-    void renderModel(const glm::mat4& view, const glm::mat4& projection, glm::vec3 lightPosition, glm::vec3 lightColor) override; 
+    void renderModel( const glm::mat4& view
+                    , const glm::mat4& projection
+                    , glm::vec3 lightPosition
+                    , glm::vec3 lightColor
+                    , glm::vec3 viewPos) override; 
     
     void changeRenderMode();
 
