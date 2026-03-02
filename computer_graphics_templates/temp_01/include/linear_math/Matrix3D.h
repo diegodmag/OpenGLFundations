@@ -64,7 +64,7 @@ namespace linear::math{
             return *reinterpret_cast<const Vector3D*>(arr_2D[j]);
         }
 
-        inline void operator*=(int s){
+        inline void operator*=(float s){
             for(size_t i=0; i<=2; i++){
                 for (size_t j = 0; j <= 2; j++)
                 {
@@ -73,7 +73,7 @@ namespace linear::math{
             }
         }
 
-        inline void operator/=(int s){
+        inline void operator/=(float s){
             for(size_t i=0; i<=2; i++){
                 for (size_t j = 0; j <= 2; j++)
                 {
@@ -119,6 +119,13 @@ namespace linear::math{
                     a(2,0)*b(0,0)+a(2,1)*b(1,0)+a(2,2)*b(2,0),
                     a(2,0)*b(0,1)+a(2,1)*b(1,1)+a(2,2)*b(2,1), 
                     a(2,0)*b(0,2)+a(2,1)*b(1,2)+a(2,2)*b(2,2),}; 
+    }
+
+    Vector3D operator*(const Matrix3D& m, const Vector3D& v){
+        return Vector3D{    m(0,0)*v.x + m(1,0)*v.y +m(2,0)*v.z, 
+                            m(0,1)*v.x + m(1,1)*v.y +m(2,1)*v.z,
+                            m(0,2)*v.x + m(1,2)*v.y +m(2,2)*v.z,
+        };
     }
 };
 
