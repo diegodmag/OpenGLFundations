@@ -10,7 +10,7 @@ namespace linear::math{
     struct Matrix3D
     {
         private: 
-            float arr_2D[3][3]; 
+            float arr_2D[3][3]{}; 
 
         public: 
         /* data */
@@ -51,27 +51,75 @@ namespace linear::math{
             return arr_2D[j][i]; 
         }
 
-        // 
-        Vector3D operator[](int i){
-            return Vector3D{arr_2D[0][i],arr_2D[1][i], arr_2D[2][i]}; 
+        // Get the matrix colum as vector3D 
+
+        inline Vector3D& operator[](int j) {
+            assert(j >= 0 && j <= 2);
+            //reinterpret_cast<const Vector3D*> < --esto regresa un puntero 
+            return *reinterpret_cast<Vector3D*>(arr_2D[j]);
+        }
+
+        inline const Vector3D& operator[](int j) const {
+            assert(j >= 0 && j <= 2);
+            return *reinterpret_cast<const Vector3D*>(arr_2D[j]);
+        }
+
+        inline void operator*=(int s){
+            for(size_t i=0; i<=2; i++){
+                for (size_t j = 0; j <= 2; j++)
+                {
+                    arr_2D[j][i] *=s; 
+                }
+            }
+        }
+
+        inline void operator/=(int s){
+            for(size_t i=0; i<=2; i++){
+                for (size_t j = 0; j <= 2; j++)
+                {
+                    arr_2D[j][i] /=s; 
+                }
+            }
         }
         
-        inline friend std::ostream& operator<<(std::ostream& os, Matrix3D& v){
+        inline friend std::ostream& operator<<(std::ostream& os, const Matrix3D& v){
             os  << "["  <<  " " << v(0,0) << ", " << v(1,0) << ", " << v(2,0) <<'\n' 
                         <<  "  " << v(0,1) << ", " << v(1,1) << ", " << v(2,1) <<'\n'
                         <<  "  " << v(0,2) << ", " << v(1,2) << ", " << v(2,2) << " " << "]"; 
             return  os; 
         }
-        // Basics operations 
+
     };
     
-    // Matrix3D operator+(const Matrix3D& a, const Matrix3D& b){
-    //     return Matrix3D{    a(0,1)-b(0,1), a(0,1)-b(0,1), a(0,1)-b(0,1), 
-    //                         a(0,1)-b(0,1), a(0,1)-b(0,1), a(0,1)-b(0,1), 
-    //                         a(0,1)-b(0,1), a(0,1)-b(0,1), a(0,1)-b(0,1) 
-    //     }; 
+    Matrix3D operator+(const Matrix3D& a, const Matrix3D& b){
+        return Matrix3D{    a(0,0)+b(0,0), a(0,1)+b(0,1), a(0,2)+b(0,2), 
+                            a(1,0)+b(1,0), a(1,1)+b(1,1), a(1,2)+b(1,2), 
+                            a(2,0)+b(2,0), a(2,1)+b(2,1), a(2,2)+b(2,2) 
+        }; 
+    }
 
-    // }
+    Matrix3D operator-(const Matrix3D& a, const Matrix3D& b){
+        return Matrix3D{    a(0,0)-b(0,0), a(0,1)-b(0,1), a(0,2)-b(0,2), 
+                            a(1,0)-b(1,0), a(1,1)-b(1,1), a(1,2)-b(1,2), 
+                            a(2,0)-b(2,0), a(2,1)-b(2,1), a(2,2)-b(2,2) 
+        }; 
+    }
+
+    //Multiplication 
+    Matrix3D operator*(const Matrix3D& a, const Matrix3D& b){
+        return 
+        Matrix3D {  a(0,0)*b(0,0)+a(0,1)*b(1,0)+a(0,2)*b(2,0),
+                    a(0,0)*b(0,1)+a(0,1)*b(1,1)+a(0,2)*b(2,1), 
+                    a(0,0)*b(0,2)+a(0,1)*b(1,2)+a(0,2)*b(2,2), 
+                    
+                    a(1,0)*b(0,0)+a(1,1)*b(1,0)+a(1,2)*b(2,0),
+                    a(1,0)*b(0,1)+a(1,1)*b(1,1)+a(1,2)*b(2,1), 
+                    a(1,0)*b(0,2)+a(1,1)*b(1,2)+a(1,2)*b(2,2),
+
+                    a(2,0)*b(0,0)+a(2,1)*b(1,0)+a(2,2)*b(2,0),
+                    a(2,0)*b(0,1)+a(2,1)*b(1,1)+a(2,2)*b(2,1), 
+                    a(2,0)*b(0,2)+a(2,1)*b(1,2)+a(2,2)*b(2,2),}; 
+    }
 };
 
 #endif 

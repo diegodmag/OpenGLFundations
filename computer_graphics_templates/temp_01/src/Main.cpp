@@ -13,11 +13,26 @@ void testingVectors(){
 }
 
 void testingMatrix(){
-    linear::math::Matrix3D mat {    1.0f, 2.0f, 3.0f,
+    linear::math::Matrix3D mat_1 {    1.0f, 2.0f, 3.0f,
                                     4.0f, 5.0f, 6.0f,
                                     7.0f, 8.0f, 9.0f,
     };
-    std::cout<<mat<<'\n'; 
+
+    linear::math::Matrix3D mat_2 {    1.0f, 2.0f, 3.0f,
+                                    4.0f, 5.0f, 6.0f,
+                                    7.0f, 8.0f, 9.0f,
+    };
+
+
+    std::cout<<mat_1<<"*"<< '\n'; 
+    std::cout<<mat_2<<'\n'<<"="<<'\n'; 
+    // mat_1/=2; 
+    std::cout<<"--------"<<'\n'; 
+    linear::math::Matrix3D mat_product = mat_1*mat_2; 
+    std::cout<<mat_product<< '\n'; 
+    // linear::math::Matrix3D mat_1_plus_2 = mat_1+mat_2;
+    // std::cout<<mat_1_plus_2<<'\n'; 
+
 }
 
 int main(){
