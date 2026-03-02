@@ -12,13 +12,23 @@ void testingVectors(){
     std::cout<<linear::math::Normalize(vec)<<'\n';
 }
 
+void testingMatrix(){
+    linear::math::Matrix3D mat {    1.0f, 2.0f, 3.0f,
+                                    4.0f, 5.0f, 6.0f,
+                                    7.0f, 8.0f, 9.0f,
+    };
+    std::cout<<mat<<'\n'; 
+}
+
 int main(){
 
-    testingVectors();
+    // testingVectors();
 
-    Scene scene {};
+    testingMatrix(); 
 
-    scene.render();
+    // Scene scene {};
+
+    // scene.render();
 
     return 0; 
 }

@@ -10,9 +10,10 @@ void WindowGL::InitGLFW(){
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, m_glfwMajor);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, m_glfwMinor);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
     m_window = glfwCreateWindow(m_width, m_height, m_name, NULL, NULL );
-
+    
     if(!m_window){
         std::cerr << "FAILED TO CREATE WINDOW\n";
         glfwTerminate();
