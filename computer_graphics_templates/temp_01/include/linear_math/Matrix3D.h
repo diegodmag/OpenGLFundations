@@ -127,6 +127,23 @@ namespace linear::math{
                             m(0,2)*v.x + m(1,2)*v.y +m(2,2)*v.z,
         };
     }
+
+
+    // Usin the Tranpose 
+    Matrix3D Transpose(const Matrix3D& a){
+        Matrix3D temp{}; 
+        for (size_t i = 0; i <=2; i++)
+        {
+            for (size_t j = 0; j <= 2; j++)
+            {
+                /* code */
+                temp(i,j) = a(j,i); 
+            }
+            
+        }
+        return temp; 
+    }
+    
 };
 
 #endif 

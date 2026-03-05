@@ -24,7 +24,7 @@ void testingMatrix(){
     };
 
 
-    std::cout<<mat_1<<"*"<< '\n'; 
+    std::cout<<mat_1<<"\n--------\n"; 
     // std::cout<<mat_2<<'\n'<<"="<<'\n'; 
     // // mat_1/=2; 
     // std::cout<<"--------"<<'\n'; 
@@ -32,22 +32,27 @@ void testingMatrix(){
     // std::cout<<mat_product<< '\n'; 
     // linear::math::Matrix3D mat_1_plus_2 = mat_1+mat_2;
     // std::cout<<mat_1_plus_2<<'\n';
+
     
-    linear::math::Vector3D v{5.0, 2.0, 3.0}; 
-    std::cout<<v<<'\n';
-    std::cout<<"---------"<<'\n';
-    std::cout<<mat_1*v<<'\n';
+    // Matrix times  vector 
+    // linear::math::Vector3D v{5.0, 2.0, 3.0}; 
+    // std::cout<<v<<'\n';
+    // std::cout<<"---------"<<'\n';
+    // std::cout<<mat_1*v<<'\n';
+
+    linear::math::Matrix3D transpose = linear::math::Transpose(mat_1); 
+    std::cout<<transpose<<'\n'; 
 }
 
 int main(){
 
     // testingVectors();
 
-    testingMatrix(); 
+    // testingMatrix(); 
 
-    // Scene scene {};
+    Scene scene {};
 
-    // scene.render();
+    scene.render();
 
     return 0; 
 }

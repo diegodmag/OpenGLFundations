@@ -6,7 +6,7 @@
 
 #include "Model.h"
 #include "obj_helpers/ModelImporter.h"
-
+#include "ShaderProgram.h"
 
 #define num_VBOs 3
 
@@ -42,7 +42,7 @@ public:
 
     }
     
-    void renderModel(const glm::mat4& view, const glm::mat4& projection) override;
+    void renderModel(const linear::math::Matrix4D& view, const linear::math::Matrix4D& projection) override;
 
     void changeRenderMode(uint mode) override;
 
