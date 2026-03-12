@@ -34,19 +34,17 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 
 void Scene::init() {
+
     m_window = new WindowGL();
     m_shaderProgram = new ShaderProgram("shaders/vertex_shader.glsl","shaders/frag_shader.glsl");
-    m_model = new ImportedModel(m_shaderProgram,"assets/obj/Teapot.obj");
+    m_model = new ImportedModel(m_shaderProgram, "assets/obj/Teapot.obj");
 
-    // PRUEBA DE TU LIBRERÍA:
-    // Creamos una matriz de vista manual (solo una traslación hacia atrás para ver el objeto)
-    // En el futuro, aquí usarás tu propio linear::math::Matrix4D::LookAt(...)
-    m_view = linear::math::Matrix4D::Translation(0.0f, 0.0f, -5.0f);
+    // Aleja la cámara un poco más
+    m_view = linear::math::Matrix4D::Translation(0.0f, 0.0f, -7.0f);
 
-    // Creamos una proyección ortográfica simple o identidad para probar
-    // NOTA: Para que se vea correctamente, deberás implementar Matrix4D::Perspective
-    // Por ahora, usaremos Identidad para confirmar que los datos fluyen a la GPU
-    m_projection = linear::math::Matrix4D::Identity();
+    float aspect = m_window->getAspectRation();
+    // Usa valores estándar: fov 45, near 0.1, far 1000
+    m_projection = linear::math::Matrix4D::Perspective(45.0f, aspect, 0.1f, 1000.0f);
 
     initCallbacks();
 }

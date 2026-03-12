@@ -62,41 +62,52 @@
 
     void ImportedModel::renderModel(const linear::math::Matrix4D& view, const linear::math::Matrix4D& projection){
 
+    //     m_shaderProgram->use();
+
+    //     // m_shaderProgram->setMat4x4("model", m_model_mat);
+    //     // m_shaderProgram->setMat4x4("view", view);
+    //     // m_shaderProgram->setMat4x4("projection", projection);
+    //     // Obtenemos las locaciones de los Uniforms
+    // GLint modelLoc = glGetUniformLocation(m_shaderProgram->getId(), "model");
+    // GLint viewLoc  = glGetUniformLocation(m_shaderProgram->getId(), "view");
+    // GLint projLoc  = glGetUniformLocation(m_shaderProgram->getId(), "projection");
+
+    // // Enviamos tus datos usando .data()
+    // // GL_FALSE es vital: indica que los datos ya están en Column-Major (tu diseño)
+    // glUniformMatrix4fv(modelLoc, 1, GL_FALSE, m_model_mat.data());
+    // glUniformMatrix4fv(viewLoc, 1, GL_FALSE, view.data());
+    // glUniformMatrix4fv(projLoc, 1, GL_FALSE, projection.data());
+
+    // glBindVertexArray(VAO); 
+    
+    // if(m_render_mode == 0)
+    //     glDrawArrays(GL_POINTS, 0, numVertices);
+    // else if(m_render_mode == 1)
+    //     glDrawArrays(GL_TRIANGLES, 0, numVertices);
+
+    //     // glBindVertexArray(VAO); 
+    //     // glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
+    //     // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
+    //     // glEnableVertexAttribArray(0);
+
+    //     // //glDrawArrays(GL_POINTS, 0, numVertices);
+    //     // // glDrawArrays(GL_TRIANGLES, 0, numVertices);
+    //     // if(m_render_mode==0)
+    //     //     glDrawArrays(GL_POINTS, 0, numVertices);
+    //     // if(m_render_mode==1)
+    //     //     glDrawArrays(GL_TRIANGLES, 0, numVertices);
         m_shaderProgram->use();
 
-        // m_shaderProgram->setMat4x4("model", m_model_mat);
-        // m_shaderProgram->setMat4x4("view", view);
-        // m_shaderProgram->setMat4x4("projection", projection);
-        // Obtenemos las locaciones de los Uniforms
-    GLint modelLoc = glGetUniformLocation(m_shaderProgram->getId(), "model");
-    GLint viewLoc  = glGetUniformLocation(m_shaderProgram->getId(), "view");
-    GLint projLoc  = glGetUniformLocation(m_shaderProgram->getId(), "projection");
+        // Enviamos tus matrices directamente a los uniforms
+        m_shaderProgram->setMat4("u_model", m_model_mat);
+        m_shaderProgram->setMat4("u_view", view);
+        m_shaderProgram->setMat4("u_projection", projection);
 
-    // Enviamos tus datos usando .data()
-    // GL_FALSE es vital: indica que los datos ya están en Column-Major (tu diseño)
-    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, m_model_mat.data());
-    glUniformMatrix4fv(viewLoc, 1, GL_FALSE, view.data());
-    glUniformMatrix4fv(projLoc, 1, GL_FALSE, projection.data());
-
-    glBindVertexArray(VAO); 
-    
-    if(m_render_mode == 0)
-        glDrawArrays(GL_POINTS, 0, numVertices);
-    else if(m_render_mode == 1)
-        glDrawArrays(GL_TRIANGLES, 0, numVertices);
-
-        // glBindVertexArray(VAO); 
-        // glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
-        // glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-        // glEnableVertexAttribArray(0);
-
-        // //glDrawArrays(GL_POINTS, 0, numVertices);
-        // // glDrawArrays(GL_TRIANGLES, 0, numVertices);
-        // if(m_render_mode==0)
-        //     glDrawArrays(GL_POINTS, 0, numVertices);
-        // if(m_render_mode==1)
-        //     glDrawArrays(GL_TRIANGLES, 0, numVertices);
-
+        glBindVertexArray(VAO); 
+        if(m_render_mode == 0)
+            glDrawArrays(GL_POINTS, 0, numVertices);
+        else
+            glDrawArrays(GL_TRIANGLES, 0, numVertices);
     }
 
     void ImportedModel::changeRenderMode(uint n_mode){
@@ -105,27 +116,42 @@
 
     void ImportedModel::updateModel(float deltaTime){
 
-static float angle = 0.0f;
-    angle += deltaTime * 0.5f; // Velocidad de rotación
+// static float angle = 0.0f;
+//     angle += deltaTime * 0.5f; // Velocidad de rotación
 
-    // Implementación manual de rotación en Y para Matrix4D (Educativo)
-    // [ cos  0  sin  0 ]
-    // [  0   1   0   0 ]
-    // [ -sin 0  cos  0 ]
-    // [  0   0   0   1 ]
-    float c = cos(angle);
-    float s = sin(angle);
+//     // Implementación manual de rotación en Y para Matrix4D (Educativo)
+//     // [ cos  0  sin  0 ]
+//     // [  0   1   0   0 ]
+//     // [ -sin 0  cos  0 ]
+//     // [  0   0   0   1 ]
+//     float c = cos(angle);
+//     float s = sin(angle);
 
-    linear::math::Matrix4D rotY(
-        c,    0.0f,  s,    0.0f,
-        0.0f, 1.0f,  0.0f, 0.0f,
-       -s,    0.0f,  c,    0.0f,
-        0.0f, 0.0f,  0.0f, 1.0f
-    );
+//     linear::math::Matrix4D rotY(
+//         c,    0.0f,  s,    0.0f,
+//         0.0f, 1.0f,  0.0f, 0.0f,
+//        -s,    0.0f,  c,    0.0f,
+//         0.0f, 0.0f,  0.0f, 1.0f
+//     );
 
-    // Aplicamos la rotación a la matriz de modelo
-    // Nota: Aquí estamos rotando sobre el origen
-    m_model_mat = rotY;
+//     // Aplicamos la rotación a la matriz de modelo
+//     // Nota: Aquí estamos rotando sobre el origen
+//     m_model_mat = rotY;
+        static float angle = 0.0f;
+        angle += deltaTime * 0.5f; 
+
+        // Usando tus funciones estáticas de Matrix4D.h
+        // Creamos una rotación simple en el eje Y (puedes añadir esta función a tu Matrix4D.h si no la tienes)
+        float c = std::cos(angle);
+        float s = std::sin(angle);
+        
+        // Actualizamos la matriz del modelo con una rotación básica
+        m_model_mat = linear::math::Matrix4D(
+            c,  0, s, 0,
+            0,  1, 0, 0,
+        -s,  0, c, 0,
+            0,  0, 0, 1
+        );
     } 
 
     void ImportedModel::finish(){

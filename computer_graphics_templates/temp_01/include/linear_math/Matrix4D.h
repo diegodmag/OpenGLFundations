@@ -52,6 +52,25 @@ namespace linear::math {
             m(0,0) = x; m(1,1) = y; m(2,2) = z;
             return m;
         }
+        // Agrega esto dentro de struct Matrix4D en Matrix4D.h
+// En Matrix4D.h dentro de struct Matrix4D
+        static Matrix4D Perspective(float fovDeg, float aspect, float nearP, float farP) noexcept {
+            float fovRad = fovDeg * (3.1415926535f / 180.0f);
+            float range = std::tan(fovRad / 2.0f) * nearP;
+            float sx = (2.0f * nearP) / (range * aspect + range * aspect); // simplificable a nearP/(range*aspect)
+            float sy = nearP / range;
+            float sz = -(farP + nearP) / (farP - nearP);
+            float pz = -(2.0f * farP * nearP) / (farP - nearP);
+
+            Matrix4D m; // Inicializada en ceros
+            m(0,0) = 1.0f / (aspect * std::tan(fovRad / 2.0f));
+            m(1,1) = 1.0f / std::tan(fovRad / 2.0f);
+            m(2,2) = -(farP + nearP) / (farP - nearP);
+            m(2,3) = -1.0f; // Importante para la división de perspectiva
+            m(3,2) = -(2.0f * farP * nearP) / (farP - nearP);
+            m(3,3) = 0.0f;
+            return m;
+        }
     };
 
     // Multiplicación Matriz4x4 * Vector4D
@@ -63,6 +82,7 @@ namespace linear::math {
             m(3,0)*v.x + m(3,1)*v.y + m(3,2)*v.z + m(3,3)*v.w
         };
     }
+
 }
 
 

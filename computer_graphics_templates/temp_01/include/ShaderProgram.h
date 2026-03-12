@@ -10,6 +10,10 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
+
+#include "linear_math/Matrix4D.h"
+#include "linear_math/Vector4D.h"
+
 /**
  * @class ShaderProgram
  * @brief Clase que modela un ShaderProgram que compila y verifica vertex y fragment shader 
@@ -80,6 +84,8 @@ public:
     void setVec3(const std::string& name, glm::vec3 vector) const;
 
     void setMat4x4(const std::string& name, const glm::mat4& value) const; 
+
+    void setMat4(const std::string& name, const linear::math::Matrix4D& matrix) const; 
 };
 
 #endif

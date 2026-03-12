@@ -80,3 +80,11 @@ void ShaderProgram::setVec3(const std::string& name, glm::vec3 vector) const{
 void ShaderProgram::setMat4x4(const std::string& name, const glm::mat4& value) const{
     glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 } 
+
+// Working on this 
+
+void ShaderProgram::setMat4(const std::string& name, const linear::math::Matrix4D& matrix) const {
+    // Usamos el método .data() que ya definiste en tu Matrix4D.h
+    glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, matrix.data());
+}
+
