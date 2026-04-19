@@ -38,6 +38,8 @@ public:
         init();         // Carga los datos a la GPU (VAO, VBO, EBO)
     }
 
+    ~CustomModel() override; 
+
     // Funciones de inicialización
     void initGeometry() override;
     void init() override;
@@ -50,7 +52,7 @@ public:
     // Ciclo de vida del renderizado
     void renderModel(const linear::math::Matrix4D &view, const linear::math::Matrix4D &projection) override;
     void updateModel(float deltaTime) override;
-    void finish() override;
+    // void finish() override;
 
     // Getters útiles opcionales
     int getNumIndices() const { return m_numIndices; }

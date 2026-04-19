@@ -3,6 +3,10 @@
 // #include "linear_math/Matrix3D.h"
 // #include "Vector3D.h"
 
+Cube::~Cube(){
+
+}
+
 void Cube::initGeometry(){
     vertices[0] = -0.5f; vertices[1]  = -0.5f; vertices[2]  = -0.5f; vertices[3]  = -1.0f; vertices[4]  = -1.0f; vertices[5]  = -1.0f; // v0     
     vertices[6]  = 0.5f; vertices[7]  = -0.5f; vertices[8]  = -0.5f; vertices[9]  =  1.0f; vertices[10] = -1.0f; vertices[11] = -1.0f; // v1
@@ -77,8 +81,10 @@ void Cube::updateModel(float deltaTime ){
      */
 }
 
-void Cube::finish(){
-    /**
-     * To implement 
-     */
-}
+
+
+// void Cube::finish(){
+//     /**
+//      * To implement 
+//      */
+// }

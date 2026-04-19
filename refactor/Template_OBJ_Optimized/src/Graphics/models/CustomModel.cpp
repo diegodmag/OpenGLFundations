@@ -1,6 +1,13 @@
 #include "Graphics/models/CustomModel.h"
 #include "Utils/obj_helpers/ObjLoader.h"
 
+
+CustomModel::~CustomModel(){
+    glDeleteVertexArrays(1, &VAO);
+    glDeleteBuffers(NUM_VBOS, m_VBO);
+    glDeleteBuffers(1, &m_EBO);
+}
+
 /**
  * @brief Carga los datos desde el archivo OBJ y los prepara para la indexación.
  */
@@ -110,9 +117,7 @@ void CustomModel::updateModel(float deltaTime) {
     // Lógica de actualización (animaciones, físicas, etc.)
 }
 
-void CustomModel::finish() {
-    // Limpieza de memoria en GPU si es necesario
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(NUM_VBOS, m_VBO);
-    glDeleteBuffers(1, &m_EBO);
-}
+// void CustomModel::finish() {
+//     // Limpieza de memoria en GPU si es necesario
+
+// }

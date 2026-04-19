@@ -20,7 +20,8 @@ find_package(glfw3 REQUIRED)
 
 
 # Ejecutable
-add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/Main.cpp
+add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.cpp
+                               ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
                                ${PROJECT_SOURCE_DIR}/src/Core/Scene.cpp
                                ${PROJECT_SOURCE_DIR}/src/Core/WindowGL.cpp
                                ${PROJECT_SOURCE_DIR}/src/Graphics/ShaderProgram.cpp

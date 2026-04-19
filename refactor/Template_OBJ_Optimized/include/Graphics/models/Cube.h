@@ -18,6 +18,8 @@ public:
         init();
     }
 
+    ~Cube() override; 
+
     void initGeometry() override;
 
     void init() override;
@@ -32,7 +34,7 @@ public:
 
     void updateModel(float deltaTime) override;
 
-    void finish() override;
+    // void finish() override;
 };
 
 #endif

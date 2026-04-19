@@ -109,10 +109,10 @@ public:
      */
     virtual void updateModel(float deltaTime) = 0;
 
-    /**
-     * @brief Limpia recursos
-     */
-    virtual void finish() = 0;
+    // /**
+    //  * @brief Limpia recursos
+    //  */
+    // virtual void finish() = 0;
 };
 
 #endif
