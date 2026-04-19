@@ -14,7 +14,7 @@ class WindowGL
 {
 
 private:
-    GLFWwindow *m_window;
+    GLFWwindow *m_window; // <- esto deberia ser un unique_ptr pero aun tenemos que entender cosas
     char *m_name;
     int m_glfwMajor{};
     int m_glfwMinor{};

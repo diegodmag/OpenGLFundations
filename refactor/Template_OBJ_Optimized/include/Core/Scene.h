@@ -6,6 +6,8 @@
 // #include <glm/glm.hpp>
 // #include <glm/gtc/matrix_transform.hpp>
 // #include <glm/gtc/type_ptr.hpp>
+#include <vector>
+
 
 #include "WindowGL.h"
 #include "Graphics/ShaderProgram.h"
@@ -32,7 +34,8 @@ private:
     // Refactor
     // Este shader
     std::shared_ptr<ShaderProgram> m_shaderProgram; // This could be a std::vector of shader programs
-    std::unique_ptr<Model> m_model;                                 // This could be a std::vector of Models
+    std::vector<std::unique_ptr<Model>> m_models;
+    // std::unique_ptr<Model> m_model;                                 // This could be a std::vector of Models
 
     linear::math::Vector3D m_camera_pos;
 

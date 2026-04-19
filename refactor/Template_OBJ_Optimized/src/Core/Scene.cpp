@@ -17,9 +17,16 @@ void Scene::init()
     m_shaderProgram = std::make_shared<ShaderProgram>("shaders/vertex_shader.glsl", "shaders/frag_shader.glsl");
 
     // El modelo si es propieda de la escena 
-    m_model = std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj");
-    // Varios modelos pueden tener el mismo shader 
+        // std::unique_ptr<Model> m =  std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj");
+        // Varios modelos pueden tener el mismo shader 
 
+        // m_models.push_back(m); // Probando
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Raptor.obj"));
+    m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
 
     // View matrix usando lookAt
     m_camera_pos = linear::math::Vector3D(-2.0f, 3.0f, -5.0f);
@@ -38,7 +45,14 @@ void Scene::init()
 void Scene::render()
 { // Sin const
 
-    m_model->translate(linear::math::Vector3D(0.0f, -1.0f, 0.0f));
+    float x_coord=0.0f; 
+    float y_coord=0.0f; 
+
+    for(size_t i=0; i<std::ssize(m_models); i++){
+        m_models[i]->translate(linear::math::Vector3D(x_coord, -1.0f, y_coord));
+        x_coord+=3.0f;
+        y_coord+=3.0f;
+    }
 
     float lastFrame = 0.0f; // Tiempo transcurrido del frame anterior
 
@@ -57,8 +71,10 @@ void Scene::render()
 
         float speed = 0.01f;
 
-        m_model->rotate(45.0f * deltaTime, linear::math::Vector3D(0.0f, 1.0f, 0.0f));
-
+        // m_model->rotate(45.0f * deltaTime, linear::math::Vector3D(0.0f, 1.0f, 0.0f));
+        for(auto& m: m_models){
+            m->rotate(45.0f * deltaTime, linear::math::Vector3D(0.0f, 1.0f, 0.0f));
+        }
         m_view = linear::math::Matrix4D::lookAt(
             m_camera_pos,
             linear::math::Vector3D(0.0f, 0.0f, 0.0f),
@@ -66,7 +82,11 @@ void Scene::render()
 
         // --- DIBUJAR ---
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        m_model->renderModel(m_view, m_projection);
+        
+        for(auto& m: m_models){
+            m->renderModel(m_view, m_projection);
+        }
+        // m_model->renderModel();
 
         glfwSwapBuffers(m_window->getWindow());
         glfwPollEvents();

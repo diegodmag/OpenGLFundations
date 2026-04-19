@@ -12,7 +12,7 @@ CustomModel::~CustomModel(){
  * @brief Carga los datos desde el archivo OBJ y los prepara para la indexación.
  */
 void CustomModel::initGeometry() {
-    ObjLoader obj_loader;
+    ObjLoader obj_loader; 
     obj_loader.parseOBJ(m_filePath);
 
     // Obtenemos los vectores procesados por el loader (ya sin duplicados)
@@ -100,17 +100,19 @@ void CustomModel::renderModel(const linear::math::Matrix4D& view, const linear::
 // --- TRANSFORMACIONES ---
 
 void CustomModel::translate(const linear::math::Vector3D& translation) {
-    m_model_mat = linear::math::Matrix4D::translate(translation) * m_model_mat;
+    m_model_mat = m_model_mat * linear::math::Matrix4D::translate(translation);
 }
 
 void CustomModel::rotate(float angle, const linear::math::Vector3D& axis) {
-    if (axis.x > 0) m_model_mat = linear::math::Matrix4D::rotateX(angle) * m_model_mat;
-    if (axis.y > 0) m_model_mat = linear::math::Matrix4D::rotateY(angle) * m_model_mat;
-    if (axis.z > 0) m_model_mat = linear::math::Matrix4D::rotateZ(angle) * m_model_mat;
+    // Nota: esta lógica con if(axis.x > 0) es rudimentaria, pero respetémosla por ahora.
+    // Lo importante es el orden: m_model_mat * rot
+    if (axis.x > 0) m_model_mat = m_model_mat * linear::math::Matrix4D::rotateX(angle);
+    if (axis.y > 0) m_model_mat = m_model_mat * linear::math::Matrix4D::rotateY(angle);
+    if (axis.z > 0) m_model_mat = m_model_mat * linear::math::Matrix4D::rotateZ(angle);
 }
 
 void CustomModel::scale(const linear::math::Vector3D& scaling) {
-    m_model_mat = linear::math::Matrix4D::scale(scaling) * m_model_mat;
+    m_model_mat = m_model_mat * linear::math::Matrix4D::scale(scaling);
 }
 
 void CustomModel::updateModel(float deltaTime) {
