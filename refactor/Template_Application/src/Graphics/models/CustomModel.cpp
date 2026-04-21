@@ -1,8 +1,8 @@
 #include "Graphics/models/CustomModel.h"
 #include "Utils/obj_helpers/ObjLoader.h"
 
-
-CustomModel::~CustomModel(){
+CustomModel::~CustomModel()
+{
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(NUM_VBOS, m_VBO);
     glDeleteBuffers(1, &m_EBO);
@@ -11,8 +11,9 @@ CustomModel::~CustomModel(){
 /**
  * @brief Carga los datos desde el archivo OBJ y los prepara para la indexación.
  */
-void CustomModel::initGeometry() {
-    ObjLoader obj_loader; 
+void CustomModel::initGeometry()
+{
+    ObjLoader obj_loader;
     obj_loader.parseOBJ(m_filePath);
 
     // Obtenemos los vectores procesados por el loader (ya sin duplicados)
@@ -25,7 +26,7 @@ void CustomModel::initGeometry() {
     m_vertices = verts;
     m_textCoords = tcs;
     m_normalVecs = normals;
-    
+
     // Guardamos la cantidad de índices para el draw call
     m_numIndices = static_cast<int>(m_indices.size());
 }
@@ -33,7 +34,8 @@ void CustomModel::initGeometry() {
 /**
  * @brief Configura el VAO, VBOs y el EBO en la GPU.
  */
-void CustomModel::init() {
+void CustomModel::init()
+{
     // 1. Generar objetos
     glGenVertexArrays(1, &VAO);
     glGenBuffers(NUM_VBOS, m_VBO);
@@ -43,34 +45,40 @@ void CustomModel::init() {
     glBindVertexArray(VAO);
 
     // --- POSICIONES (Atributo 0) ---
-    if (!m_vertices.empty()) {
-        glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]); 
+    if (!m_vertices.empty())
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_VBO[0]);
         glBufferData(GL_ARRAY_BUFFER, m_vertices.size() * sizeof(float), m_vertices.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(0);
     }
 
     // --- TEXTURAS (Atributo 1) ---
-    if (!m_textCoords.empty()) {
+    if (!m_textCoords.empty())
+    {
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO[1]);
         glBufferData(GL_ARRAY_BUFFER, m_textCoords.size() * sizeof(float), m_textCoords.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)0);
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(1);
     }
 
     // --- NORMALES (Atributo 2) ---
-    if (!m_normalVecs.empty()) {
+    if (!m_normalVecs.empty())
+    {
         glBindBuffer(GL_ARRAY_BUFFER, m_VBO[2]);
         glBufferData(GL_ARRAY_BUFFER, m_normalVecs.size() * sizeof(float), m_normalVecs.data(), GL_STATIC_DRAW);
-        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+        glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void *)0);
         glEnableVertexAttribArray(2);
     }
 
     // --- ELEMENT BUFFER (EBO) ---
-    if (!m_indices.empty()) {
+    if (!m_indices.empty())
+    {
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_EBO);
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_indices.size() * sizeof(unsigned int), m_indices.data(), GL_STATIC_DRAW);
-    } else {
+    }
+    else
+    {
         std::cerr << "CUSTOM_MODEL_ERROR: No se pudieron cargar los índices para: " << m_filePath << std::endl;
     }
 
@@ -81,8 +89,10 @@ void CustomModel::init() {
 /**
  * @brief Renderiza el modelo usando glDrawElements para optimizar el caché de vértices.
  */
-void CustomModel::renderModel(const linear::math::Matrix4D& view, const linear::math::Matrix4D& projection) {
-    if (m_numIndices == 0) return;
+void CustomModel::renderModel(const linear::math::Matrix4D &view, const linear::math::Matrix4D &projection)
+{
+    if (m_numIndices == 0)
+        return;
 
     m_shaderProgram->use();
 
@@ -92,33 +102,68 @@ void CustomModel::renderModel(const linear::math::Matrix4D& view, const linear::
     m_shaderProgram->setMat4x4("projection", projection);
 
     // Al usar VAOs configurados en el init, solo bindeamos y dibujamos
-    glBindVertexArray(VAO); 
+    glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
 }
 
 // --- TRANSFORMACIONES ---
 
-void CustomModel::translate(const linear::math::Vector3D& translation) {
+void CustomModel::translate(const linear::math::Vector3D &translation)
+{
     m_model_mat = m_model_mat * linear::math::Matrix4D::translate(translation);
 }
 
-void CustomModel::rotate(float angle, const linear::math::Vector3D& axis) {
+void CustomModel::rotate(float angle, const linear::math::Vector3D &axis)
+{
     // Nota: esta lógica con if(axis.x > 0) es rudimentaria, pero respetémosla por ahora.
     // Lo importante es el orden: m_model_mat * rot
-    if (axis.x > 0) m_model_mat = m_model_mat * linear::math::Matrix4D::rotateX(angle);
-    if (axis.y > 0) m_model_mat = m_model_mat * linear::math::Matrix4D::rotateY(angle);
-    if (axis.z > 0) m_model_mat = m_model_mat * linear::math::Matrix4D::rotateZ(angle);
+    if (axis.x > 0)
+        m_model_mat = m_model_mat * linear::math::Matrix4D::rotateX(angle);
+    if (axis.y > 0)
+        m_model_mat = m_model_mat * linear::math::Matrix4D::rotateY(angle);
+    if (axis.z > 0)
+        m_model_mat = m_model_mat * linear::math::Matrix4D::rotateZ(angle);
 }
 
-void CustomModel::scale(const linear::math::Vector3D& scaling) {
+void CustomModel::scale(const linear::math::Vector3D &scaling)
+{
     m_model_mat = m_model_mat * linear::math::Matrix4D::scale(scaling);
 }
 
-void CustomModel::updateModel(float deltaTime) {
+void CustomModel::updateModel(float deltaTime)
+{
     // Lógica de actualización (animaciones, físicas, etc.)
 }
 
+void CustomModel::Render(const glm::mat4 &view, const glm::mat4 &projection)
+{
+
+    if (m_numIndices == 0)
+        return;
+
+    m_shaderProgram->use();
+
+    // Pasar matrices de transformación al shader
+    m_shaderProgram->SetMat4x4("model", m_model_matrix);
+    m_shaderProgram->SetMat4x4("view", view);
+    m_shaderProgram->SetMat4x4("projection", projection);
+
+    // Al usar VAOs configurados en el init, solo bindeamos y dibujamos
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void CustomModel::Translate(const glm::vec3 &translation)
+{
+    m_model_matrix = glm::translate(m_model_matrix, translation);
+}
+
+void CustomModel::Scale(const glm::vec3 &scale)
+{
+    m_model_matrix = glm::scale(m_model_matrix, scale);
+}
 // void CustomModel::finish() {
 //     // Limpieza de memoria en GPU si es necesario
 

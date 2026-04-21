@@ -7,9 +7,10 @@
 #include <vector>
 #include <GL/glew.h>  
 #include <GLFW/glfw3.h> 
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-// #include <glm/gtc/type_ptr.hpp>
+
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "Math/linear_math/Matrix4D.h"
 #include "Math/linear_math/Vector3D.h"
@@ -81,14 +82,18 @@ public:
 
     void setVec3(const std::string& name, float x, float y, float z) const;
     
-    // void setVec3(const std::string& name, glm::vec3 vector) const;
-
-    // void setMat4x4(const std::string& name, const glm::mat4& value) const; 
-
+    
     void setVec3(const std::string& name, const linear::math::Vector3D& vector) const ;
     
     // Replace glm::mat4 with Matrix4D
     void setMat4x4(const std::string& name, const linear::math::Matrix4D& value) const ;
+
+
+    // GLM 
+
+    void SetVec3(const std::string& name, glm::vec3 vector) const;
+
+    void SetMat4x4(const std::string& name, const glm::mat4& value) const; 
 };
 
 #endif

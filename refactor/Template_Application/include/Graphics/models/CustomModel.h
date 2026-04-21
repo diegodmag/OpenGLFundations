@@ -34,6 +34,7 @@ public:
     CustomModel(std::shared_ptr<ShaderProgram> program, const char *filePath)
         : Model(program), m_filePath(filePath), m_numIndices(0)
     {
+        m_model_matrix = glm::mat4(1.0f);
         initGeometry(); // Extrae datos del OBJ a los vectores locales
         init();         // Carga los datos a la GPU (VAO, VBO, EBO)
     }
@@ -53,6 +54,17 @@ public:
     void renderModel(const linear::math::Matrix4D &view, const linear::math::Matrix4D &projection) override;
     void updateModel(float deltaTime) override;
     // void finish() override;
+
+
+
+    void Render(const glm::mat4 &view, const glm::mat4 &projection);
+
+    void Translate(const glm::vec3 &translation);
+
+    void Rotate(float angle, const glm::vec3 &axis);
+
+    void Scale(const glm::vec3 &scaling);
+
 
     // Getters útiles opcionales
     int getNumIndices() const { return m_numIndices; }

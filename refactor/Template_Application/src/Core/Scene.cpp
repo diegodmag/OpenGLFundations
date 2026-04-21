@@ -7,22 +7,22 @@ Scene::Scene(WindowGL *window)
     init();
 }
 
-Scene::~Scene(){
-
+Scene::~Scene()
+{
 }
 
 void Scene::init()
 {
-    // El shader si es propiedad de la escena 
+    // El shader si es propiedad de la escena
     m_shaderProgram = std::make_shared<ShaderProgram>("shaders/vertex_shader.glsl", "shaders/frag_shader.glsl");
 
-    // El modelo si es propieda de la escena 
-        // std::unique_ptr<Model> m =  std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj");
-        // Varios modelos pueden tener el mismo shader 
+    // El modelo si es propieda de la escena
+    // std::unique_ptr<Model> m =  std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj");
+    // Varios modelos pueden tener el mismo shader
 
-        // m_models.push_back(m); // Probando
-    m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Raptor.obj"));
-    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
+    // m_models.push_back(m); // Probando
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Raptor.obj"));
+    m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
@@ -40,23 +40,38 @@ void Scene::init()
         m_window->getAspectRation(),
         0.1f,
         100.0f);
+
+    // For GLM
+    // glm::vec3 camera_position{0.0f,2.0f,5.0f};
+    // glm::vec3 camera_foreward{0.0f,0.0f,0.0f};
+    // glm::vec3 camera_up{0.0f,0.0f,1.0f};
+
+    // m_view_matrix= glm::lookAt(camera_position, camera_position+camera_foreward, camera_up);
+    glm::vec3 camera_position(0.0f, 2.0f, 5.0f);
+    glm::vec3 camera_target(0.0f, 0.0f, 0.0f);
+    glm::vec3 camera_up(0.0f, 1.0f, 0.0f);
+    m_view_matrix = glm::lookAt(camera_position, camera_target, camera_up);
+
+    m_projection_matrix = glm::perspective(glm::radians(45.0f), m_window->getAspectRation(), 0.1f, 1000.0f);
 }
 
 void Scene::render()
 { // Sin const
 
-    float x_coord=0.0f; 
-    float y_coord=0.0f; 
+    // float x_coord=0.0f;
+    // float y_coord=0.0f;
 
-    for(size_t i=0; i<std::ssize(m_models); i++){
-        m_models[i]->translate(linear::math::Vector3D(8.0f, -7.0f, 4.0f));
-        // x_coord+=3.0f;
-        // y_coord+=3.0f;
-    }
+    // for(size_t i=0; i<std::ssize(m_models); i++){
+    //     m_models[i]->translate(linear::math::Vector3D(8.0f, -7.0f, 4.0f));
+    //     // x_coord+=3.0f;
+    //     // y_coord+=3.0f;
+    // }
 
-    for(size_t i=0; i<std::ssize(m_models); i++){
-        m_models[i]->scale(linear::math::Vector3D(0.1f,0.1f,0.1f));
-    }
+    // for(size_t i=0; i<std::ssize(m_models); i++){
+    //     // m_models[i]->Translate(glm::vec3(0.0f,0.0f,5.0f));
+    //     m_models[i]->Scale(glm::vec3(2.0f,2.0f,2.0f));
+    // }
+    glEnable(GL_DEPTH_TEST);
 
     float lastFrame = 0.0f; // Tiempo transcurrido del frame anterior
 
@@ -76,19 +91,22 @@ void Scene::render()
         float speed = 0.01f;
 
         // m_model->rotate(45.0f * deltaTime, linear::math::Vector3D(0.0f, 1.0f, 0.0f));
-        for(auto& m: m_models){
-            m->rotate(45.0f * deltaTime, linear::math::Vector3D(0.0f, 1.0f, 0.0f));
-        }
-        m_view = linear::math::Matrix4D::lookAt(
-            m_camera_pos,
-            linear::math::Vector3D(0.0f, 0.0f, 0.0f),
-            linear::math::Vector3D(0.0f, 1.0f, 0.0f));
+        // for(auto& m: m_models){
+        //     m->rotate(45.0f * deltaTime, linear::math::Vector3D(0.0f, 1.0f, 0.0f));
+        // }
+
+        // m_view = linear::math::Matrix4D::lookAt(
+        //     m_camera_pos,
+        //     linear::math::Vector3D(0.0f, 0.0f, 0.0f),
+        //     linear::math::Vector3D(0.0f, 1.0f, 0.0f));
 
         // --- DIBUJAR ---
+
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        
-        for(auto& m: m_models){
-            m->renderModel(m_view, m_projection);
+        for (auto &m : m_models)
+        {
+            // m->renderModel(m_view, m_projection);
+            m->Render(m_view_matrix, m_projection_matrix);
         }
         // m_model->renderModel();
 

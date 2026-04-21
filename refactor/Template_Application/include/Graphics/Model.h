@@ -3,9 +3,9 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
-// #include <glm/glm.hpp>
-// #include <glm/gtc/matrix_transform.hpp>
-// #include <glm/gtc/type_ptr.hpp>
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.h"
 
@@ -31,6 +31,8 @@ protected:
 
     linear::math::Matrix4D m_model_mat;
     // float angle
+
+    glm::mat4 m_model_matrix; // NUEVO 
 
     /**
      * @brief Inicializa vertices
@@ -72,6 +74,8 @@ public:
          * 3. Fin del constructor: La copia temporal (ahora vacía por haber usado move) se destruye, el contador baja a 1.
          */
         m_model_mat = linear::math::Matrix4D::identity();
+
+        m_model_matrix = glm::mat4(1.0f);
     }
 
     /**
