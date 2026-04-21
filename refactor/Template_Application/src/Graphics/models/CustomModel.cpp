@@ -110,6 +110,11 @@ void CustomModel::Translate(const glm::vec3 &translation)
     m_model_matrix = glm::translate(m_model_matrix, translation);
 }
 
+void CustomModel::Rotate(float angle, const glm::vec3 &axis)
+{
+    m_model_matrix = glm::rotate(m_model_matrix, glm::radians(angle), axis);
+}
+
 void CustomModel::Scale(const glm::vec3 &scale)
 {
     m_model_matrix = glm::scale(m_model_matrix, scale);

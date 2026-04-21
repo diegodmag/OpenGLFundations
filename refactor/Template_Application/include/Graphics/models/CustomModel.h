@@ -54,7 +54,6 @@ public:
 
     void Scale(const glm::vec3 &scaling);
 
-    // Getters útiles opcionales
     int getNumIndices() const { return m_numIndices; }
 };
 

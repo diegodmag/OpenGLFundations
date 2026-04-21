@@ -39,7 +39,6 @@ void WindowGL::InitGLEW()
     }
     std::cout << "GLEW STARTED" << std::endl;
 
-    // 🔧 Add these:
     glViewport(0, 0, m_width, m_height);
     glEnable(GL_DEPTH_TEST);
     glClearColor(0.2f, 0.3f, 0.3f, 1.0f); // optional background

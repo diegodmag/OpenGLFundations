@@ -11,6 +11,7 @@
 #include <vector>
 
 #include "WindowGL.h"
+#include "Camera.h"
 #include "Graphics/ShaderProgram.h"
 
 #include "Graphics/Model.h"
@@ -31,10 +32,8 @@ private:
     WindowGL *m_window;
 
     std::shared_ptr<ShaderProgram> m_shaderProgram; // This could be a std::vector of shader programs
+    std::unique_ptr<Camera> m_camera;
     std::vector<std::unique_ptr<CustomModel>> m_models;
-
-    glm::mat4 m_view_matrix;
-    glm::mat4 m_projection_matrix;
 
     /**
      * @brief Inicializacion

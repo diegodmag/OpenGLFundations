@@ -19,7 +19,7 @@ private:
      *
      */
     std::unique_ptr<Scene> m_scene;
-    /* data */
+
 public:
     Application();
     ~Application();

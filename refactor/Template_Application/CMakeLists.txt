@@ -24,6 +24,7 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCE_DIR}/src/main.cpp
                                ${PROJECT_SOURCE_DIR}/src/Core/Application.cpp
                                ${PROJECT_SOURCE_DIR}/src/Core/Scene.cpp
                                ${PROJECT_SOURCE_DIR}/src/Core/WindowGL.cpp
+                               ${PROJECT_SOURCE_DIR}/src/Core/Camera.cpp
                                ${PROJECT_SOURCE_DIR}/src/Graphics/ShaderProgram.cpp
                                ${PROJECT_SOURCE_DIR}/src/Graphics/models/Cube.cpp
                                ${PROJECT_SOURCE_DIR}/src/Graphics/models/CustomModel.cpp
