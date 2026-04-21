@@ -10,16 +10,12 @@
 
 #include <vector>
 
-
 #include "WindowGL.h"
 #include "Graphics/ShaderProgram.h"
 
 #include "Graphics/Model.h"
 #include "Graphics/models/Cube.h"
 #include "Graphics/models/CustomModel.h" // En teoria solo necesitamos este
-
-#include "Math/linear_math/Matrix4D.h"
-#include "Math/linear_math/Vector3D.h"
 
 /**
  * @class Scene
@@ -33,21 +29,12 @@ private:
      * Por que la escena es un observador, no una propietaria de la ventana.
      */
     WindowGL *m_window;
-    // Refactor
-    // Este shader
+
     std::shared_ptr<ShaderProgram> m_shaderProgram; // This could be a std::vector of shader programs
     std::vector<std::unique_ptr<CustomModel>> m_models;
-    // std::vector<std::unique_ptr<Model>> m_models;
-    // std::unique_ptr<Model> m_model;                                 // This could be a std::vector of Models
 
-    linear::math::Vector3D m_camera_pos;
-
-    linear::math::Matrix4D m_view;
-    linear::math::Matrix4D m_projection;
-
-    glm::mat4 m_view_matrix; 
-    glm::mat4 m_projection_matrix; 
-
+    glm::mat4 m_view_matrix;
+    glm::mat4 m_projection_matrix;
 
     /**
      * @brief Inicializacion

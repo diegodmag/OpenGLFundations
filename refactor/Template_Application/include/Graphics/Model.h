@@ -3,15 +3,12 @@
 
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
+
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
 #include "ShaderProgram.h"
-
-#include "Math/linear_math/Matrix4D.h"
-#include "Math/linear_math/Vector3D.h"
-#include "Math/MathUtils.h"
 
 #include <memory>
 
@@ -29,10 +26,7 @@ protected:
     // ShaderProgram* m_shaderProgram; // Esto si se puede optimizar
     GLuint VAO, VBO, EBO;
 
-    linear::math::Matrix4D m_model_mat;
-    // float angle
-
-    glm::mat4 m_model_matrix; // NUEVO 
+    glm::mat4 m_model_matrix; // NUEVO
 
     /**
      * @brief Inicializa vertices
@@ -73,8 +67,6 @@ public:
          *    y se injerta en el m_shader_program. El contador se mantiene en 2.
          * 3. Fin del constructor: La copia temporal (ahora vacía por haber usado move) se destruye, el contador baja a 1.
          */
-        m_model_mat = linear::math::Matrix4D::identity();
-
         m_model_matrix = glm::mat4(1.0f);
     }
 
@@ -99,24 +91,6 @@ public:
      * @param view Matriz de vista
      * @param projection Matriz de proyeccion
      */
-    virtual void renderModel(const linear::math::Matrix4D &view, const linear::math::Matrix4D &projection) = 0;
-
-    virtual void translate(const linear::math::Vector3D &translation) = 0;
-
-    virtual void rotate(float angle, const linear::math::Vector3D &axis) = 0;
-
-    virtual void scale(const linear::math::Vector3D &scaling) = 0;
-
-    /**
-     * @brief Aplica transformaciones o animaciones
-     * @param deltaTime Referencia del tiempo transcurrido entre frames
-     */
-    virtual void updateModel(float deltaTime) = 0;
-
-    // /**
-    //  * @brief Limpia recursos
-    //  */
-    // virtual void finish() = 0;
 };
 
 #endif

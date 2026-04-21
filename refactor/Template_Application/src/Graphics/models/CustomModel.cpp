@@ -86,56 +86,6 @@ void CustomModel::init()
     glBindVertexArray(0);
 }
 
-/**
- * @brief Renderiza el modelo usando glDrawElements para optimizar el caché de vértices.
- */
-void CustomModel::renderModel(const linear::math::Matrix4D &view, const linear::math::Matrix4D &projection)
-{
-    if (m_numIndices == 0)
-        return;
-
-    m_shaderProgram->use();
-
-    // Pasar matrices de transformación al shader
-    m_shaderProgram->setMat4x4("model", m_model_mat);
-    m_shaderProgram->setMat4x4("view", view);
-    m_shaderProgram->setMat4x4("projection", projection);
-
-    // Al usar VAOs configurados en el init, solo bindeamos y dibujamos
-    glBindVertexArray(VAO);
-    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
-    glBindVertexArray(0);
-}
-
-// --- TRANSFORMACIONES ---
-
-void CustomModel::translate(const linear::math::Vector3D &translation)
-{
-    m_model_mat = m_model_mat * linear::math::Matrix4D::translate(translation);
-}
-
-void CustomModel::rotate(float angle, const linear::math::Vector3D &axis)
-{
-    // Nota: esta lógica con if(axis.x > 0) es rudimentaria, pero respetémosla por ahora.
-    // Lo importante es el orden: m_model_mat * rot
-    if (axis.x > 0)
-        m_model_mat = m_model_mat * linear::math::Matrix4D::rotateX(angle);
-    if (axis.y > 0)
-        m_model_mat = m_model_mat * linear::math::Matrix4D::rotateY(angle);
-    if (axis.z > 0)
-        m_model_mat = m_model_mat * linear::math::Matrix4D::rotateZ(angle);
-}
-
-void CustomModel::scale(const linear::math::Vector3D &scaling)
-{
-    m_model_mat = m_model_mat * linear::math::Matrix4D::scale(scaling);
-}
-
-void CustomModel::updateModel(float deltaTime)
-{
-    // Lógica de actualización (animaciones, físicas, etc.)
-}
-
 void CustomModel::Render(const glm::mat4 &view, const glm::mat4 &projection)
 {
 
@@ -164,7 +114,3 @@ void CustomModel::Scale(const glm::vec3 &scale)
 {
     m_model_matrix = glm::scale(m_model_matrix, scale);
 }
-// void CustomModel::finish() {
-//     // Limpieza de memoria en GPU si es necesario
-
-// }

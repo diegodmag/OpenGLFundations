@@ -39,23 +39,12 @@ public:
         init();         // Carga los datos a la GPU (VAO, VBO, EBO)
     }
 
-    ~CustomModel() override; 
+    ~CustomModel() override;
 
     // Funciones de inicialización
     void initGeometry() override;
+
     void init() override;
-
-    // Transformaciones espaciales
-    void translate(const linear::math::Vector3D &translation) override;
-    void rotate(float angle, const linear::math::Vector3D &axis) override;
-    void scale(const linear::math::Vector3D &scaling) override;
-
-    // Ciclo de vida del renderizado
-    void renderModel(const linear::math::Matrix4D &view, const linear::math::Matrix4D &projection) override;
-    void updateModel(float deltaTime) override;
-    // void finish() override;
-
-
 
     void Render(const glm::mat4 &view, const glm::mat4 &projection);
 
@@ -64,7 +53,6 @@ public:
     void Rotate(float angle, const glm::vec3 &axis);
 
     void Scale(const glm::vec3 &scaling);
-
 
     // Getters útiles opcionales
     int getNumIndices() const { return m_numIndices; }
