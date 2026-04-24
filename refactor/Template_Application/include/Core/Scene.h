@@ -44,8 +44,9 @@ public:
     Scene(WindowGL *window);
     ~Scene();
 
-
     
+    void input(float deltaTime); 
+
     /**
      * @brief Ciclo de renderizado general
      */

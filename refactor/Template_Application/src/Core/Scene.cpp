@@ -32,6 +32,34 @@ void Scene::init()
 
 }
 
+void Scene::input(float deltaTime){ 
+
+    float cameraSpeed = static_cast<float>(2.5 * deltaTime);
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_W) == GLFW_PRESS){
+        m_camera->MoveForeward(cameraSpeed);
+    }
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_S) == GLFW_PRESS){
+        m_camera->MoveForeward(-cameraSpeed);
+    }
+
+
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_A) == GLFW_PRESS){
+        m_camera->MoveRight(-cameraSpeed);
+    }
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_D) == GLFW_PRESS){
+        m_camera->MoveRight(cameraSpeed);
+    }
+    
+    
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_Q) == GLFW_PRESS){
+        m_camera->MoveUp(-cameraSpeed);
+    }
+    if (glfwGetKey(m_window->getWindow(), GLFW_KEY_E) == GLFW_PRESS){
+        m_camera->MoveUp(cameraSpeed);
+    }
+}
+
 void Scene::render()
 {
 
@@ -46,11 +74,12 @@ void Scene::render()
     while (!glfwWindowShouldClose(m_window->getWindow()))
     {
         m_camera->ComputeViewMatrix();
-        // float currentFrame = static_cast<float>(glfwGetTime()); // Obtiene el tiempo desde que inicio la aplicacion
-        // float deltaTime = currentFrame - lastFrame;
-        // lastFrame = currentFrame;
+        float currentFrame = static_cast<float>(glfwGetTime()); // Obtiene el tiempo desde que inicio la aplicacion
+        float deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
         // float speed = 0.01f;
+        input(deltaTime);
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
         for (auto &m : m_models)

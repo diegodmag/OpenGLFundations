@@ -3,6 +3,7 @@
 Camera::Camera(glm::vec3 position)
     :     m_position{position}
         , m_foreward{glm::vec3(0.0f, 0.0f, -1.0f)}
+        , m_right{glm::vec3(1.0f, 0.0f, 0.0f)}
         , m_up{glm::vec3(0.0f, 1.0f, 0.0f)}
 {
 }
@@ -41,7 +42,7 @@ void Camera::MoveForeward(float displacement){
 }
 
 void Camera::MoveRight(float displacement){
-    m_position+= m_rigth*displacement; 
+    m_position+= m_right*displacement; 
 }
 
 void Camera::MoveUp(float displacement){
