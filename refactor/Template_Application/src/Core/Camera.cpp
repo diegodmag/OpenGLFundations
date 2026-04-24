@@ -35,3 +35,15 @@ void Camera::ComputeProjectionMatrix(float aspectRatio, float fov)
 {
     m_projection_matrix = glm::perspective(glm::radians(fov), aspectRatio, 0.1f, 1000.0f);
 }
+
+void Camera::MoveForeward(float displacement){
+    m_position+= m_foreward*displacement; 
+}
+
+void Camera::MoveRight(float displacement){
+    m_position+= m_rigth*displacement; 
+}
+
+void Camera::MoveUp(float displacement){
+    m_position+= m_up*displacement; 
+}

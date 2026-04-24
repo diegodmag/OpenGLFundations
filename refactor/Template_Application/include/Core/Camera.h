@@ -44,6 +44,13 @@ public:
     void ComputeViewMatrix();
 
     void ComputeProjectionMatrix(float aspectRatio, float fov);
+
+    void MoveForeward(float displacement); 
+
+    void MoveRight(float displacement); 
+
+    void MoveUp(float displacement); 
+
 };
 
 #endif

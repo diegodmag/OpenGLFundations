@@ -44,6 +44,8 @@ public:
     Scene(WindowGL *window);
     ~Scene();
 
+
+    
     /**
      * @brief Ciclo de renderizado general
      */
