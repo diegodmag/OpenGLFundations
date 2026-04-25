@@ -5,6 +5,10 @@
 #include <iostream>
 #include "Graphics/Model.h"
 
+
+//Testing 
+#include "Core/WindowGL.h"
+
 // Definimos el número de Vertex Buffer Objects: Posición, Textura, Normales
 #define NUM_VBOS 3
 
@@ -55,6 +59,10 @@ public:
     void Scale(const glm::vec3 &scaling);
 
     int getNumIndices() const { return m_numIndices; }
+
+
+    // Testing
+    void Move(const WindowGL &window, float deltaTime); 
 };
 
 #endif

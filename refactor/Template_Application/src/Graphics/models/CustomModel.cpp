@@ -119,3 +119,36 @@ void CustomModel::Scale(const glm::vec3 &scale)
 {
     m_model_matrix = glm::scale(m_model_matrix, scale);
 }
+
+
+
+// Testing 
+
+void CustomModel::Move(const WindowGL &window, float deltaTime){
+    
+    float displacement = static_cast<float>(2.5*deltaTime);
+
+    glm::vec3 vector = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    if (glfwGetKey(window.getWindow(), GLFW_KEY_UP) == GLFW_PRESS){
+        vector=glm::vec3(0.0f,1.0f,0.0f);
+        std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n'; 
+    }
+    if (glfwGetKey(window.getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS){
+        // m_camera->MoveRight(cameraSpeed);
+        vector=glm::vec3(0.0f,-1.0f,0.0f);
+    }
+    if(vector != glm::vec3(0.0f)){
+        // std::cout<<"Es distinto\n";
+        // std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n';
+        vector = glm::normalize(vector);
+        Translate(vector*displacement);                        
+    }
+    // if(vector.length()>0){
+    //     // vector = glm::normalize(vector);
+    //     std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n'; 
+    //     // std::cout<<"Se movio"<<'\n'; 
+    //     // Translate(vector*displacement); 
+    // } 
+
+}

@@ -31,6 +31,8 @@ private:
 
     // glm::vec3 m_direction;
 
+    float m_orthoSize = 5.0f; // Para projeccion ortographica 
+
 public:
     Camera(glm::vec3 position);
     ~Camera();
@@ -43,7 +45,14 @@ public:
 
     void ComputeViewMatrix();
 
+    void SetIsometricView(); 
+
+    void UpdateOrthoSize(float delta); 
+
     void ComputeProjectionMatrix(float aspectRatio, float fov);
+    
+    // Testing 
+    void ComputeIsometricProjection(float aspectRatio, float size);
 
     void MoveForeward(float displacement); 
 

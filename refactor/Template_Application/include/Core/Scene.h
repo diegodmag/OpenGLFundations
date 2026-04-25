@@ -47,6 +47,8 @@ public:
     
     void input(float deltaTime); 
 
+    void inputIsometricProcess(float deltaTime); 
+
     /**
      * @brief Ciclo de renderizado general
      */
