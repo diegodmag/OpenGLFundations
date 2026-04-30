@@ -94,3 +94,17 @@ void ShaderProgram::SetMat4x4(const std::string &name, const glm::mat4 &value) c
 {
     glUniformMatrix4fv(glGetUniformLocation(m_id, name.c_str()), 1, GL_FALSE, glm::value_ptr(value));
 }
+
+/**
+ * Nueva Funcion para textura
+ * @brief Busca la variable uniforme para textura
+ *
+ */
+void ShaderProgram::SetTextureUnit(const std::string &name, int unit) const
+{
+    /**
+     * Internamente los samplers se comportan como variables uniformes de tipo entero
+     * 
+     */
+    glUniform1i(glGetUniformLocation(m_id, name.c_str()), unit);
+}

@@ -37,4 +37,5 @@ target_link_libraries(${PROJECT_NAME}
     OpenGL::GL
     GLEW::GLEW
     glfw
+    soil2
 )

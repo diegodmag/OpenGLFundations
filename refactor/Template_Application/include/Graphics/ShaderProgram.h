@@ -84,6 +84,8 @@ public:
     void SetVec3(const std::string &name, glm::vec3 vector) const;
 
     void SetMat4x4(const std::string &name, const glm::mat4 &value) const;
+
+    void SetTextureUnit(const std::string &name, int unit) const;
 };
 
 #endif

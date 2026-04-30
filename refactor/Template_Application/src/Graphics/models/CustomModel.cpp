@@ -6,6 +6,7 @@ CustomModel::~CustomModel()
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(NUM_VBOS, m_VBO);
     glDeleteBuffers(1, &m_EBO);
+    glDeleteTextures(1, &m_textureID);
 }
 
 /**
@@ -94,12 +95,30 @@ void CustomModel::Render(const glm::mat4 &view, const glm::mat4 &projection)
 
     m_shaderProgram->use();
 
+    RenderTexture(); 
+
     // Pasar matrices de transformación al shader
     m_shaderProgram->SetMat4x4("model", m_model_matrix);
     m_shaderProgram->SetMat4x4("view", view);
     m_shaderProgram->SetMat4x4("projection", projection);
 
     // Al usar VAOs configurados en el init, solo bindeamos y dibujamos
+    glBindVertexArray(VAO);
+    glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
+    glBindVertexArray(0);
+}
+
+void CustomModel::RenderTexture() const {
+    glActiveTexture(GL_TEXTURE0); // Activamos unidad de textura 0 
+    glBindTexture(GL_TEXTURE_2D, m_textureID); // asignamos una textura a esa unidad 
+    // Le pasamos 0 por que es la unidad de textura que definimos en el fragment shader 
+    m_shaderProgram->SetTextureUnit("samp", 0);
+}
+
+void CustomModel::Draw() const
+{
+    if (m_numIndices == 0)
+        return;
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);
     glBindVertexArray(0);
@@ -120,35 +139,35 @@ void CustomModel::Scale(const glm::vec3 &scale)
     m_model_matrix = glm::scale(m_model_matrix, scale);
 }
 
+// Testing
 
+void CustomModel::Move(const WindowGL &window, float deltaTime)
+{
 
-// Testing 
-
-void CustomModel::Move(const WindowGL &window, float deltaTime){
-    
-    float displacement = static_cast<float>(2.5*deltaTime);
+    float displacement = static_cast<float>(2.5 * deltaTime);
 
     glm::vec3 vector = glm::vec3(0.0f, 0.0f, 0.0f);
 
-    if (glfwGetKey(window.getWindow(), GLFW_KEY_UP) == GLFW_PRESS){
-        vector=glm::vec3(0.0f,1.0f,0.0f);
-        std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n'; 
+    if (glfwGetKey(window.getWindow(), GLFW_KEY_UP) == GLFW_PRESS)
+    {
+        vector = glm::vec3(0.0f, 1.0f, 0.0f);
     }
-    if (glfwGetKey(window.getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS){
+    if (glfwGetKey(window.getWindow(), GLFW_KEY_DOWN) == GLFW_PRESS)
+    {
         // m_camera->MoveRight(cameraSpeed);
-        vector=glm::vec3(0.0f,-1.0f,0.0f);
+        vector = glm::vec3(0.0f, -1.0f, 0.0f);
     }
-    if(vector != glm::vec3(0.0f)){
+    if (vector != glm::vec3(0.0f))
+    {
         // std::cout<<"Es distinto\n";
         // std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n';
         vector = glm::normalize(vector);
-        Translate(vector*displacement);                        
+        Translate(vector * displacement);
     }
     // if(vector.length()>0){
     //     // vector = glm::normalize(vector);
-    //     std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n'; 
-    //     // std::cout<<"Se movio"<<'\n'; 
-    //     // Translate(vector*displacement); 
-    // } 
-
+    //     std::cout<<vector.x<<" "<<vector.y<<" "<<vector.z<<'\n';
+    //     // std::cout<<"Se movio"<<'\n';
+    //     // Translate(vector*displacement);
+    // }
 }

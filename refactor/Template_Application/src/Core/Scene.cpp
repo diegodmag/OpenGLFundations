@@ -14,17 +14,19 @@ Scene::~Scene()
 void Scene::init()
 {
     // El shader si es propiedad de la escena
-    m_shaderProgram = std::make_shared<ShaderProgram>("shaders/vertex_shader.glsl", "shaders/frag_shader.glsl");
+    // m_shaderProgram = std::make_shared<ShaderProgram>("shaders/vertex_shader.glsl", "shaders/frag_shader.glsl");
+    m_shaderProgram = std::make_shared<ShaderProgram>("shaders/vert_texture_shader.glsl", "shaders/frag_texture_shader.glsl");
 
-    m_camera = std::make_unique<Camera>(glm::vec3(0.0f, 2.0f, 5.0f));
-    // m_camera->ComputeProjectionMatrix(m_window->getAspectRation(), 45.0f);
-    m_camera->ComputeIsometricProjection(m_window->getAspectRation(), 5.0f);
-
-    m_camera->SetIsometricView(); 
+    m_camera = std::make_unique<Camera>(glm::vec3(0.0f, 0.0f, 10.0f));
+    m_camera->ComputeProjectionMatrix(m_window->getAspectRation(), 45.0f);
+    
+    // m_camera->ComputeIsometricProjection(m_window->getAspectRation(), 5.0f);
+    // m_camera->SetIsometricView(); 
 
     // m_models.push_back(m); // Probando
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Car.obj"));
-    m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Cube.obj"));
+    // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Cube.obj"));
+    m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Beagle.obj", "assets/textures/beagle.jpg"));
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Cube.obj"));
 
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
@@ -34,7 +36,13 @@ void Scene::init()
     // m_models.push_back(std::make_unique<CustomModel>(m_shaderProgram, "assets/obj/Teapot.obj"));
 
     // Para el input 
-    
+    for (auto &model : m_models)
+    {
+        model->Translate(glm::vec3(0.0f, 0.0f, -2.0f));
+        model->Scale(glm::vec3(0.1f, 0.1f, 0.1f));
+        model->Rotate(-90.0f, glm::vec3(1.0f,0.0f,0.0f));
+    }
+
 
 }
 
@@ -93,15 +101,8 @@ void Scene::render()
 
     glEnable(GL_DEPTH_TEST);
     
-    glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-
-    float i =2;
-    for (auto &model : m_models)
-    {
-        model->Translate(glm::vec3(i,i,0));
-        // model->Scale(glm::vec3(0.5f));
-        i+=1;
-    }
+    // glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    // glPolygonMode(GL_FRONT, GL_LINE);
 
     while (!glfwWindowShouldClose(m_window->getWindow()))
     {
@@ -111,16 +112,16 @@ void Scene::render()
         lastFrame = currentFrame;
 
         // float speed = 0.01f;
-        // input(deltaTime);
-        inputIsometricProcess(deltaTime);
+        input(deltaTime);
+        // inputIsometricProcess(deltaTime);
 
         m_camera->ComputeViewMatrix();
 
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        for (auto &m : m_models)
-        {
-            m->Move(*m_window, deltaTime);
-        }
+        // for (auto &m : m_models)
+        // {
+        //     m->Move(*m_window, deltaTime);
+        // }
         for (auto &m : m_models)
         {
             m->Render(m_camera->GetViewMatrix(), m_camera->GetProjectionMatrix());
