@@ -102,6 +102,8 @@ void CustomModel::Render(const glm::mat4 &view, const glm::mat4 &projection)
     m_shaderProgram->SetMat4x4("view", view);
     m_shaderProgram->SetMat4x4("projection", projection);
 
+    m_shaderProgram->SetVec3("lightColor", glm::vec3(1.0f, 1.0f, 1.0f));
+    m_shaderProgram->SetVec3("lightPos", glm::vec3(1.2f, 1.0f, 2.0f));
     // Al usar VAOs configurados en el init, solo bindeamos y dibujamos
     glBindVertexArray(VAO);
     glDrawElements(GL_TRIANGLES, m_numIndices, GL_UNSIGNED_INT, 0);

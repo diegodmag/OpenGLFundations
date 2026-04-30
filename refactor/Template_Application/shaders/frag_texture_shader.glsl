@@ -1,18 +1,43 @@
 #version 430 core
-in vec2 tc; // Variable de entrada que se recibe del vertex shader
+in vec2 tc;
+in vec3 FragPos;
+in vec3 Normal;
 
-/**
-El sampler es un tipo de variable uniforme que representa la textura en los shaders.
-Basicamente extrae los colores (texels) de una imagen y los devuelve para que el fragment 
-shader los use para el pixel final. 
-*/
-layout (binding = 0) uniform sampler2D samp; // sampler para mapear la coordenada de textura 
-// binding = 0 -> Asigna el sampler a la Unidad de textura 0 
+layout(binding = 0) uniform sampler2D samp;
+
+uniform vec3 lightColor;   
+uniform vec3 lightPos; // world space     
+
+uniform vec3 viewPos; // For the Specular 
+
 
 out vec4 FragColor;
 
 void main()
-{    
-    // FragColor = vec4(tc, 0.0, 1.0);
-    FragColor = texture(samp, tc);
+{
+    
+    vec3 objectColor = texture(samp, tc).rgb; // obtenemos el color de la textura 
+
+    // Ambient light 
+    float ambientStrength = 0.1;
+    vec3 ambient = ambientStrength * lightColor; // comunmente es blanco
+
+    // Diffuse Light
+    vec3 norm = normalize(Normal); // Target - Origin 
+    vec3 lightDir = normalize(lightPos - FragPos); // vector hacia la luz
+    float diff = max(dot(norm, lightDir), 0.0);
+    vec3 diffuse = diff * lightColor;
+
+    // Specular 
+
+    float specularStrength = 0.5;
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(-lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 2);
+    vec3 specular = specularStrength * spec * lightColor;
+
+    
+    // vec3 result = (ambient + diffuse) * objectColor;
+    vec3 result = (ambient + diffuse + specular) * objectColor;
+    FragColor = vec4(result, 1.0);
 }

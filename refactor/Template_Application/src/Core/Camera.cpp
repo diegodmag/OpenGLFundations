@@ -51,6 +51,8 @@ void Camera::UpdateOrthoSize(float delta){
 void Camera::ComputeViewMatrix()
 {
     m_view_matrix = glm::lookAt(m_position, m_position + m_foreward, m_up);
+
+    //Aqui podriamos mandar la posicion 
 }
 
 void Camera::ComputeProjectionMatrix(float aspectRatio, float fov)
